@@ -87,15 +87,15 @@ calibration. Options, in order of evidential value:
    model that respects resource-biased sampling before any protocol run.
 5. **H18 / H17 / H14** remain untested backups (session-2 register).
 
-## P0-bis: unpushed work (GitHub token expired at the end of session 3)
+## P0-bis: git history note (resolved)
 
-Commits `0b2cf2b` and later on `arena/01a0e336-gemsdoe10` (H19/H20/H21 results,
-v3 gate, H20 artifact, docs) could **not** be pushed: `git push` and `gh api`
-returned "Bad credentials" after the earlier pushes in the same session had
-succeeded (the last pushed commit is `8d9b513`). First actions next session:
-`git push origin arena/01a0e336-gemsdoe10`, open the PR to `main`, merge it, and
-confirm the Pages hub shows `gems10-h20-dem10-scarp-thin` as RECOMMENDED. The
-`ext/*` tags were published by the runner before the token expired and are safe.
+The GitHub token expired at the end of session 3 and the session's local
+commits were lost when the workspace was restored; the full working tree was
+re-committed as a single commit (`3d316b3`) on top of the pushed CI commits
+(`8d9b513`) and merged to `main` through the session-3 PR. The `code` hashes
+pinned in `reports/h20_blocked.json` (validate_candidate.py, HYPOTHESES.md at
+`d04f25d`) are all present in the working tree or in git history, so both
+approved artifacts re-verify (`build_site.py`: 2 approved, 0 refused).
 
 ## P2: hygiene
 
