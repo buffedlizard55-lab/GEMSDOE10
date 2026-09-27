@@ -1,0 +1,16 @@
+# Large official + derived rasters are NEVER committed (see data/README.md).
+data/training_features.tif
+data/features*.tif
+data/features*.npy
+data/*.memmap
+*.tif.part-*
+models/
+*.joblib
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+# Scratch / local runs
+scratch/
+*.log
+.DS_Store

@@ -1,0 +1,39 @@
+name: ci
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install -r requirements.txt
+      - name: Verify committed data pins
+        run: python scripts/fetch_data.py --no-features
+      - name: Tests
+        run: python -m pytest tests/ -q
+      - name: Gate self-check (valid + invalid fixtures)
+        run: |
+          python - << 'EOF'
+          import sys
+          sys.path.insert(0, 'src')
+          import numpy as np, rasterio
+          from gems10 import raster
+          from pathlib import Path
+          fp = np.isfinite(rasterio.open('data/sample_submission.tif').read(1))
+          good = np.where(fp, 0.01, np.nan)
+          raster.write_submission(good, '/tmp/ci_good.tif', 'data/sample_submission.tif', footprint=fp)
+          raster.assert_submittable('/tmp/ci_good.tif', 'data/sample_submission.tif')
+          print('valid fixture: SUBMITTABLE')
+          bad = np.where(fp, 0.01, np.nan); bad[2000, 1500] = np.nan
+          try:
+              raster.write_submission(bad, '/tmp/ci_bad.tif', 'data/sample_submission.tif', footprint=fp)
+              print('INVALID FIXTURE WAS ACCEPTED — FAIL'); raise SystemExit(1)
+          except ValueError as e:
+              print('invalid fixture correctly refused:', str(e)[:80])
+          EOF

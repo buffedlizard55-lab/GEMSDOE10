@@ -1,0 +1,263 @@
+# Provenance: adapted from buffedlizard55-lab/6GEMSDOE src/gems (same owner, re-verified here).
+"""Metric-aware placement of predictions.
+
+The metric (see metric.py) rewards a prediction pixel p(x) in two ways and
+punishes it once:
+
+  * it raises TP_w for every ground-truth pixel within 300 m, weighted p(x)*k(d);
+  * it lowers FN_w by the same amount (beta = 0.8 vs alpha = 0.2);
+  * it adds alpha * p(x) * (1 - k(d_nearest_gt)) to FP_w.
+
+So the marginal value of putting probability p at a pixel where the model
+believes a fault is present with posterior q, and where the nearest ground-truth
+pixel is expected about d away, is
+
+    gain(p) ~ q * k(d) * (1 + beta) - (1 - q) * alpha * (1 - k(d))     [per unit p]
+
+which is positive while the local posterior exceeds
+
+    q* = alpha * (1 - k) / (k * (1 + beta) + alpha * (1 - k)).
+
+Two consequences that decide how predictions should be placed:
+
+  1. Along a *true* line, densifying is never harmful. Putting p at every pixel
+     of the line gives each ground-truth pixel k = 1 at distance 0, hence maximum
+     TP_w and zero FN_w for that line. Thinning a true line to "every 4th-5th
+     pixel" (the task brief's hypothesis) can only lower TP_w and raise FN_w,
+     because the skipped ground-truth pixels are then served at best by a
+     neighbour ~2 px away, i.e. k ~ 1/3 (200 m). The 300 m kernel does not imply
+     4-5 px spacing; that rule is a false-positive control, not free geometry.
+  2. At d = 1 px (the realistic localisation error) q* = 0.0526, i.e. ~5%. The
+     break-even posterior is very low, so aggressively keeping only the top 1% of
+     pixels is usually the wrong move for this metric.
+
+`strategies()` exposes several placements precisely so that these claims are
+MEASURED (scripts/analysis.py scores every strategy on spatially blocked held-out
+folds against the real labels) instead of asserted.
+"""
+
+from __future__ import annotations
+
+import numpy as np
+from scipy import ndimage
+
+from . import metric
+
+
+def breakeven_posterior(k: float) -> float:
+    """q* for a given kernel weight k (see module docstring)."""
+    return metric.ALPHA * (1.0 - k) / (k * (1.0 + metric.BETA) + metric.ALPHA * (1.0 - k))
+
+
+def breakeven_table() -> dict[float, float]:
+    """q* at each achievable kernel weight on the 100 m grid."""
+    # kernel weights for integer offsets with d <= 3 px: 0, 1, sqrt2, 2, sqrt5, sqrt8, 3 px
+    ks = [1.0, 2.0 / 3.0, 1.0 - np.sqrt(2) / 3,
+          1.0 / 3.0, 1.0 - np.sqrt(5) / 3, 1.0 - np.sqrt(8) / 3, 0.0]
+    return {round(k, 4): round(breakeven_posterior(k), 5) for k in sorted(set(ks), reverse=True)}
+
+
+def _skeleton(mask: np.ndarray) -> np.ndarray:
+    """Zhang-Suen thinning, implemented locally to avoid a scikit-image dep."""
+    img = mask.astype(np.uint8).copy()
+    changed = True
+    while changed:
+        changed = False
+        for step in (0, 1):
+            p = np.pad(img, 1)
+            P2 = p[0:-2, 1:-1]; P3 = p[0:-2, 2:]; P4 = p[1:-1, 2:]; P5 = p[2:, 2:]
+            P6 = p[2:, 1:-1]; P7 = p[2:, 0:-2]; P8 = p[1:-1, 0:-2]; P9 = p[0:-2, 0:-2]
+            Bn = P2 + P3 + P4 + P5 + P6 + P7 + P8 + P9
+            seq = [P2, P3, P4, P5, P6, P7, P8, P9, P2]
+            An = sum(((seq[i] == 0) & (seq[i + 1] == 1)).astype(np.uint8)
+                     for i in range(8))
+            if step == 0:
+                cond = (P2 * P4 * P6 == 0) & (P4 * P6 * P8 == 0)
+            else:
+                cond = (P2 * P4 * P8 == 0) & (P2 * P6 * P8 == 0)
+            kill = (img == 1) & (Bn >= 2) & (Bn <= 6) & (An == 1) & cond
+            if kill.any():
+                img[kill] = 0
+                changed = True
+    return img.astype(bool)
+
+
+def thin_keep(mask: np.ndarray, spacing: int) -> np.ndarray:
+    """Skeleton, then keep one pixel per `spacing` pixels of arc length.
+
+    `spacing=1` returns the skeleton unchanged — the geometry the metric prefers
+    for a true line. Larger spacing reproduces the brief's "4-5 px" hypothesis so
+    it can be scored against the alternative.
+    """
+    skel = _skeleton(mask)
+    if spacing <= 1 or not skel.any():
+        return skel
+    ys, xs = np.nonzero(skel)
+    order = np.lexsort((xs, ys))
+    ys, xs = ys[order], xs[order]
+    keep = np.zeros_like(skel)
+    keep[ys[::spacing], xs[::spacing]] = True
+    return keep & skel
+
+
+def densify_along_lineaments(prob: np.ndarray, valid: np.ndarray,
+                             threshold: float, dilation: int = 1) -> np.ndarray:
+    """Raise p toward the local maximum next to supra-threshold pixels.
+
+    This adds no information: it compensates for a ridge detector that is one
+    pixel off centre, which is exactly the off-by-one error the competition page
+    cites as motivation for distance weighting ("rasterization is lossy and can
+    induce off-by-one errors near pixel boundaries").
+    """
+    strong = (prob >= threshold) & valid
+    if not strong.any() or dilation < 1:
+        return prob.copy()
+    dilated = ndimage.binary_dilation(strong, iterations=dilation) & valid
+    filled = ndimage.maximum_filter(np.where(valid, prob, -np.inf),
+                                    size=2 * dilation + 1)
+    out = np.where(dilated, np.maximum(prob, filled), prob)
+    out = np.where(valid, out, 0.0)
+    return np.clip(np.nan_to_num(out, nan=0.0), 0.0, 1.0)
+
+
+def topk_mask(p: np.ndarray, valid: np.ndarray, frac: float) -> np.ndarray:
+    """Exactly the top `frac` share of valid pixels by probability (>= tie-broken).
+
+    Selecting a BUDGET rather than a probability cut-off is the right control for
+    this metric: FP_w is an absolute sum over predicted pixels while TP_w and
+    FN_w are per-ground-truth-pixel sums, so the score depends on how many
+    pixels you commit to relative to how many fault pixels exist — a quantity a
+    probability threshold only controls indirectly.
+    """
+    p = np.clip(np.nan_to_num(p, nan=0.0), 0.0, 1.0)
+    n_valid = int(valid.sum())
+    if n_valid == 0:
+        return np.zeros_like(valid)
+    k = max(1, int(round(frac * n_valid)))
+    if k >= n_valid:
+        return valid.astype(bool)
+    inside = p[valid]
+    thr = float(np.partition(inside, n_valid - k)[n_valid - k])
+    return (p >= thr) & valid
+
+
+def gated_topk(p: np.ndarray, valid: np.ndarray, gate: np.ndarray,
+               frac: float) -> np.ndarray:
+    """Exact-budget top-k that spends the budget on gated pixels first.
+
+    `gate` marks the pixels the cross-signal agreement test accepts. The full
+    budget `frac * n_valid` is still spent: all gated pixels up to the budget
+    are selected by probability, and only if the gate is sparser than the
+    budget does the remainder come from the ungated pixels, again by
+    probability. A monotone gate therefore changes WHERE the budget goes,
+    never how much — so it is directly comparable to `topk_mask` under the
+    same blocked folds.
+    """
+    p = np.clip(np.nan_to_num(p, nan=0.0), 0.0, 1.0)
+    n_valid = int(valid.sum())
+    if n_valid == 0:
+        return np.zeros_like(valid, dtype=bool)
+    k = max(1, int(round(frac * n_valid)))
+    gated = valid & gate
+    ungated = valid & ~gate
+    sel = np.zeros_like(valid, dtype=bool)
+    n_g = int(gated.sum())
+    if n_g >= k:
+        vals = p[gated]
+        thr = float(np.partition(vals, n_g - k)[n_g - k])
+        sel[gated] = vals >= thr
+    else:
+        sel[gated] = True
+        rem = k - n_g
+        n_u = int(ungated.sum())
+        if rem > 0 and n_u > 0:
+            vals = p[ungated]
+            if n_u > rem:
+                thr = float(np.partition(vals, n_u - rem)[n_u - rem])
+                sel[ungated] = vals >= thr
+            else:
+                sel[ungated] = True
+    return sel & valid
+
+
+def get_strategy(name: str, prob: np.ndarray, valid: np.ndarray, threshold: float,
+                 spacing: int = 4, top_fraction: float = 0.01,
+                 gate: np.ndarray | None = None) -> np.ndarray:
+    """Compute a single named placement.
+
+    `strategies()` builds all of them, which is what the CV comparison wants but is
+    wasteful for the final build (the skeleton pass is the expensive one). This
+    dispatcher computes exactly the requested placement.
+    """
+    if name == "raw":
+        return strategies(prob, valid, threshold, spacing, top_fraction)["raw"]
+    if name == "threshold":
+        return strategies(prob, valid, threshold, spacing, top_fraction)["threshold"]
+    if name.startswith("hard@"):
+        # p -> 1 on the selected pixels. See the module docstring: the metric can
+        # be written as DTI = TP_w / (beta*n_gt + alpha*FP_w + (1-beta)*TP_w),
+        # which is strictly increasing under p -> lambda*p because the beta*n_gt
+        # term does not scale. Fractional probabilities therefore give away score.
+        thr = float(name.split("@", 1)[1])
+        p = np.clip(np.nan_to_num(prob, nan=0.0), 0.0, 1.0)
+        return np.where((p >= thr) & valid, 1.0, 0.0).astype(np.float32)
+    if name.startswith("topk_hard@"):
+        frac = float(name.split("@", 1)[1])
+        p = np.clip(np.nan_to_num(prob, nan=0.0), 0.0, 1.0)
+        return np.where(topk_mask(p, valid, frac), 1.0, 0.0).astype(np.float32)
+    if name.startswith("topk_soft@"):
+        frac = float(name.split("@", 1)[1])
+        p = np.clip(np.nan_to_num(prob, nan=0.0), 0.0, 1.0)
+        return np.where(topk_mask(p, valid, frac), p, 0.0).astype(np.float32)
+    if name.startswith("topk_gate@"):
+        # `topk_gate@<frac>`: same exact budget as topk_hard@<frac>, but the
+        # budget is spent on `gate` pixels first (cross-signal agreement).
+        # A gate must be supplied; without one this strategy is undefined.
+        if gate is None:
+            raise ValueError(
+                f"strategy {name!r} requires a gate surface (agreement channels "
+                f"from the feature stack)")
+        frac = float(name.split("@", 1)[1])
+        p = np.clip(np.nan_to_num(prob, nan=0.0), 0.0, 1.0)
+        return np.where(gated_topk(p, valid, gate, frac), 1.0, 0.0).astype(np.float32)
+    if name == "densified":
+        return densify_along_lineaments(
+            np.where(valid, np.clip(np.nan_to_num(prob, nan=0.0), 0, 1), 0.0),
+            valid, threshold, dilation=1)
+    if name in ("skeleton", "skeleton_spaced"):
+        p = np.clip(np.nan_to_num(prob, nan=0.0), 0.0, 1.0)
+        p = np.where(valid, p, 0.0)
+        strong = (p >= threshold) & valid
+        keep = (_skeleton(strong) if name == "skeleton"
+                else thin_keep(strong, spacing))
+        return np.where(keep & valid, p, 0.0).astype(np.float32)
+    if name.startswith("top"):
+        p = np.clip(np.nan_to_num(prob, nan=0.0), 0.0, 1.0)
+        p = np.where(valid, p, 0.0)
+        q = float(np.quantile(p[valid], max(0.0, 1.0 - top_fraction))) if valid.any() else 1.0
+        return np.where(p >= q, p, 0.0).astype(np.float32)
+    raise KeyError(f"unknown placement strategy: {name}")
+
+
+def strategies(prob: np.ndarray, valid: np.ndarray, threshold: float,
+               spacing: int = 4, top_fraction: float = 0.01) -> dict[str, np.ndarray]:
+    """Named placements. Every value is 0 outside `valid`, so all of them pass
+    the submission gate's NaN rule by construction."""
+    p = np.clip(np.nan_to_num(prob, nan=0.0), 0.0, 1.0)
+    p = np.where(valid, p, 0.0)
+
+    out: dict[str, np.ndarray] = {"raw": p}
+    out["threshold"] = np.where(p >= threshold, p, 0.0)
+
+    if valid.any():
+        q = float(np.quantile(p[valid], max(0.0, 1.0 - top_fraction)))
+    else:
+        q = 1.0
+    out[f"top{int(round(top_fraction * 100))}pct"] = np.where(p >= q, p, 0.0)
+
+    strong = (p >= threshold) & valid
+    out["skeleton"] = np.where(_skeleton(strong) & valid, p, 0.0).astype(np.float32)
+    out[f"skeleton_spaced{spacing}"] = np.where(
+        thin_keep(strong, spacing) & valid, p, 0.0).astype(np.float32)
+    out["densified"] = densify_along_lineaments(p, valid, threshold, dilation=1)
+    return out
