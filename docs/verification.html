@@ -127,6 +127,53 @@
 </tr>
 </tbody>
 </table>
+<h2>Session-2 review additions (2026-09-27)</h2>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Finding</th>
+<th>Evidence / action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Critical (found pre-holdout-contact)</td>
+<td>First-draft H13 statistic was miscalibrated: <code>adv = max(NCC_ℓ − NCC_0)</code> (window 8 px, lags 1–6) measured mean <strong>+0.35</strong> on a white-noise null — max-selection bias, not signal.</td>
+<td>Synthetic-null audit before any label contact. Recalibrated (window 16, lags 2/4/6, pooled zero-lag-dip contrast <code>adv = mean_d(mean_ℓ NCC_ℓ − NCC_0)</code>); post-fix null mean +0.009. Documented in HYPOTHESES.md calibration addendum; enforced by <code>tests/test_alignment.py</code>.</td>
+</tr>
+<tr>
+<td>High</td>
+<td>90° strip branch compared a column with itself row-shifted instead of adjacent columns (inconsistent with the 0° convention).</td>
+<td>Fixed in <code>alignment.strip_triples</code>; covered by <code>test_ninety_degree_offset_detected</code>.</td>
+</tr>
+<tr>
+<td>High</td>
+<td>Full-grid float64 offset build OOM-killed on the 4 GB host.</td>
+<td><code>alignment.offset_channels_tiled</code> (bit-identical to the full-grid path, verified by <code>test_tiled_matches_full_grid</code>); builder uses it.</td>
+</tr>
+<tr>
+<td>High</td>
+<td>H13 candidate failed its own preregistered rule: dev mean +0.00338 across three positive folds, confirmation <strong>−0.00145</strong>.</td>
+<td><code>reports/h13_blocked.json</code>. No slot spent; recorded as a measured negative.</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>H16 passes the rule (dev mean +0.003734, confirmation +0.000704, all arms topk06_binary) but on four correlated stripe folds with a re-used confirmation geography and a dev-selected policy.</td>
+<td><code>reports/h16_blocked.json</code>. The margin is a proxy, not a forecast; final binding + format gates still required. A hash-consistent clean re-run supersedes the first report (a reporting-only edit landed after that run started).</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>Release gates were H12-hardcoded (protocol string, arm name, scalar scores).</td>
+<td><code>src/gems10/release.py</code> now protocol-aware (v1 + <code>policy-sweep-v2</code>), candidate from the report, per-arm selected policy; v1 path regression-tested; v2 path checked against both session-2 reports (pass/fail/wrong-policy cases).</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>Baseline107 Frangi tile-local normalization, <code>tc</code>/depth-band metadata semantics (session 1) remain unresolved.</td>
+<td>No new claim made; H13/H16 add label-free and system-derived channels but inherit the 107 baseline unchanged. Fixing baseline normalization requires a new preregistered run.</td>
+</tr>
+</tbody>
+</table>
 <h2>Three review passes</h2>
 <ol>
 <li><strong>Implementation:</strong> restored input; re-read official rules/forum; fetched all ten published artifacts; preregistered four hypotheses; implemented H12 and paired buffered spatial runner; added content novelty and holdout release gates; updated site and dated source feed.</li>
@@ -182,11 +229,11 @@
 <li><strong>No DrivenData account session.</strong> We can read public leaderboard/forum through the research fetch tool, but cannot verify authenticated upload hashes, remaining slots or eligibility. Never request credentials in chat; use the authorized account holder's normal platform workflow.</li>
 <li><strong>Binary network access is uneven.</strong> Dropbox and GDR archive requests fail TLS from this runtime. Public GitHub API transport works. Feature data were restored from an immutable team mirror and matched inherited hashes, not independently authenticated official bytes. H15 remains blocked, not advertised as usable data.</li>
 <li><strong>CPU only, ~4 GB RAM.</strong> Bounded HGB training works here. A GPU is not required for the implemented experiment. Raw 1 m DEM processing and U-Net comparisons need additional storage/compute and their own frozen protocols; no assertion that GPU training is already complete.</li>
-<li><strong>No final H12 artifact without a positive experiment.</strong> The inherited <code>train_final.py</code> fits baseline107. A passing novel candidate needs a correct final feature/training manifest before publisher approval; a failed one must not ship. No submission slot was spent.</li>
+<li><strong>No artifact without a positive experiment AND a bound final fit.</strong> H12 was measured and rejected; H13 failed its preregistered rule (development improved, confirmation regressed); H16 is ELIGIBLE and is the only candidate that may proceed to the final-data fit, hash-bound training manifest and release gates. No submission slot was spent by this session.</li>
 <li><strong>Feature semantics/normalization issues.</strong> <code>tc</code> and depth-to-base metadata need official release comparison. Existing Frangi normalization depends on tile-local maxima; new paired experiments fix the tile height and hash the resulting stack. Fixing this changes the baseline and needs a new recorded run.</li>
 <li><strong>Masking surrogate is not backend source code.</strong> Known pixels are excluded officially, but order relative to the metric dilation is not disclosed. The optional FP-ignore metric is an explicit surrogate, not a byte-for-byte official scorer claim.</li>
 <li><strong>Current-best scope.</strong> Reproducible persisted campaign arms are baseline/discovery/selftrain; some claimed external runs have no persisted grids/results. No claim of beating every historic group method or the neural ensemble that scored .1563 without matched retraining.</li>
 <li><strong>Live checks are not continuous science.</strong> Daily scheduled workflow checks availability, quotations and the leaderboard. Changed text or failures require review; it does not autonomously certify newly downloaded data, account compliance or geologic interpretations. GitHub schedules may be delayed/disabled by platform policy.</li>
 <li><strong>Legal/user obligations remain.</strong> Rules eligibility, AI-disclosure accuracy and account/entity submission allowance require participant attestation. A repo count is not proof of a rules violation. Final upload/sign-off cannot honestly be declared fully autonomous here.</li>
 </ol>
-<p>Do not claim all original goals are finished: no demonstrated &gt;.3049 model, no new geothermal-vent catalogue, no high-resolution external pilot, no private-score verification. See NEXT_STEPS.md for the next measurable work.</p></article></main><footer class="wrap"><b>Maximize P(Win). Own the Outcome.</b><p>Local evidence is not a private competition score. AI-assisted research; official links and limitations are explicit.</p><p>Site built 2026-09-27T05:37:57+00:00 · <a href="https://github.com/buffedlizard55-lab/GEMSDOE10">Repository</a> · <a href="data/site.json">Machine-readable manifest</a></p></footer></body></html>
+<p>Do not claim all original goals are finished: no demonstrated &gt;.3049 model, no new geothermal-vent catalogue, no high-resolution external pilot, no private-score verification. H16's +0.0037 dev / +0.0007 confirmation margin is a catalogue-generalization proxy on four correlated stripe folds, not a leaderboard forecast; the confirmation fold is re-used geography, and the selected policy was chosen on the development folds. See HYPOTHESES.md (session-2 results) for the next measurable work.</p></article></main><footer class="wrap"><b>Maximize P(Win). Own the Outcome.</b><p>Local evidence is not a private competition score. AI-assisted research; official links and limitations are explicit.</p><p>Site built 2026-09-27T06:55:51+00:00 · <a href="https://github.com/buffedlizard55-lab/GEMSDOE10">Repository</a> · <a href="data/site.json">Machine-readable manifest</a></p></footer></body></html>

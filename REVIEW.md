@@ -37,6 +37,18 @@ Reproduce with `python scripts/audit_submissions.py`. Each source is resolved to
 | Medium | Multiple repos were treated as proof of competition-rule violations on a sibling site. | Repos are not registrations. [Rules §3.4–3.6](https://docs.nlr.gov/docs/fy26osti/96647.pdf) limit submissions per participating entity and final selections. We cannot verify account/entity usage. Keep one shared slot ledger; do not accuse the group of violations from repo count alone. |
 | Medium | PDF Appendix A.1 contains general 5 p.m. ET / document-format language, while task-specific §3.2/3.5 requires GeoTIFF and §1.2 directs dates to the website. | [Official PDF](https://docs.nlr.gov/docs/fy26osti/96647.pdf). Flag wording inconsistency; do not replace the competition TIF with a report PDF or wait until the final hour. Current platform timeline remains the operational reference. |
 
+## Session-2 review additions (2026-09-27)
+
+| Severity | Finding | Evidence / action |
+|---|---|---|
+| Critical (found pre-holdout-contact) | First-draft H13 statistic was miscalibrated: `adv = max(NCC_ℓ − NCC_0)` (window 8 px, lags 1–6) measured mean **+0.35** on a white-noise null — max-selection bias, not signal. | Synthetic-null audit before any label contact. Recalibrated (window 16, lags 2/4/6, pooled zero-lag-dip contrast `adv = mean_d(mean_ℓ NCC_ℓ − NCC_0)`); post-fix null mean +0.009. Documented in HYPOTHESES.md calibration addendum; enforced by `tests/test_alignment.py`. |
+| High | 90° strip branch compared a column with itself row-shifted instead of adjacent columns (inconsistent with the 0° convention). | Fixed in `alignment.strip_triples`; covered by `test_ninety_degree_offset_detected`. |
+| High | Full-grid float64 offset build OOM-killed on the 4 GB host. | `alignment.offset_channels_tiled` (bit-identical to the full-grid path, verified by `test_tiled_matches_full_grid`); builder uses it. |
+| High | H13 candidate failed its own preregistered rule: dev mean +0.00338 across three positive folds, confirmation **−0.00145**. | `reports/h13_blocked.json`. No slot spent; recorded as a measured negative. |
+| Medium | H16 passes the rule (dev mean +0.003734, confirmation +0.000704, all arms topk06_binary) but on four correlated stripe folds with a re-used confirmation geography and a dev-selected policy. | `reports/h16_blocked.json`. The margin is a proxy, not a forecast; final binding + format gates still required. A hash-consistent clean re-run supersedes the first report (a reporting-only edit landed after that run started). |
+| Medium | Release gates were H12-hardcoded (protocol string, arm name, scalar scores). | `src/gems10/release.py` now protocol-aware (v1 + `policy-sweep-v2`), candidate from the report, per-arm selected policy; v1 path regression-tested; v2 path checked against both session-2 reports (pass/fail/wrong-policy cases). |
+| Medium | Baseline107 Frangi tile-local normalization, `tc`/depth-band metadata semantics (session 1) remain unresolved. | No new claim made; H13/H16 add label-free and system-derived channels but inherit the 107 baseline unchanged. Fixing baseline normalization requires a new preregistered run. |
+
 ## Three review passes
 
 1. **Implementation:** restored input; re-read official rules/forum; fetched all ten published artifacts; preregistered four hypotheses; implemented H12 and paired buffered spatial runner; added content novelty and holdout release gates; updated site and dated source feed.

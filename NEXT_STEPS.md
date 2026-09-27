@@ -1,40 +1,63 @@
-# Next session — measured improvements, not more of the same
+# Next steps — session 2 (2026-09-27)
 
-Read README.md (including preserved requirements), REVIEW.md and HYPOTHESES.md first.
+Read README.md (including the preserved project prompt), HYPOTHESES.md (session-2
+register + preregistration + results), REVIEW.md, KNOWLEDGE.md first.
 
-## Completed this session
+## Current state
 
-- Restored feature raster automatically; all three inherited byte pins match. CPU training works.
-- Audited ten sibling artifacts at immutable commits; exact and catalogue-only duplicates identified.
-- Read official leaderboard, submission/metric rules and staff masking/new-geometry/cadence/hidden-source posts first-hand.
-- Preregistered four physical hypotheses. Tested H12 against baseline107 and its discovery variant on four buffered spatial stripes; confirmation failed in the initial run. A completed same-configuration reproducibility run matched every fold score and decision while checking persisted OOF serialization; the final report is `reports/h12_blocked.json`.
-- Added semantic duplicate, raw probability, spatial evidence and training-provenance release gates. Rebuilt site with no misleading download recommendation.
-- Added official-feed refresh, stale/failure labels, and daily Pages schedule. No competition slot used.
+- **H16 ELIGIBLE** under the preregistered rule (`reports/h16_blocked.json`):
+  dev mean Δ +0.003734, confirmation Δ +0.000704 vs baseline107 AND
+  baseline107_discovery, all arms selected topk06_binary. `promotion_allowed`
+  stays false until the final-training binding exists.
+- **H13 NOT ELIGIBLE** (`reports/h13_blocked.json`): three positive development
+  folds (+0.003638/+0.003252/+0.003250) but confirmation −0.001450. Measured
+  negative; no slot spent.
+- **H12 rejected** earlier (`reports/h12_blocked.json`); **H15 blocked** by
+  in-sandbox TLS on the GDR 1391 binaries (official index verified, CC BY 4.0).
+- A hash-consistent clean H16 re-run supersedes the first report for the
+  release binding (a reporting-only edit to `validate_candidate.py` landed
+  after that run started).
 
-## P0: carry forward the negative result
+## P0: finish the H16 release chain (in order)
 
-1. **Do not promote or retune H12 on the same confirmation fold.** Initial development delta +0.001218; confirmation delta −0.002171. Use the completed report for full precision. A positive development mean did not transfer.
-2. **Retain the baseline and random controls.** Fold 0's HGB and H12 underperform the budget-matched random field. Diagnose feature/label distribution shifts and geographic support before interpreting tiny average gains as discovery.
-3. **Keep saved-array readback checks.** An initial OOF integrity check found unexpected finite zeros in the first raster row of earlier saved NPYs. The fail-closed rerun with buffered serialization, readback checks and per-file SHA reproduced every metric exactly; all final saved files passed subsequent checks. Never silently repair predictions to make a file publishable. The initial in-memory rejection decision is not permission to trust an unverified saved grid.
-4. **Coordinate one entity-level upload ledger.** Actual history and slots are not available here. Multiple repos are not proof of misconduct. No automatic uploads or alternate registrations.
+1. Confirm the clean H16 re-run reproduces the decision exactly (fixed seeds,
+   same inputs).
+2. `python scripts/train_final.py --extra data/features_continuation.npy
+   --hypothesis H16 --bind-to reports/h16_blocked.json --work-dir final_out`
+   — refuses if the decision is not eligible; writes the training manifest and
+   sets `final_prediction` + `promotion_allowed` in the report.
+3. `python scripts/build_submission.py --prob final_out/prob_final.npy
+   --policy topk06_binary --name gems10-h16-continuation
+   --validation reports/h16_blocked.json --note "..."` — one-click download
+   appears on the hub only after every gate passes.
+4. `python scripts/build_site.py`; re-run the full test suite; commit; open PR
+   to main and merge (session requirement).
 
-## P1: next distinct experiment
+## P1: what this session must not claim
 
-5. **H13: lateral displacement of magnetic texture.** Implement opposing-strip correlation with nonzero lag advantage; use independent strip agreement and synthetic displaced-contact tests. Require a no-shift control and lithologic-contact confound control. No new external source is needed. Preserve trial accounting; fold 3 has now been inspected and is not a pristine future lockbox. Use a preregistered nested spatial evaluation or newly held-out independent labels before claiming confirmation.
-6. **Fix baseline Frangi tile normalization in a separately recorded ablation.** Current c uses each tile's maximum, so changing tile_rows changes features. Choose a deterministic calibration from training data or a fixed physical normalization, test tile invariance, rerun all paired controls. Do not overwrite historic reports.
-7. **Resolve band semantics from official releases.** Compare `tc` to GeoDAWN total-count data and clarify conductive-base versus basement-depth metadata before assigning physical meaning. Preserve raw tags and checksum evidence.
-8. **Improve new-fault validation rather than multiplying transforms.** Seek independent expert-reviewed traces with licenses and provenance, audited against all supplied catalogue variants. A geographic catalogue holdout is necessary but insufficient to establish new-fault performance.
+- No leaderboard forecast from +0.0037/+0.0007 (four correlated stripe folds,
+  re-used confirmation geography, dev-selected policy).
+- No geothermal-resource claim; the target is fault pixels.
+- No slot spent, no upload made, no credentials touched.
 
-## P2: external work / publication
+## P2: remaining scientific work (ranked)
 
-9. **H15 stays BLOCKED.** GDR 1391 page and archive URLs are known, but binary downloads failed TLS here. Retry on GitHub Actions/unrestricted runner, record hash/license, inspect content and measure footprint coverage before adding it to a model. Page availability is not evidence of downloaded usable data.
-10. **H14 potential-field continuation** is a separate buried-structure experiment, not another Gaussian-blur sweep. Test boundary padding/source ambiguities and 100 m localization before evaluation.
-11. If a candidate eventually wins: implement its correct full-data training recipe, store final model/probability hashes and input/code/config binding, pass format + semantic novelty + publication rechecks, then expose one-click TIFF/ZIP plus a unique note. The old `train_final.py` does not train H12.
-12. GPU segmentation/1 m DEM pilot remains optional future work needing compute/storage. Eligibility, disclosure and final platform submission must be done through the authorized participant account; no credentials in chat or Git.
+1. **H18 cross-field edge coincidence** (tmi + iso_gravity edge orientation
+   coherence) and **H17 geodetic strain-rate coherence** — next untested
+   candidates if more signal is needed; preregister before implementation.
+2. **H15 unblock:** fetch the GDR 1391 archives via an unrestricted-network
+   path (GitHub Actions runner or the user), hash + attribute them, then
+   implement the paleo-discharge residual.
+3. **INGENIOUS Quaternary Faults v2** (2023-06-27, same GDR): audit whether it
+   contains traces absent from the provided label raster before any use.
+4. **Baseline normalization ablation:** Frangi tile-local scale → global or
+   train-calibrated normalization (changes the 107 baseline; new preregistered
+   run required).
+5. **1 m DEM / U-Net comparison** per the official reference solution
+   (needs storage + compute and its own frozen protocol).
 
-## Reproduce / inspect
+## Session-1 carry-over (still open)
 
-`python scripts/verify_project.py --with-features` runs tests, pins, site generation and local link checks.
-`python scripts/audit_submissions.py` refreshes immutable artifact comparisons.
-`python scripts/refresh_sources.py` refreshes official text availability and public leaderboard with honest stale states.
-`python scripts/validate_hypothesis.py` is an offline experiment, not an upload job.
+- Fold-0 random-control anomaly diagnosis (feature/label geography shift).
+- `tc`/depth band metadata semantics vs official releases.
+- Entity-level upload ledger coordination (user-side).

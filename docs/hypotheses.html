@@ -62,6 +62,93 @@
 <li>H15: <a href="https://gdr.openei.org/submissions/1391">official GDR resource list</a> describes shallow temperature, paleo deposits, and well/spring observations. Exact archives: <a href="https://gdr.openei.org/files/1391/paleo_geothermal_regional.zip">paleo</a>, <a href="https://gdr.openei.org/files/1391/2m_temperature_probe_INGENIOUS_regional_data.zip">2 m probes</a>, <a href="https://gdr.openei.org/files/1391/wellspringdata.gdb.zip">well/spring</a>. Page access is not equivalent to successful binary acquisition.</li>
 <li><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/">DrivenData problem</a> defines the prediction target and allowed external data. <a href="https://community.drivendata.org/t/where-do-you-draw-the-line/11536/2">Staff 11536/2</a> defines new as any fault pixel not already captured by USGS/INGENIOUS, including new geometry of existing systems. Thus distance &gt;1 km from known traces is a sensitivity check, <strong>not</strong> a verified property of hidden labels or an exclusive selection target.</li>
 </ul>
+<h2>Session-2 register (2026-09-27) — ranked untried candidates</h2>
+<p><strong>New verified staff fact (re-verified 2026-09-27, <a href="https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/4">11516/4</a>)</strong>: the known-fault mask is <strong>pixel-exact</strong> (identical to the provided training labels); a predicted pixel near a known trace but far from new-fault ground truth is <strong>fully penalized</strong>; and new-fault ground truth <strong>can lie within 300 m of a known trace</strong> as "corrections or modifications to existing fault traces". Predicting on the known line itself is free (masked). This directly ranks strategies that target continuations, splays and corrections of existing systems above generic region-wide line detectors.</p>
+<p>Candidates not yet implemented or tested in this checkout (H12 tested and rejected; H15 blocked by data access). Expected-impact ranks are qualitative scientific judgments conditioned on the verified facts above, not predicted DTI gains.</p>
+<table>
+<thead>
+<tr>
+<th>Rank (impact / cost)</th>
+<th>ID · layers</th>
+<th>Physical signature / transform</th>
+<th>Why it could catch a missing fault, not just redraw the catalogue</th>
+<th>Difference from everything already implemented here</th>
+<th>Data readiness</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1 / 2 (medium)</strong> <strong>H16: endpoint continuation by marker alignment.</strong> <code>tmi</code>, <code>det_elev</code>, <code>rtp</code> bands; catalogue system strikes/endpoints (train systems only in CV)</td>
+<td>Along each system endpoint ray (outward, 5/15/30/60 px = 0.5–6 km), score orientation-matched structure-tensor lineament energy (cos 2(φ−θ_ray) gate) plus corridor continuity: 1-D zero-lag NCC of the band sampled along the ray, front half vs back half, minus the same on a 6 px-offset control ray</td>
+<td>Staff state new labels include corrections/modifications of existing traces within 300 m of known lines; mapped traces end where exposure ends, so unmapped continuations concentrate just beyond endpoints. Evidence that the same marker family keeps running past the endpoint, oriented to the local strike, is a continuation signature.</td>
+<td><code>discovery.strike_rays</code> is a fixed 10 px, fixed-weight, <em>prior</em> fused after the model; it is not a scored feature, does not use orientation-matched lineament energy, and does not measure marker continuity. This is endpoint-conditioned, multi-length, evidence-scored continuation as model features.</td>
+<td>Provided raster + labels (systems). Per-fold rebuild from train systems only. No new external data.</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>2 / 2 (medium)</strong> <strong>H13: lateral displacement of geophysical texture.</strong> <code>rtp</code>, <code>tmi</code>, <code>iso_grav_anom</code> bands</td>
+<td>Zero-difference normalized cross-correlation (NCC) of marker strips on opposite sides of a candidate trace (strikes 0/45/90/135°, separation 1–3 px), zero-lag vs best nonzero along-strike lag (1–6 px): advantage, zero-lag value, dominant lag</td>
+<td>A strike-slip discontinuity offsets marker texture without a strong ridge on the slip plane; offset of magnetic/gravity lineaments can expose unmapped splays and en-echelon strands adjacent to existing systems (the region where staff say new geometry lives). Not every offset contact is tectonic — controls required.</td>
+<td>Existing code detects intensity/curvature/ridge shape and planar-detrended steps (H12); nothing measures restored matching of offset marker strips. Not a weighted union, not a catalogue ray. Falsified by shuffled-strip and no-shift controls.</td>
+<td>Provided stack only; magnetic bands correlated, gravity quasi-independent. No new external data.</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>3 / 3 (high)</strong> <strong>H18: cross-field edge coincidence.</strong> <code>tmi_hg</code>, <code>tmi_vg</code>, <code>iso_grav_anom_hg</code>, <code>iso_grav_anom_vg</code>, <code>iso_grav_anom_slope</code></td>
+<td>Linear edge energy in ≥2 independent potential-field bands at matched strike (orientation coherence between bands), with along-strike persistence</td>
+<td>A buried or concealed fault boundary should turn up as a coincident, same-strike edge in gravity AND magnetics; a single-band edge is more likely a lithologic contact. Coincidence across fields is cheap discriminative evidence the HGB has to relearn implicitly today.</td>
+<td>Existing edge channels are per-band; no cross-field coincidence/orientation-matching transform exists in this checkout.</td>
+<td>Provided stack only.</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>4 / 4 (high)</strong> <strong>H17: geodetic strain-rate linear coherence.</strong> <code>geod_2ndinv</code>, <code>geod_shearrate</code>, <code>geod_dilaterate</code></td>
+<td>Persistent linear coherence of the strain-rate trio (multi-scale orientation consensus), independent of surface topography</td>
+<td>Slow aseismic slip on unmapped faults produces strain-rate linearity without fresh surface scarps; the trio is quasi-independent of the magnetic/gravity families used by H13/H16.</td>
+<td>No geodetic-band coherence transform exists here; the trio currently enters only as raw bands and one cross product.</td>
+<td>Provided stack only.</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>5 / 4 (high; BLOCKED)</strong> <strong>H14: concealed basin-margin source boundary</strong> (carried from session 1). <code>iso_grav_anom</code>, <code>rtp</code></td>
+<td>Fourier upward continuation exp(−h·k); edge-position persistence with continuation height</td>
+<td>Basin fill hides surface traces while retaining basement density boundaries.</td>
+<td>Existing multiscale Gaussian derivatives do not model potential-field continuation.</td>
+<td>Provided stack only; padding/source-depth tests required. Lower rank: 100 m localization and novelty uncertain.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Not viable without new external data (named sources checked 2026-09-27):</strong> H15 (paleo-discharge) requires the <a href="https://gdr.openei.org/submissions/1391">GDR 1391 archives</a> — landing page, DOI <a href="https://doi.org/10.15121/1881483">10.15121/1881483</a>, CC BY 4.0 and exact archive URLs re-verified this session, but binary downloads still fail TLS from this runtime (measured). A GitHub Actions runner (unrestricted network) is the obtainable path; until bytes are in hand with hash + license attribution, H15 stays BLOCKED and ineligible. INGENIOUS <code>Quaternary Faults v2</code> (2023-06-27, 5.85 MB, same GDR) is an additional candidate: if it contains traces absent from the provided label raster, they are <em>known-but-unmasked</em> candidates — download, hash and audited comparison against the label raster required first.</p>
+<h2>Session-2 results (2026-09-27)</h2>
+<ul>
+<li><strong>H16: ELIGIBLE</strong> under the preregistered decision rule
+  (<code>reports/h16_blocked.json</code>, protocol <code>...-policy-sweep-v2</code>). Selected policy
+  topk06_binary for all three arms. vs baseline107: dev mean Δ <strong>+0.003734</strong>
+  (folds +0.001018 / +0.006011 / +0.004173), confirmation Δ <strong>+0.000704</strong>.
+  vs baseline107_discovery: identical deltas (the discovery fusion adds nothing
+  at a 6% budget on this geography). Random topk02 control: 0.1206–0.1492,
+  below every baseline fold. <code>promotion_allowed</code> remains <strong>false</strong>: a
+  full-data final fit with a hash-bound training manifest is still required
+  (<code>train_final.py --bind-to</code>). Note: the recorded run predates a reporting-only
+  edit to <code>validate_candidate.py</code>; a clean re-run on frozen code will supersede
+  the report for the release binding.</li>
+<li><strong>H13: running</strong> (same protocol; label-free 39-channel offset grid
+  <code>data/features_offset.npy</code>).</li>
+<li>Status register update: H16 eligible (final-binding stage); H12 rejected;
+  H15 blocked; H18/H17/H14 remain untested backups.</li>
+</ul>
+<h2>Preregistered H16 + H13 validation (session 2, frozen before implementation, 2026-09-27)</h2>
+<ol>
+<li><strong>Engine (H13).</strong> For band B (rtp, tmi, iso_grav_anom; sentinels → NaN, 0-filled, halo-invalidated), strike θ ∈ {0°, 90°} exact axis strips; θ ∈ {45°, 135°} after one <code>ndimage.rotate(θ, order=1, reshape=False)</code> of the band (documented approximation). Strips: rows/cols i and i−d, d ∈ {1,2,3} px (100–300 m). Window 16 px (3.3 km) along strike. Per position, zero-difference NCC at lag 0 and lags ℓ ∈ {2,4,6} px (200/400/600 m; no-wrap). Channels per (band, θ): <code>ncc0</code> (zero-lag NCC at the best-contrast separation), <code>ncc_best</code> (max nonzero-lag NCC, a sensitivity indicator with documented +0.17 null bias), <code>adv</code> = mean_d ( mean_ℓ NCC_ℓ(d) − NCC_0(d) ) — the unbiased zero-lag-dip contrast; plus <code>advmax</code> per band (max over θ). 39 channels. Invalid halo (window+seps+lags+3 = 28 px) ⇒ NaN (HGB native).</li>
+<li><strong>Calibration addendum (2026-09-27, synthetic null fields, BEFORE any holdout data contact).</strong> The first draft (<code>adv = max_{d,ℓ≥1}(NCC_ℓ − NCC_0)</code>, window 8 px, lags 1–6 px) measured mean adv <strong>+0.35</strong> (max 1.0) on a white-noise null — pure max-selection bias, not signal. Recalibrated to window 16 px, lags {2,4,6}, and the pooled contrast above; post-fix null: mean adv <strong>+0.009</strong>, median +0.009 (target ≈ 0). Verified by <code>tests/test_alignment.py</code>: displaced lineation (shift 3 px on square-wave texture) gives ncc_best &gt; 0.4, ncc0 &lt; 0.6, adv &gt; 0.15 at the straddling row; no-shift control and white-noise null give adv &lt; 0.15 and |mean adv| &lt; 0.05; NaN halos invalidate; ray geometry and 1-D NCC controls pass.</li>
+<li><strong>Engine (H16).</strong> Systems from labels via <code>discovery.system_strikes</code> (train systems only per fold). Keep systems with n_px ≥ 8 and width ≤ 20 px. Structure tensor (σ=1.5, integration 4) on <code>tmi</code> and <code>det_elev</code>. For each endpoint ray (outward from centroid through the endpoint), radii t ∈ {5,15,30,60} px: <code>cont_tmi_r{t}</code> / <code>cont_elev_r{t}</code> = energy·coherence·max(0, cos 2(φ−θ_ray)) at the ray point, 3 px disk, max over systems; <code>cont_ncc_r15</code>, <code>cont_ncc_r30</code> (rtp) = 1-D NCC of the ray-sampled band, halves of 16 samples about the point, minus the same computed on a 6 px perpendicular-offset control ray, clipped to [−1,1]. 10 channels, all NaN where no train ray covers the pixel.</li>
+<li><strong>Protocol.</strong> Identical to the H12 blocked protocol: <code>cv.make_folds(n_blocks=4, n_folds=4, buffer_px=40)</code>; folds 0–2 development, fold 3 confirmation (re-used confirmation geography, explicitly not pristine — recorded as a limitation); HGB 200 iterations, lr .05, depth 7, L2 1, seed 7; ≤200,000 sampled negatives per fold; sampling and all feature construction blind to held-out labels (H16 rebuilds from train systems only).</li>
+<li><strong>Policy axis (new, free from saved OOF probabilities).</strong> Pre-registered set: topk01_binary, topk02_binary, topk03_binary, topk04_binary, topk06_binary, topk02_soft, topk02_envelope, topk02_halo2. Per arm, selected policy = argmax mean development DTI (ties → topk02_binary). Primary reported policy remains topk02_binary. No policy tuning on the confirmation fold.</li>
+<li><strong>Decision rule.</strong> A candidate (H16 or H13) is promotable only if, under each arm's own selected policy, it beats <strong>both</strong> baseline107 and baseline107_discovery on the mean of development folds <strong>and</strong> on the confirmation fold. Otherwise: no slot, no release, negative result recorded. A passing candidate then needs full-data final training with a manifest binding probability hash, inputs, config and code hashes before any publication (generalized release gate).</li>
+<li><strong>Controls.</strong> H13: white-noise null (adv ≈ 0) and no-shift control reported; H16: systems-width and n_px filters fixed; no radius/strike sweep on the lockbox. Unit tests (<code>tests/test_alignment.py</code>) include a synthetic displaced-lineation construct that must show the zero-lag dip, and null/control constructs that must not.</li>
+<li><strong>No promise.</strong> These are catalogue-generalization proxies. Nothing here predicts the private new-fault score; passing locally is necessary, not sufficient, and publication still requires the full evidence chain.</li>
+</ol>
 <h2>Preregistered H12 validation (before code/results)</h2>
 <ol>
 <li>Existing <code>reports/cv_*.json</code> use interleaved fault components, <strong>not</strong> spatial blocks. The 0.0929 ALL / 0.0508 FAR10 numbers are not directly comparable with a blocked score. Rerun baseline107 and baseline107+H12 on identical existing <code>cv.make_folds(n_blocks=4,n_folds=4)</code> geography.</li>
@@ -71,4 +158,4 @@
 <li>Score with the published distance-weighted Tversky formula, predictions and ground truth restricted to the score mask. This is catalogue-generalization, not private-new-fault validation. Known training pixels lie outside score blocks. Component-holdout comparisons remain supplemental and cannot be silently mixed with these values.</li>
 <li>No training-final/publishing if H12 fails. If it passes this matched baseline, first establish whether the historical campaign winner (including self-training) can be reproduced on the same geography before claiming it beat the current best. Format-valid diagnostic TIFs must be labelled <strong>EXPERIMENT — DO NOT SUBMIT</strong>. Public download promotion requires evidence and content-duplicate checks.</li>
 <li>Log actual input/code hashes, fold masks, feature definition, config, scores, runtime, decision and limitations. Never infer future leaderboard score from proxy DTI. No competition upload is authorized by a local test alone.</li>
-</ol></article></main><footer class="wrap"><b>Maximize P(Win). Own the Outcome.</b><p>Local evidence is not a private competition score. AI-assisted research; official links and limitations are explicit.</p><p>Site built 2026-09-27T05:37:57+00:00 · <a href="https://github.com/buffedlizard55-lab/GEMSDOE10">Repository</a> · <a href="data/site.json">Machine-readable manifest</a></p></footer></body></html>
+</ol></article></main><footer class="wrap"><b>Maximize P(Win). Own the Outcome.</b><p>Local evidence is not a private competition score. AI-assisted research; official links and limitations are explicit.</p><p>Site built 2026-09-27T06:55:51+00:00 · <a href="https://github.com/buffedlizard55-lab/GEMSDOE10">Repository</a> · <a href="data/site.json">Machine-readable manifest</a></p></footer></body></html>

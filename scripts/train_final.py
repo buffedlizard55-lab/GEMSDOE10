@@ -42,6 +42,14 @@ def main() -> int:
     ap.add_argument("--externals", default=None,
                     help="comma list of u8 stacks to append as features "
                          "(lidar,rad) from <data-dir>/external/")
+    ap.add_argument("--extra", default=None,
+                    help="static (H,W,C) feature npy to append, e.g. "
+                         "data/features_offset.npy (H13)")
+    ap.add_argument("--hypothesis", default="baseline107",
+                    help="candidate label for the training manifest")
+    ap.add_argument("--bind-to", default=None,
+                    help="reports/<h>_blocked.json: bind the final prediction "
+                         "and training manifest into this report (release gate)")
     ap.add_argument("--with-discovery", action="store_true")
     ap.add_argument("--discovery-w", default="0.5,0.4")
     ap.add_argument("--with-selftrain", action="store_true")
@@ -69,6 +77,16 @@ def main() -> int:
         for name, g in zip(names, ext_grids):
             channels += [f"{name}_u8_{i}" for i in range(g.shape[2])]
             print(f"external {name}: {g.shape} (disk memmap)")
+    if args.extra:
+        extra_path = Path(args.extra)
+        ext_grids.append(np.lib.format.open_memmap(str(extra_path), mode="r"))
+        emeta = json.loads(extra_path.with_suffix(".meta.json").read_text()) \
+            if extra_path.with_suffix(".meta.json").exists() else None
+        if emeta and emeta.get("channels"):
+            channels += list(emeta["channels"])
+        else:
+            channels += [f"extra_{i}" for i in range(ext_grids[-1].shape[2])]
+        print(f"extra features {extra_path.name}: {ext_grids[-1].shape} (disk memmap)")
     # Proximity OFF by default (harness: it memorises, DTI 0.012). Only for
     # ablation via --with-proximity.
     prox = train_proximity_channel(pos) if args.with_proximity else None
@@ -134,10 +152,51 @@ def main() -> int:
     work_dir.mkdir(parents=True, exist_ok=True)
     np.save(work_dir / "prob_final.npy", prob.astype(np.float32))
     (work_dir / "prob_final.meta.json").write_text(json.dumps(
-        {"config": vars(args), "channels": channels,
+        {"config": vars(args), "hypothesis": args.hypothesis,
+         "channels": channels,
          "prob_min": float(np.nanmin(prob)), "prob_max": float(np.nanmax(prob)),
          "prob_mean": float(np.nanmean(prob)),
          "seconds": round(time.time() - t0, 1)}, indent=1, default=str) + "\n")
+    if args.bind_to:
+        import hashlib
+        import pickle
+        from gems10.raster import sha256_file
+        p = Path(args.bind_to)
+        report_path = p if p.is_absolute() else REPO_ROOT / p
+        if not report_path.exists() and (REPO_ROOT / "reports" / p.name).exists():
+            report_path = REPO_ROOT / "reports" / p.name
+        report = json.loads(report_path.read_text())
+        if not report.get("decision", {}).get("eligible"):
+            raise SystemExit("REFUSED: validation decision is not eligible; "
+                             "no final-training binding is written")
+        model_path = work_dir / "model_final.joblib"
+        with open(model_path, "wb") as fh:
+            pickle.dump(clf, fh)
+        prob_sha = sha256_file(work_dir / "prob_final.npy")
+        manifest_name = f"final_manifest_{args.hypothesis.lower()}.json"
+        manifest = {
+            "hypothesis": args.hypothesis,
+            "probability_sha256": prob_sha,
+            "validation_protocol": report.get("protocol"),
+            "validated_inputs": report.get("inputs"),
+            "config": report.get("config"),
+            "model_sha256": sha256_file(model_path),
+            "final_prob_file": str((work_dir / "prob_final.npy").name),
+            "code": report.get("code"),
+        }
+        manifest_path = REPO_ROOT / "reports" / manifest_name
+        manifest_path.write_text(json.dumps(manifest, indent=2,
+                                            allow_nan=False) + "\n")
+        report["final_prediction"] = {
+            "sha256": prob_sha,
+            "training_manifest_file": manifest_name,
+            "training_manifest_sha256": sha256_file(manifest_path),
+        }
+        report["promotion_allowed"] = True
+        report_path.write_text(json.dumps(report, indent=2,
+                                          allow_nan=False) + "\n")
+        print(f"bound final prediction into {report_path.name} "
+              f"(manifest {manifest_name})")
     print(f"done in {time.time()-t0:.0f}s -> {work_dir}/prob_final.npy")
     return 0
 

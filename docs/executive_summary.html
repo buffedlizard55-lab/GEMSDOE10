@@ -3,14 +3,19 @@
 <meta name="description" content="Evidence-first geological fault discovery: audited predictions, spatial validation and safe submission downloads.">
 <title>How to submit · GEMSDOE10</title><link rel="stylesheet" href="assets/style.css"></head>
 <body><a class="skip" href="#main">Skip to content</a><header><div class="wrap masthead"><a class="brand" href="index.html"><span class="mark">G/10</span><span>GEMSDOE10<small>GEOTHERMAL FAULT RESEARCH</small></span></a><span class="edition">Evidence before emission<br>DOE GEMS Prize · 2026</span></div><nav class="wrap"><a href="index.html" >Submission hub</a><a href="executive_summary.html" aria-current=page>How to submit</a><a href="results.html" >Results & audit</a><a href="hypotheses.html" >Research</a><a href="sources.html" >Official sources</a><a href="verification.html" >Review</a></nav></header>
-<main id="main" class="wrap"><section class="release"><span class="eyebrow">SUBMISSION DESK / RELEASE GATE</span><h2>No approved submission</h2><p>Protect the weekly slot. No new candidate has all the evidence required for publication. A renamed TIFF or a catalogue-only change is not a new discovery.</p><a class="button" href="results.html">Review the holdout decision <span>↗</span></a><a class="text-link" href="executive_summary.html">How submission works →</a><p class="fine">Nothing is uploaded automatically. Download buttons appear here only after improvement, provenance, novelty and GeoTIFF checks pass.</p></section><article><h1>Executive submission guide</h1>
+<main id="main" class="wrap"><section class="release"><span class="eyebrow">APPROVED / FORMAT RECHECKED</span><h2>gems10-h16-continuation</h2><a class="button" href="downloads/gems10-h16-continuation-20260927T065521077735Z-3431b83c7c.tif" download>Download .tif ↓</a><a class="text-link" href="downloads/gems10-h16-continuation-20260927T065521077735Z-3431b83c7c.zip" download>Single-file ZIP</a><p>Note: <code>H16 endpoint-continuation features (tmi/det_elev/rtp ray channels), 117-feature HGB, topk06_binary; spatial holdout dev +0.0037 / confirm +0.0007 vs matched baselines (reports/h16_blocked.json)</code></p><p class="fine">gems10-h16-continuation-20260927T065521077735Z-3431b83c7c.tif · sha256 b33684ae033512a1a1c7d2cfccd128955fedfdff2a8fed6c7585a755b1b58b3c</p></section><article><h1>Executive submission guide</h1>
 <h2>1. Start with release status, not a file browser</h2>
 <p>Open the <a href="https://buffedlizard55-lab.github.io/GEMSDOE10/">submission hub</a>.
 If it says <strong>NO APPROVED SUBMISSION</strong>, stop: an experiment has not satisfied the evidence gates.
 A format-valid TIFF alone is not a reason to spend one of the three weekly slots.</p>
-<p>No new candidate is approved by default. The H12 decision is in <code>reports/h12_blocked.json</code>.
-The website is static: CPU scripts generate files; approved files are then one-click downloads.
-It does not secretly train a model in the browser or upload to DrivenData.</p>
+<p>No candidate is approved by default. Session-2 decisions (protocol
+<code>spatial-4x4-strided-v1-buffer40-policy-sweep-v2</code>): <strong>H16 ELIGIBLE</strong>
+(<code>reports/h16_blocked.json</code>), <strong>H13 NOT ELIGIBLE</strong> (<code>reports/h13_blocked.json</code>),
+H12 rejected earlier (<code>reports/h12_blocked.json</code>). H16 still requires the
+full-data final fit with a hash-bound training manifest before any download
+appears on the hub. The website is static: CPU scripts generate files;
+approved files are then one-click downloads. It does not secretly train a
+model in the browser or upload to DrivenData.</p>
 <h2>2. When a candidate is approved</h2>
 <ol>
 <li>Click <strong>Download .tif</strong> at the top of the hub (or its single-member ZIP). Do not upload this report, an HTML page, or a PDF.</li>
@@ -34,9 +39,10 @@ Do not silently clip or replace bad model outputs: investigate them. The publish
 <p>The local gate follows the published specification and pinned template, not private backend source code.
 A local pass is not a guarantee of backend acceptance or a competitive score.</p>
 <h2>4. Build and release</h2>
-<p>See README.md for data → features → blocked comparison. <strong>Do not run old baseline final training and label it H12.</strong>
-The final-prediction manifest for a future passing candidate must tie the generated NPY hash to its training recipe and the compatible completed validation report.
-<code>build_submission.py --validation ...</code> refuses missing, non-improving, incomplete, mismatched-policy or unbound evidence.
+<p>See README.md for data → features → blocked comparison. <strong>Do not run old baseline final training and label it a passing candidate.</strong>
+For H16 the bound pipeline is: <code>build_continuation.py</code> (all-systems 10-channel grid) → <code>train_final.py --extra data/features_continuation.npy --hypothesis H16 --bind-to reports/h16_blocked.json</code> (refuses to bind unless the report's decision is eligible; writes the training manifest, sets <code>promotion_allowed</code>, and records <code>final_prediction</code> in the report) → <code>build_submission.py --prob ... --policy topk06_binary --validation reports/h16_blocked.json</code>.
+The final-prediction manifest must tie the generated NPY hash to its training recipe and the compatible completed validation report.
+<code>build_submission.py --validation ...</code> refuses missing, non-improving, incomplete, mismatched-policy or unbound evidence (fail-closed gates in <code>src/gems10/release.py</code>, protocol-aware for v1 and v2 reports).
 <code>--experiment</code> writes diagnostics only into <code>scratch/experiments/</code>, never the download hub.</p>
 <p>The canonical field hash detects renamed/recompressed copies; the noncatalogue hash catches catalogue-only changes.
 A unique file is not guaranteed a unique rounded DTI, and changing noise to force novelty is prohibited by our methodology.</p>
@@ -66,4 +72,4 @@ Multiple repositories do not by themselves establish multiple registrations or a
 </tr>
 </tbody>
 </table>
-<p>Historical group scores live in <code>reports/submission_audit.json</code> labelled user-reported; they do not reveal current remaining slots.</p></article></main><footer class="wrap"><b>Maximize P(Win). Own the Outcome.</b><p>Local evidence is not a private competition score. AI-assisted research; official links and limitations are explicit.</p><p>Site built 2026-09-27T05:37:57+00:00 · <a href="https://github.com/buffedlizard55-lab/GEMSDOE10">Repository</a> · <a href="data/site.json">Machine-readable manifest</a></p></footer></body></html>
+<p>Historical group scores live in <code>reports/submission_audit.json</code> labelled user-reported; they do not reveal current remaining slots.</p></article></main><footer class="wrap"><b>Maximize P(Win). Own the Outcome.</b><p>Local evidence is not a private competition score. AI-assisted research; official links and limitations are explicit.</p><p>Site built 2026-09-27T06:55:51+00:00 · <a href="https://github.com/buffedlizard55-lab/GEMSDOE10">Repository</a> · <a href="data/site.json">Machine-readable manifest</a></p></footer></body></html>
