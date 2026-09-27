@@ -1,5 +1,5 @@
 {
-  "started_utc": "2026-09-27T05:31:32.417058+00:00",
+  "started_utc": "2026-09-27T05:34:58.100436+00:00",
   "status": "passed",
   "checks": [
     {
@@ -11,7 +11,7 @@
     {
       "command": "/home/user/GEMSDOE10/.venv/bin/python -m pytest -q --junitxml=scratch/test-results.xml",
       "exit_code": 0,
-      "stdout": "........................................................................ [ 75%]\n.......................                                                  [100%]\n",
+      "stdout": "........................................................................ [ 75%]\n........................                                                 [100%]\n",
       "stderr": ""
     },
     {
@@ -23,7 +23,7 @@
   ],
   "scope": "local tests, data integrity and static site links; not all scientific claims or private backend behavior",
   "tests": {
-    "tests": 95,
+    "tests": 96,
     "failures": 0,
     "errors": 0,
     "skipped": 0
@@ -35,5 +35,5 @@
   },
   "approved_downloads": 0,
   "refused_publications": [],
-  "finished_utc": "2026-09-27T05:31:44.155305+00:00"
+  "finished_utc": "2026-09-27T05:35:08.975846+00:00"
 }

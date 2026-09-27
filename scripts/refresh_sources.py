@@ -9,6 +9,7 @@ import argparse
 import datetime
 import hashlib
 from html import unescape
+from html.parser import HTMLParser
 import json
 from pathlib import Path
 import re
@@ -34,6 +35,26 @@ def read_page(url):
     return raw.decode('utf-8'), hashlib.sha256(raw).hexdigest()
 
 
+class LeaderboardText(HTMLParser):
+    """Visible text + profile markers, independent of table vs div layout."""
+    def __init__(self):
+        super().__init__(); self.parts = []; self.skip = 0
+    def handle_starttag(self, tag, attrs):
+        if tag in ('script', 'style', 'head'):
+            self.skip += 1
+        if not self.skip and tag == 'a':
+            href = dict(attrs).get('href', '')
+            match = re.search(r'/users/([^/?#]+)/?$', href)
+            if match:
+                self.parts.append(' PROFILE:' + match[1] + ' ')
+    def handle_endtag(self, tag):
+        if tag in ('script', 'style', 'head') and self.skip:
+            self.skip -= 1
+    def handle_data(self, data):
+        if not self.skip:
+            self.parts.append(data)
+
+
 def parse_leaderboard(html):
     for row in re.findall(r'<tr\b[^>]*>(.*?)</tr>', html, re.S | re.I):
         text = plain(row)
@@ -45,9 +66,19 @@ def parse_leaderboard(html):
             participants = re.findall(r'''/users/([^/"'?<>\s]+)(?:[/"'])''', row)
             if len(set(values)) == 1 and len(set(participants)) == 1:
                 return {'rank1': unescape(participants[0]), 'score': float(values[0])}
-    raise ValueError('rank-one row ambiguous or markup changed; previous snapshot retained; '
-                     + 'first rows: ' + ' | '.join(plain(r)[:180] for r in
-                         re.findall(r'<tr\b[^>]*>(.*?)</tr>', html, re.S | re.I)[:3]))
+    parser = LeaderboardText(); parser.feed(html)
+    visible = ' '.join(' '.join(parser.parts).split())
+    # DrivenData may use CSS-grid/div rows rather than HTML table rows.
+    winner = re.search(r'#\s*1(?!\d)(.*?)(?=#\s*2(?!\d)|$)', visible)
+    if winner:
+        segment = winner[1]
+        values = set(re.findall(r'(?<![\d.])0\.\d{4}(?!\d)', segment))
+        participants = set(re.findall(r'PROFILE:([^\s]+)', segment))
+        if len(values) == len(participants) == 1:
+            return {'rank1': participants.pop(), 'score': float(values.pop())}
+    raise ValueError('rank-one row ambiguous or unavailable; previous snapshot retained; '
+                     + 'visible response excerpt: ' + visible[:700])
+
 
 
 def refresh(feed, getter=read_page):
