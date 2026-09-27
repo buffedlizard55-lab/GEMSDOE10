@@ -68,6 +68,10 @@ def main() -> int:
     ap.add_argument("--ray-lens", default="5,10,15")
     ap.add_argument("--weights", default="0.0,0.2,0.4,0.6")
     ap.add_argument("--lidar-w", default="0.0,0.3,0.5")
+    ap.add_argument("--far-only", action="store_true",
+                    help="mask discovery layers to >10px from train systems: "
+                         "near-catalogue boost crowds far detections out of "
+                         "the fixed top-k budget (measured -29% FAR10)")
     ap.add_argument("--report", default=None)
     args = ap.parse_args()
     t0 = time.time()
@@ -109,10 +113,13 @@ def main() -> int:
         d = ndimage.distance_transform_edt(~train_sys)
         gts = {"ALL": held, "FAR10": held & (d > 10), "FAR20": held & (d > 20)}
         setups = {name: cached_scorer_setup(gt) for name, gt in gts.items()}
+        corr = discovery.relay_corridors(footprint.shape, strikes)
+        far = (d > 10)
         fold_cache[k] = {
             "prob": np.nan_to_num(np.load(p).astype(np.float64), nan=0.0),
             "strikes": strikes,
-            "corr": discovery.relay_corridors(footprint.shape, strikes),
+            "corr": corr,
+            "far": far,
             "gts": gts, "setups": setups, "ign": train_sys}
         print(f"fold {k} cached ({len(strikes)} strikes)", flush=True)
 
@@ -123,8 +130,14 @@ def main() -> int:
         for k, fc in fold_cache.items():
             rays = discovery.strike_rays(footprint.shape, fc["strikes"],
                                          ray_len_px=rl)
+            corr = fc["corr"]
+            rg = ridge
+            if args.far_only:
+                rays = rays * fc["far"]
+                corr = corr * fc["far"]
+                rg = rg * fc["far"]
             fused = discovery.noisy_or_fuse(
-                fc["prob"], (rays, wr), (fc["corr"], wc), (ridge, wl))
+                fc["prob"], (rays, wr), (corr, wc), (rg, wl))
             fused = np.where(footprint, fused, np.nan)
             emis_cache = {pol: np.nan_to_num(
                 modeling.apply_policy(fused, footprint, pol), nan=0.0)
