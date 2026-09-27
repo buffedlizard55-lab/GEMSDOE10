@@ -1,0 +1,410 @@
+{
+  "hypothesis": "H20",
+  "product": "USGS 3DEP 1/3 arc-second seamless DEM (current), public domain",
+  "product_catalog": "https://www.sciencebase.gov/catalog/item/4f70aa9fe4b058caae3f8de5",
+  "template_sha256": "2176d08e485aa2cd2860ce8df539db4faf4d76163b38a4dd8c30a40454d35cbc",
+  "footprint_pixels": 5167373,
+  "vector_order": "np.nonzero(np.isfinite(sample_submission)) row-major",
+  "grid": {
+    "rows": 3730,
+    "cols": 3292,
+    "block_cells": 400,
+    "halo_cells": 12,
+    "dst_pixel_m": 10.0,
+    "resampling": "bilinear"
+  },
+  "channels": [
+    "dem10_slope_max",
+    "dem10_slope_mean",
+    "dem10_slope_std",
+    "dem10_hgm20_max",
+    "dem10_hgm50_max",
+    "dem10_hgm200_mean",
+    "dem10_steep_ratio_max",
+    "dem10_resid_std",
+    "dem10_resid_range",
+    "dem10_curv_absmax",
+    "dem10_onesided",
+    "dem10_onesided3",
+    "dem10_valid_frac"
+  ],
+  "channel_stats": {
+    "dem10_slope_max": {
+      "finite": 5167373,
+      "p01": 0.0,
+      "p50": 8.140494346618652,
+      "p99": 44.19221206665045,
+      "max": 80.2000961303711,
+      "sha256": "fd46738e9a58a6f40c130c3c70f645525dbfc12d27b6ed149e596e6a379cbfaa",
+      "bytes": 20669620
+    },
+    "dem10_slope_mean": {
+      "finite": 5167373,
+      "p01": 0.0,
+      "p50": 4.504060745239258,
+      "p99": 33.006990661621096,
+      "max": 60.830406188964844,
+      "sha256": "338b443c441db61120faf36437ec61dfcccaa569c41aa3099ed3accef5a35f95",
+      "bytes": 20669620
+    },
+    "dem10_slope_std": {
+      "finite": 5167373,
+      "p01": 0.0,
+      "p50": 1.2393773794174194,
+      "p99": 8.776545410156267,
+      "max": 25.518115997314453,
+      "sha256": "9c15e0e760d8255eb0473821a07cc09e4fe4b40746e6e37278e691f615c0f642",
+      "bytes": 20669620
+    },
+    "dem10_hgm20_max": {
+      "finite": 5167373,
+      "p01": 0.0,
+      "p50": 0.09782470762729645,
+      "p99": 0.7456643891334539,
+      "max": 2.490656614303589,
+      "sha256": "f58df86b0be3b3dc54affc60dc7d77a95db3dafb9c1267eac4912c5d8e57526b",
+      "bytes": 20669620
+    },
+    "dem10_hgm50_max": {
+      "finite": 5167373,
+      "p01": 6.011265577399172e-05,
+      "p50": 0.07541969418525696,
+      "p99": 0.6236818861961368,
+      "max": 1.369678258895874,
+      "sha256": "1cca42538ec0c91951b578136893eb5d90cd1414c45257d2a72ebe80b29f0f40",
+      "bytes": 20669620
+    },
+    "dem10_hgm200_mean": {
+      "finite": 5167373,
+      "p01": 6.5551862353459e-05,
+      "p50": 0.05079512670636177,
+      "p99": 0.36938292145729124,
+      "max": 0.7439606189727783,
+      "sha256": "9328f889f4d607f8530840da138741b7431da49d2432b0ab2da110a82984102b",
+      "bytes": 20669620
+    },
+    "dem10_steep_ratio_max": {
+      "finite": 5167373,
+      "p01": 0.0,
+      "p50": 1.4867284297943115,
+      "p99": 8.235042953491224,
+      "max": 79.3355941772461,
+      "sha256": "eaf3d5e24c6769ffb98665e75c9665dbaa16bdb79708900217dca955031e6828",
+      "bytes": 20669620
+    },
+    "dem10_resid_std": {
+      "finite": 5167373,
+      "p01": 0.0015797028550878168,
+      "p50": 0.9329182505607605,
+      "p99": 11.499924087524422,
+      "max": 40.53256607055664,
+      "sha256": "50db8caa815cb09cc695ec230f15f41e8e04cd9bef5fc09b07b06aeadd44a86e",
+      "bytes": 20669620
+    },
+    "dem10_resid_range": {
+      "finite": 5167373,
+      "p01": 0.0067138671875,
+      "p50": 3.7613525390625,
+      "p99": 43.2078857421875,
+      "max": 138.75927734375,
+      "sha256": "bbcf8a462ace31a80964ba8a7ab76fcbcb347deb4f4d2919166b3eda5c721b0c",
+      "bytes": 20669620
+    },
+    "dem10_curv_absmax": {
+      "finite": 5167373,
+      "p01": 1.220703097715159e-06,
+      "p50": 0.0014416504418477416,
+      "p99": 0.015406494028866291,
+      "max": 0.05859985202550888,
+      "sha256": "58e82f1301032b46b10344b9299b83e6ce5bed1ca83e320f078fa57321bff632",
+      "bytes": 20669620
+    },
+    "dem10_onesided": {
+      "finite": 5167373,
+      "p01": 0.06213400483131409,
+      "p50": 0.83173006772995,
+      "p99": 0.9985499978065491,
+      "max": 0.9999997019767761,
+      "sha256": "02d1d241de9534d307f314d0b2f8a857ceb1ce0d099fd7dee8872a83bd0271f8",
+      "bytes": 20669620
+    },
+    "dem10_onesided3": {
+      "finite": 5167373,
+      "p01": 0.02214149966835976,
+      "p50": 0.37677881121635437,
+      "p99": 0.9559814953804019,
+      "max": 0.9999977350234985,
+      "sha256": "bca9faf8e0c572ecb1e77b6c94b0cb96c41e824873cb7747e0ece28b531598d2",
+      "bytes": 20669620
+    },
+    "dem10_valid_frac": {
+      "finite": 5167373,
+      "p01": 1.0,
+      "p50": 1.0,
+      "p99": 1.0,
+      "max": 1.0,
+      "sha256": "35d7ef0719bfed93f9aed927afd8c51882283fc7316cab0f8c219c9302b92122",
+      "bytes": 20669620
+    }
+  },
+  "tiles": {
+    "n38w118": {
+      "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n38w118/USGS_13_n38w118.tif",
+      "available": true,
+      "http": "HTTP/1.1 200 OK",
+      "bytes": 409708514,
+      "etag": "\"14662fdfaf7eef0bef210a9f30dc7c9c-79\"",
+      "last_modified": "Thu, 11 Jun 2026 17:55:45 GMT",
+      "sha256": "21e4616b410d787b6faee8f60fefbc7969fdb2d26a300ae0cce9703e40077192",
+      "src_crs": "EPSG:4269",
+      "src_nodata": -999999.0,
+      "src_shape": [
+        10812,
+        10812
+      ],
+      "bounds_template_crs": [
+        410972.594504035,
+        4094810.7409351715,
+        500049.431573739,
+        4206348.924769476
+      ]
+    },
+    "n38w119": {
+      "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n38w119/USGS_13_n38w119.tif",
+      "available": true,
+      "http": "HTTP/1.1 200 OK",
+      "bytes": 416350584,
+      "etag": "\"741072dc04b6f1cfa61ac1f8dcb0761d-80\"",
+      "last_modified": "Thu, 11 Jun 2026 17:53:36 GMT",
+      "sha256": "d1a22cfe538179c65fa221f70c0cd7ba4403d087450dd3bb463ee50fb69fa97c",
+      "src_crs": "EPSG:4269",
+      "src_nodata": -999999.0,
+      "src_shape": [
+        10812,
+        10812
+      ],
+      "bounds_template_crs": [
+        321987.0748278659,
+        4095277.5397645887,
+        412251.0224268916,
+        4207765.065702287
+      ]
+    },
+    "n39w118": {
+      "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n39w118/USGS_13_n39w118.tif",
+      "available": true,
+      "http": "HTTP/1.1 200 OK",
+      "bytes": 391985657,
+      "etag": "\"548de8b9b07e686f9debe7dd77f5c0f2-75\"",
+      "last_modified": "Wed, 14 Jan 2026 17:30:09 GMT",
+      "sha256": "01a5b4bdc759d2fdb610cba1f4cd3db2482af13b29eaca186f7bb37862081b0f",
+      "src_crs": "EPSG:4269",
+      "src_nodata": -999999.0,
+      "src_shape": [
+        10812,
+        10812
+      ],
+      "bounds_template_crs": [
+        412152.14122540376,
+        4205753.379947905,
+        500048.7767262,
+        4317314.345928493
+      ]
+    },
+    "n39w119": {
+      "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n39w119/USGS_13_n39w119.tif",
+      "available": true,
+      "http": "HTTP/1.1 200 OK",
+      "bytes": 401998969,
+      "etag": "\"6657f23841bd258575b53be9cac3e03b-77\"",
+      "last_modified": "Thu, 15 May 2025 18:38:40 GMT",
+      "sha256": "b7fe301c8cdc70babbe84339afe09fef6247c6ac21b3315387d58955dba116bc",
+      "src_crs": "EPSG:4269",
+      "src_nodata": -999999.0,
+      "src_shape": [
+        10812,
+        10812
+      ],
+      "bounds_template_crs": [
+        324346.5197762354,
+        4206224.591569602,
+        413456.1069961245,
+        4318742.008344221
+      ]
+    },
+    "n40w118": {
+      "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n40w118/USGS_13_n40w118.tif",
+      "available": true,
+      "http": "HTTP/1.1 200 OK",
+      "bytes": 397926937,
+      "etag": "\"8eee63102aa8fbbd902872952be69504-76\"",
+      "last_modified": "Wed, 14 Jan 2026 17:24:03 GMT",
+      "sha256": "f2d1d2419b5a8ef7c43fcab6af5c67f1c2ae84259d0c7cf184f9f42f80d16d46",
+      "src_crs": "EPSG:4269",
+      "src_nodata": -999999.0,
+      "src_shape": [
+        10812,
+        10812
+      ],
+      "bounds_template_crs": [
+        413358.5362559816,
+        4316714.932736246,
+        500048.1069698152,
+        4428298.259849076
+      ]
+    },
+    "n40w119": {
+      "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n40w119/USGS_13_n40w119.tif",
+      "available": true,
+      "http": "HTTP/1.1 200 OK",
+      "bytes": 378567782,
+      "etag": "\"95b6a4fb1924990e8e6c5cf776b13160-73\"",
+      "last_modified": "Thu, 09 Mar 2023 20:29:29 GMT",
+      "sha256": "e3b69524af737688d74ca01f06fd3de994bf6d8d5b11fe599e211d5dfe4f91c1",
+      "src_crs": "EPSG:4269",
+      "src_nodata": -999999.0,
+      "src_shape": [
+        10812,
+        10812
+      ],
+      "bounds_template_crs": [
+        326759.63150339364,
+        4317189.983723075,
+        414687.653034881,
+        4429735.705781152
+      ]
+    },
+    "n40w120": {
+      "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n40w120/USGS_13_n40w120.tif",
+      "available": true,
+      "http": "HTTP/1.1 200 OK",
+      "bytes": 402039220,
+      "etag": "\"44fd1cd0f38242b5744f2b7c081dc4b6-77\"",
+      "last_modified": "Wed, 20 May 2026 18:43:33 GMT",
+      "sha256": "59a6df67e342b5b0c7166ab5a07b8bed6f9774a868a14badacd2c3d7dc185b3a",
+      "src_crs": "EPSG:4269",
+      "src_nodata": -999999.0,
+      "src_shape": [
+        10812,
+        10812
+      ],
+      "bounds_template_crs": [
+        240149.653155264,
+        4318616.576531773,
+        329323.3167444169,
+        4432132.331112149
+      ]
+    },
+    "n40w121": {
+      "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n40w121/USGS_13_n40w121.tif",
+      "available": true,
+      "http": "HTTP/1.1 200 OK",
+      "bytes": 426141596,
+      "etag": "\"c4be10bf609b08bc568121636f74982f-82\"",
+      "last_modified": "Wed, 20 May 2026 18:43:07 GMT",
+      "sha256": "1ef8c81e8528aacbbb7a3eb5733d225dad81422af04d1f330576e6d6ac9af957",
+      "src_crs": "EPSG:4269",
+      "src_nodata": -999999.0,
+      "src_shape": [
+        10812,
+        10812
+      ],
+      "bounds_template_crs": [
+        153523.1134516286,
+        4320995.861183844,
+        243949.862850494,
+        4435489.991799617
+      ]
+    },
+    "n41w117": {
+      "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n41w117/USGS_13_n41w117.tif",
+      "available": true,
+      "http": "HTTP/1.1 200 OK",
+      "bytes": 400243874,
+      "etag": "\"668e9653e71de8ee607c74c816612a85-77\"",
+      "last_modified": "Wed, 20 May 2026 18:33:22 GMT",
+      "sha256": "7e2dcd6fb40f66bc166fea34724f5a7eb6071ea371b303448cdf5afc8fa2c067",
+      "src_crs": "EPSG:4269",
+      "src_nodata": -999999.0,
+      "src_shape": [
+        10812,
+        10812
+      ],
+      "bounds_template_crs": [
+        499952.577514543,
+        4427695.55760792,
+        585408.5774480845,
+        4539300.797926722
+      ]
+    },
+    "n41w118": {
+      "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n41w118/USGS_13_n41w118.tif",
+      "available": true,
+      "http": "HTTP/1.1 200 OK",
+      "bytes": 393630308,
+      "etag": "\"15d82c304d78ff6666491c6b3c2e3565-76\"",
+      "last_modified": "Thu, 16 Jan 2025 19:07:25 GMT",
+      "sha256": "2b503a935cf4016cb4b675b3e739bf9bd0df8d4fc5c49b6cf8d4381740523048",
+      "src_crs": "EPSG:4269",
+      "src_nodata": -999999.0,
+      "src_shape": [
+        10812,
+        10812
+      ],
+      "bounds_template_crs": [
+        414591.4225690786,
+        4427695.55760792,
+        500047.42250261316,
+        4539300.797926529
+      ]
+    },
+    "n41w119": {
+      "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n41w119/USGS_13_n41w119.tif",
+      "available": true,
+      "http": "HTTP/1.1 200 OK",
+      "bytes": 386798261,
+      "etag": "\"da64c60b5f98e11f1d3bdfb40fe698a7-74\"",
+      "last_modified": "Thu, 27 Jun 2024 19:10:48 GMT",
+      "sha256": "5029c65f574c5c5241f1862336e8911d39c8faab1e037b9ba0b4d2fafe0fce0c",
+      "src_crs": "EPSG:4269",
+      "src_nodata": -999999.0,
+      "src_shape": [
+        10812,
+        10812
+      ],
+      "bounds_template_crs": [
+        329225.6938896852,
+        4428173.869766191,
+        415945.29557900835,
+        4540746.2772664465
+      ]
+    },
+    "n41w120": {
+      "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n41w120/USGS_13_n41w120.tif",
+      "available": true,
+      "http": "HTTP/1.1 200 OK",
+      "bytes": 375913234,
+      "etag": "\"cceaf08bb00f424940ee6f9d9b75e61e-72\"",
+      "last_modified": "Tue, 02 Jun 2026 16:09:51 GMT",
+      "sha256": "f5bee4fbfe291b0eaf181d4b36aa32766b6ab62b9a0cb83420f22fea73580c41",
+      "src_crs": "EPSG:4269",
+      "src_nodata": -999999.0,
+      "src_shape": [
+        10812,
+        10812
+      ],
+      "bounds_template_crs": [
+        243850.84042506458,
+        4429610.240804556,
+        331840.2545654847,
+        4543156.245276554
+      ]
+    }
+  },
+  "blocks_processed": 49,
+  "code_sha256": "6a4040042acf614ef39abe3ba4061a9b98760f957900f02eead7f24efd2443bb",
+  "elapsed_seconds": 546.0,
+  "generated_utc": "2026-09-27T19:15:20Z",
+  "github_run_id": "36343078537",
+  "github_sha": "70c12296272cff038c4f1cfb97da36b2109241db"
+}

@@ -1,0 +1,231 @@
+template 3730x3292 footprint=5167373 crs=EPSG:32611
+tiles touched by footprint: ['n38w118', 'n38w119', 'n39w118', 'n39w119', 'n40w118', 'n40w119', 'n40w120', 'n40w121', 'n41w117', 'n41w118', 'n41w119', 'n41w120']
+n38w118 {'http': 'HTTP/1.1 200 OK', 'bytes': 409708514, 'etag': '"14662fdfaf7eef0bef210a9f30dc7c9c-79"', 'last_modified': 'Thu, 11 Jun 2026 17:55:45 GMT'}
+n38w119 {'http': 'HTTP/1.1 200 OK', 'bytes': 416350584, 'etag': '"741072dc04b6f1cfa61ac1f8dcb0761d-80"', 'last_modified': 'Thu, 11 Jun 2026 17:53:36 GMT'}
+n39w118 {'http': 'HTTP/1.1 200 OK', 'bytes': 391985657, 'etag': '"548de8b9b07e686f9debe7dd77f5c0f2-75"', 'last_modified': 'Wed, 14 Jan 2026 17:30:09 GMT'}
+n39w119 {'http': 'HTTP/1.1 200 OK', 'bytes': 401998969, 'etag': '"6657f23841bd258575b53be9cac3e03b-77"', 'last_modified': 'Thu, 15 May 2025 18:38:40 GMT'}
+n40w118 {'http': 'HTTP/1.1 200 OK', 'bytes': 397926937, 'etag': '"8eee63102aa8fbbd902872952be69504-76"', 'last_modified': 'Wed, 14 Jan 2026 17:24:03 GMT'}
+n40w119 {'http': 'HTTP/1.1 200 OK', 'bytes': 378567782, 'etag': '"95b6a4fb1924990e8e6c5cf776b13160-73"', 'last_modified': 'Thu, 09 Mar 2023 20:29:29 GMT'}
+n40w120 {'http': 'HTTP/1.1 200 OK', 'bytes': 402039220, 'etag': '"44fd1cd0f38242b5744f2b7c081dc4b6-77"', 'last_modified': 'Wed, 20 May 2026 18:43:33 GMT'}
+n40w121 {'http': 'HTTP/1.1 200 OK', 'bytes': 426141596, 'etag': '"c4be10bf609b08bc568121636f74982f-82"', 'last_modified': 'Wed, 20 May 2026 18:43:07 GMT'}
+n41w117 {'http': 'HTTP/1.1 200 OK', 'bytes': 400243874, 'etag': '"668e9653e71de8ee607c74c816612a85-77"', 'last_modified': 'Wed, 20 May 2026 18:33:22 GMT'}
+n41w118 {'http': 'HTTP/1.1 200 OK', 'bytes': 393630308, 'etag': '"15d82c304d78ff6666491c6b3c2e3565-76"', 'last_modified': 'Thu, 16 Jan 2025 19:07:25 GMT'}
+n41w119 {'http': 'HTTP/1.1 200 OK', 'bytes': 386798261, 'etag': '"da64c60b5f98e11f1d3bdfb40fe698a7-74"', 'last_modified': 'Thu, 27 Jun 2024 19:10:48 GMT'}
+n41w120 {'http': 'HTTP/1.1 200 OK', 'bytes': 375913234, 'etag': '"cceaf08bb00f424940ee6f9d9b75e61e-72"', 'last_modified': 'Tue, 02 Jun 2026 16:09:51 GMT'}
+  n38w118: 409708514 B sha256 21e4616b410d787b nodata=-999999.0
+  n38w119: 416350584 B sha256 d1a22cfe538179c6 nodata=-999999.0
+  n39w118: 391985657 B sha256 01a5b4bdc759d2fd nodata=-999999.0
+  n39w119: 401998969 B sha256 b7fe301c8cdc70ba nodata=-999999.0
+  n40w118: 397926937 B sha256 f2d1d2419b5a8ef7 nodata=-999999.0
+  n40w119: 378567782 B sha256 e3b69524af737688 nodata=-999999.0
+  n40w120: 402039220 B sha256 59a6df67e342b5b0 nodata=-999999.0
+  n40w121: 426141596 B sha256 1ef8c81e8528aacb nodata=-999999.0
+  n41w117: 400243874 B sha256 7e2dcd6fb40f66bc nodata=-999999.0
+  n41w118: 393630308 B sha256 2b503a935cf4016c nodata=-999999.0
+  n41w119: 386798261 B sha256 5029c65f574c5c52 nodata=-999999.0
+  n41w120: 375913234 B sha256 f5bee4fbfe291b0e nodata=-999999.0
+block (0,0) done  1 blocks  206s
+block (0,1) done  2 blocks  213s
+block (0,2) done  3 blocks  221s
+block (0,3) done  4 blocks  228s
+block (0,4) done  5 blocks  236s
+block (0,5) done  6 blocks  243s
+block (0,6) done  7 blocks  251s
+block (0,7) done  8 blocks  258s
+block (0,8) done  9 blocks  260s
+block (1,0) done  10 blocks  268s
+block (1,1) done  11 blocks  275s
+block (1,2) done  12 blocks  283s
+block (1,3) done  13 blocks  290s
+block (1,4) done  14 blocks  298s
+block (1,5) done  15 blocks  306s
+block (1,6) done  16 blocks  313s
+block (1,7) done  17 blocks  321s
+block (1,8) done  18 blocks  323s
+block (2,0) done  19 blocks  330s
+block (2,1) done  20 blocks  338s
+block (2,2) done  21 blocks  345s
+block (2,3) done  22 blocks  352s
+block (2,4) done  23 blocks  360s
+block (3,0) done  24 blocks  368s
+block (3,1) done  25 blocks  375s
+block (3,2) done  26 blocks  382s
+block (3,3) done  27 blocks  390s
+block (3,4) done  28 blocks  397s
+block (4,1) done  29 blocks  405s
+block (4,2) done  30 blocks  412s
+block (4,3) done  31 blocks  420s
+block (4,4) done  32 blocks  428s
+block (5,2) done  33 blocks  435s
+block (5,3) done  34 blocks  443s
+block (5,4) done  35 blocks  450s
+block (5,5) done  36 blocks  457s
+block (6,2) done  37 blocks  465s
+block (6,3) done  38 blocks  472s
+block (6,4) done  39 blocks  480s
+block (6,5) done  40 blocks  487s
+block (7,2) done  41 blocks  495s
+block (7,3) done  42 blocks  502s
+block (7,4) done  43 blocks  510s
+block (7,5) done  44 blocks  517s
+block (8,3) done  45 blocks  525s
+block (8,4) done  46 blocks  532s
+block (8,5) done  47 blocks  539s
+block (9,4) done  48 blocks  542s
+block (9,5) done  49 blocks  545s
+{
+ "hypothesis": "H20",
+ "product": "USGS 3DEP 1/3 arc-second seamless DEM (current), public domain",
+ "product_catalog": "https://www.sciencebase.gov/catalog/item/4f70aa9fe4b058caae3f8de5",
+ "template_sha256": "2176d08e485aa2cd2860ce8df539db4faf4d76163b38a4dd8c30a40454d35cbc",
+ "footprint_pixels": 5167373,
+ "vector_order": "np.nonzero(np.isfinite(sample_submission)) row-major",
+ "grid": {
+  "rows": 3730,
+  "cols": 3292,
+  "block_cells": 400,
+  "halo_cells": 12,
+  "dst_pixel_m": 10.0,
+  "resampling": "bilinear"
+ },
+ "channels": [
+  "dem10_slope_max",
+  "dem10_slope_mean",
+  "dem10_slope_std",
+  "dem10_hgm20_max",
+  "dem10_hgm50_max",
+  "dem10_hgm200_mean",
+  "dem10_steep_ratio_max",
+  "dem10_resid_std",
+  "dem10_resid_range",
+  "dem10_curv_absmax",
+  "dem10_onesided",
+  "dem10_onesided3",
+  "dem10_valid_frac"
+ ],
+ "channel_stats": {
+  "dem10_slope_max": {
+   "finite": 5167373,
+   "p01": 0.0,
+   "p50": 8.140494346618652,
+   "p99": 44.19221206665045,
+   "max": 80.2000961303711,
+   "sha256": "fd46738e9a58a6f40c130c3c70f645525dbfc12d27b6ed149e596e6a379cbfaa",
+   "bytes": 20669620
+  },
+  "dem10_slope_mean": {
+   "finite": 5167373,
+   "p01": 0.0,
+   "p50": 4.504060745239258,
+   "p99": 33.006990661621096,
+   "max": 60.830406188964844,
+   "sha256": "338b443c441db61120faf36437ec61dfcccaa569c41aa3099ed3accef5a35f95",
+   "bytes": 20669620
+  },
+  "dem10_slope_std": {
+   "finite": 5167373,
+   "p01": 0.0,
+   "p50": 1.2393773794174194,
+   "p99": 8.776545410156267,
+   "max": 25.518115997314453,
+   "sha256": "9c15e0e760d8255eb0473821a07cc09e4fe4b40746e6e37278e691f615c0f642",
+   "bytes": 20669620
+  },
+  "dem10_hgm20_max": {
+   "finite": 5167373,
+   "p01": 0.0,
+   "p50": 0.09782470762729645,
+   "p99": 0.7456643891334539,
+   "max": 2.490656614303589,
+   "sha256": "f58df86b0be3b3dc54affc60dc7d77a95db3dafb9c1267eac4912c5d8e57526b",
+   "bytes": 20669620
+  },
+  "dem10_hgm50_max": {
+   "finite": 5167373,
+   "p01": 6.011265577399172e-05,
+   "p50": 0.07541969418525696,
+   "p99": 0.6236818861961368,
+   "max": 1.369678258895874,
+   "sha256": "1cca42538ec0c91951b578136893eb5d90cd1414c45257d2a72ebe80b29f0f40",
+   "bytes": 20669620
+  },
+  "dem10_hgm200_mean": {
+   "finite": 5167373,
+   "p01": 6.5551862353459e-05,
+   "p50": 0.05079512670636177,
+   "p99": 0.36938292145729124,
+   "max": 0.7439606189727783,
+   "sha256": "9328f889f4d607f8530840da138741b7431da49d2432b0ab2da110a82984102b",
+   "bytes": 20669620
+  },
+  "dem10_steep_ratio_max": {
+   "finite": 5167373,
+   "p01": 0.0,
+   "p50": 1.4867284297943115,
+   "p99": 8.235042953491224,
+   "max": 79.3355941772461,
+   "sha256": "eaf3d5e24c6769ffb98665e75c9665dbaa16bdb79708900217dca955031e6828",
+   "bytes": 20669620
+  },
+  "dem10_resid_std": {
+   "finite": 5167373,
+   "p01": 0.0015797028550878168,
+   "p50": 0.9329182505607605,
+   "p99": 11.499924087524422,
+   "max": 40.53256607055664,
+   "sha256": "50db8caa815cb09cc695ec230f15f41e8e04cd9bef5fc09b07b06aeadd44a86e",
+   "bytes": 20669620
+  },
+  "dem10_resid_range": {
+   "finite": 5167373,
+   "p01": 0.0067138671875,
+   "p50": 3.7613525390625,
+   "p99": 43.2078857421875,
+   "max": 138.75927734375,
+   "sha256": "bbcf8a462ace31a80964ba8a7ab76fcbcb347deb4f4d2919166b3eda5c721b0c",
+   "bytes": 20669620
+  },
+  "dem10_curv_absmax": {
+   "finite": 5167373,
+   "p01": 1.220703097715159e-06,
+   "p50": 0.0014416504418477416,
+   "p99": 0.015406494028866291,
+   "max": 0.05859985202550888,
+   "sha256": "58e82f1301032b46b10344b9299b83e6ce5bed1ca83e320f078fa57321bff632",
+   "bytes": 20669620
+  },
+  "dem10_onesided": {
+   "finite": 5167373,
+   "p01": 0.06213400483131409,
+   "p50": 0.83173006772995,
+   "p99": 0.9985499978065491,
+   "max": 0.9999997019767761,
+   "sha256": "02d1d241de9534d307f314d0b2f8a857ceb1ce0d099fd7dee8872a83bd0271f8",
+   "bytes": 20669620
+  },
+  "dem10_onesided3": {
+   "finite": 5167373,
+   "p01": 0.02214149966835976,
+   "p50": 0.37677881121635437,
+   "p99": 0.9559814953804019,
+   "max": 0.9999977350234985,
+   "sha256": "bca9faf8e0c572ecb1e77b6c94b0cb96c41e824873cb7747e0ece28b531598d2",
+   "bytes": 20669620
+  },
+  "dem10_valid_frac": {
+   "finite": 5167373,
+   "p01": 1.0,
+   "p50": 1.0,
+   "p99": 1.0,
+   "max": 1.0,
+   "sha256": "35d7ef0719bfed93f9aed927afd8c51882283fc7316cab0f8c219c9302b92122",
+   "bytes": 20669620
+  }
+ },
+ "blocks_processed": 49,
+ "code_sha256": "6a4040042acf614ef39abe3ba4061a9b98760f957900f02eead7f24efd2443bb",
+ "elapsed_seconds": 546.0,
+ "generated_utc": "2026-09-27T19:15:20Z",
+ "github_run_id": "36343078537",
+ "github_sha": "70c12296272cff038c4f1cfb97da36b2109241db"
+}
