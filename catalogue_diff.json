@@ -1,0 +1,667 @@
+{
+  "generated_utc": "2026-09-27T14:42:38Z",
+  "template_sha256": "2176d08e485aa2cd2860ce8df539db4faf4d76163b38a4dd8c30a40454d35cbc",
+  "labels_sha256": "7ba308ccdc4418b31a178f4f1ef21aaa6e152e4028f2f6f64b01f7eb25ae4093",
+  "template_epsg": 32611,
+  "gdal": "GDAL 3.8.4, released 2024/02/08",
+  "label_pixels": 60988,
+  "footprint_pixels": 5167373,
+  "archives": {
+    "usgs_qffd": {
+      "url": "https://earthquake.usgs.gov/static/lfs/nshm/qfaults/Qfaults_GIS.zip",
+      "bytes": 32371696,
+      "sha256": "447eadc5926256710d988c30e5996ba540604caa0154f9746c48bad637926893",
+      "members": [
+        "GDB/Qfaults_2020_WGS84.gdb/a00000001.TablesByName.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000001.freelist",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000001.gdbindexes",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000001.gdbtable",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000001.gdbtablx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000002.gdbtable",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000002.gdbtablx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000003.gdbindexes",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000003.gdbtable",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000003.gdbtablx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000004.CatItemsByPhysicalName.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000004.CatItemsByType.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000004.FDO_UUID.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000004.freelist",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000004.gdbindexes",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000004.gdbtable",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000004.gdbtablx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000004.horizon",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000004.spx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000005.CatItemTypesByName.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000005.CatItemTypesByParentTypeID.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000005.CatItemTypesByUUID.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000005.gdbindexes",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000005.gdbtable",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000005.gdbtablx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000006.CatRelsByDestinationID.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000006.CatRelsByOriginID.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000006.CatRelsByType.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000006.FDO_UUID.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000006.freelist",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000006.gdbindexes",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000006.gdbtable",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000006.gdbtablx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000007.CatRelTypesByBackwardLabel.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000007.CatRelTypesByDestItemTypeID.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000007.CatRelTypesByForwardLabel.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000007.CatRelTypesByName.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000007.CatRelTypesByOriginItemTypeID.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000007.CatRelTypesByUUID.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000007.gdbindexes",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000007.gdbtable",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000007.gdbtablx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000009.GDB_3_r_num.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000009.gdbindexes",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000009.gdbtable",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000009.gdbtablx",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000a.GDB_4_ref_id.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000a.gdbindexes",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000a.gdbtable",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000a.gdbtablx",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000a.horizon",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000a.spx",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000c.GDB_6_ref_num.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000c.GDB_6_reference_id.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000c.gdbindexes",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000c.gdbtable",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000c.gdbtablx",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000d.GDB_7_ref_id.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000d.gdbindexes",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000d.gdbtable",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000d.gdbtablx",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000d.horizon",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000d.spx",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000e.gdbindexes",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000e.gdbtable",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000e.gdbtablx",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000f.GDB_9_ref_num.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000f.GDB_9_reference_id.atx",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000f.freelist",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000f.gdbindexes",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000f.gdbtable",
+        "GDB/Qfaults_2020_WGS84.gdb/a0000000f.gdbtablx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000010.gdbindexes",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000010.gdbtable",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000010.gdbtablx",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000010.horizon",
+        "GDB/Qfaults_2020_WGS84.gdb/a00000010.spx",
+        "GDB/Qfaults_2020_WGS84.gdb/gdb",
+        "GDB/Qfaults_2020_WGS84.gdb/timestamps",
+        "SHP/Qfaults_US_Database.cpg",
+        "SHP/Qfaults_US_Database.dbf",
+        "SHP/Qfaults_US_Database.prj",
+        "SHP/Qfaults_US_Database.sbn",
+        "SHP/Qfaults_US_Database.sbx",
+        "SHP/Qfaults_US_Database.shp",
+        "SHP/Qfaults_US_Database.shp.xml",
+        "SHP/Qfaults_US_Database.shx",
+        "SHP/ca_offshore.cpg",
+        "SHP/ca_offshore.dbf",
+        "SHP/ca_offshore.prj",
+        "SHP/ca_offshore.sbn",
+        "SHP/ca_offshore.sbx",
+        "SHP/ca_offshore.shp",
+        "SHP/ca_offshore.shp.xml",
+        "SHP/ca_offshore.shx",
+        "SHP/citations.xls",
+        "SHP/fault_areas.cpg",
+        "SHP/fault_areas.dbf",
+        "SHP/fault_areas.prj",
+        "SHP/fault_areas.sbn",
+        "SHP/fault_areas.sbx",
+        "SHP/fault_areas.shp",
+        "SHP/fault_areas.shp.xml",
+        "SHP/fault_areas.shx",
+        "SHP/fault_citation_keys.xls",
+        "Symbology/Fault Areas.lyr",
+        "Symbology/fault_symbology.lyr"
+      ]
+    },
+    "ingenious_v1": {
+      "url": "https://gdr.openei.org/files/1391/faults_quaternary_INGENIOUS_regional_data.zip",
+      "bytes": 6037873,
+      "sha256": "13e851e3618486d1ce8cdcaf238cbf7c5e290805dacee698e479ba3052f53a2a",
+      "members": [
+        "faults_quaternary_INGENIOUS_regional_data/faults_quaternary_regional.cpg",
+        "faults_quaternary_INGENIOUS_regional_data/faults_quaternary_regional.dbf",
+        "faults_quaternary_INGENIOUS_regional_data/faults_quaternary_regional.prj",
+        "faults_quaternary_INGENIOUS_regional_data/faults_quaternary_regional.sbn",
+        "faults_quaternary_INGENIOUS_regional_data/faults_quaternary_regional.sbx",
+        "faults_quaternary_INGENIOUS_regional_data/faults_quaternary_regional.shp",
+        "faults_quaternary_INGENIOUS_regional_data/faults_quaternary_regional.shp.xml",
+        "faults_quaternary_INGENIOUS_regional_data/faults_quaternary_regional.shx"
+      ]
+    },
+    "ingenious_v2": {
+      "url": "https://gdr.openei.org/files/1391/qfaults_ingenious_nad83conus117_2023-06-27.zip",
+      "bytes": 6131182,
+      "sha256": "c7b091c9ac8bca140ad89ee6bb2bd63dd3ac12e3013acbfd8373d11c9faee59d",
+      "members": [
+        "README_fielddefinitions_qfaults_ingenious_nad83conus117_2023-06-27.txt",
+        "qfaults_ingenious_nad83conus117_2023-06-27.cpg",
+        "qfaults_ingenious_nad83conus117_2023-06-27.dbf",
+        "qfaults_ingenious_nad83conus117_2023-06-27.prj",
+        "qfaults_ingenious_nad83conus117_2023-06-27.sbn",
+        "qfaults_ingenious_nad83conus117_2023-06-27.sbx",
+        "qfaults_ingenious_nad83conus117_2023-06-27.shp",
+        "qfaults_ingenious_nad83conus117_2023-06-27.shp.xml",
+        "qfaults_ingenious_nad83conus117_2023-06-27.shx"
+      ]
+    },
+    "paleo_geothermal": {
+      "url": "https://gdr.openei.org/files/1391/paleo_geothermal_regional.zip",
+      "bytes": 84008,
+      "sha256": "faffcf697f32dbbf6cbb317cd1effb3e305538ce38eb239d72d0c6fa071e91ca",
+      "members": [
+        "Paleo_geothermal_final.cpg",
+        "Paleo_geothermal_final.csv",
+        "Paleo_geothermal_final.dbf",
+        "Paleo_geothermal_final.prj",
+        "Paleo_geothermal_final.sbn",
+        "Paleo_geothermal_final.sbx",
+        "Paleo_geothermal_final.shp",
+        "Paleo_geothermal_final.shx"
+      ]
+    },
+    "probes_2m": {
+      "url": "https://gdr.openei.org/files/1391/2m_temperature_probe_INGENIOUS_regional_data.zip",
+      "bytes": 1080530,
+      "sha256": "1301f70d230058e616ea5d34d1c7a32fabf7d49198172f376c59c89bd652eca3",
+      "members": [
+        "2m_temperature_probe_INGENIOUS_regional_data/2m_temperature_probe.xlsx",
+        "2m_temperature_probe_INGENIOUS_regional_data/2m_temperature_probe_n83geo/2m_temperature_probe_n83geo.cpg",
+        "2m_temperature_probe_INGENIOUS_regional_data/2m_temperature_probe_n83geo/2m_temperature_probe_n83geo.dbf",
+        "2m_temperature_probe_INGENIOUS_regional_data/2m_temperature_probe_n83geo/2m_temperature_probe_n83geo.prj",
+        "2m_temperature_probe_INGENIOUS_regional_data/2m_temperature_probe_n83geo/2m_temperature_probe_n83geo.sbn",
+        "2m_temperature_probe_INGENIOUS_regional_data/2m_temperature_probe_n83geo/2m_temperature_probe_n83geo.sbx",
+        "2m_temperature_probe_INGENIOUS_regional_data/2m_temperature_probe_n83geo/2m_temperature_probe_n83geo.shp",
+        "2m_temperature_probe_INGENIOUS_regional_data/2m_temperature_probe_n83geo/2m_temperature_probe_n83geo.shp.xml",
+        "2m_temperature_probe_INGENIOUS_regional_data/2m_temperature_probe_n83geo/2m_temperature_probe_n83geo.shx",
+        "2m_temperature_probe_INGENIOUS_regional_data/README.txt"
+      ]
+    },
+    "wellspring": {
+      "url": "https://gdr.openei.org/files/1391/wellspringdata.gdb.zip",
+      "bytes": 20810222,
+      "sha256": "7222178427ce0634453846819e6482fd6867536534fe9600987099e3b356590f",
+      "members": [
+        "wellspringdata.gdb/a00000001.TablesByName.atx",
+        "wellspringdata.gdb/a00000001.gdbindexes",
+        "wellspringdata.gdb/a00000001.gdbtable",
+        "wellspringdata.gdb/a00000001.gdbtablx",
+        "wellspringdata.gdb/a00000002.gdbtable",
+        "wellspringdata.gdb/a00000002.gdbtablx",
+        "wellspringdata.gdb/a00000003.gdbindexes",
+        "wellspringdata.gdb/a00000003.gdbtable",
+        "wellspringdata.gdb/a00000003.gdbtablx",
+        "wellspringdata.gdb/a00000004.CatItemsByPhysicalName.atx",
+        "wellspringdata.gdb/a00000004.CatItemsByType.atx",
+        "wellspringdata.gdb/a00000004.FDO_UUID.atx",
+        "wellspringdata.gdb/a00000004.freelist",
+        "wellspringdata.gdb/a00000004.gdbindexes",
+        "wellspringdata.gdb/a00000004.gdbtable",
+        "wellspringdata.gdb/a00000004.gdbtablx",
+        "wellspringdata.gdb/a00000004.spx",
+        "wellspringdata.gdb/a00000005.CatItemTypesByName.atx",
+        "wellspringdata.gdb/a00000005.CatItemTypesByParentTypeID.atx",
+        "wellspringdata.gdb/a00000005.CatItemTypesByUUID.atx",
+        "wellspringdata.gdb/a00000005.gdbindexes",
+        "wellspringdata.gdb/a00000005.gdbtable",
+        "wellspringdata.gdb/a00000005.gdbtablx",
+        "wellspringdata.gdb/a00000006.CatRelsByDestinationID.atx",
+        "wellspringdata.gdb/a00000006.CatRelsByOriginID.atx",
+        "wellspringdata.gdb/a00000006.CatRelsByType.atx",
+        "wellspringdata.gdb/a00000006.FDO_UUID.atx",
+        "wellspringdata.gdb/a00000006.gdbindexes",
+        "wellspringdata.gdb/a00000006.gdbtable",
+        "wellspringdata.gdb/a00000006.gdbtablx",
+        "wellspringdata.gdb/a00000007.CatRelTypesByBackwardLabel.atx",
+        "wellspringdata.gdb/a00000007.CatRelTypesByDestItemTypeID.atx",
+        "wellspringdata.gdb/a00000007.CatRelTypesByForwardLabel.atx",
+        "wellspringdata.gdb/a00000007.CatRelTypesByName.atx",
+        "wellspringdata.gdb/a00000007.CatRelTypesByOriginItemTypeID.atx",
+        "wellspringdata.gdb/a00000007.CatRelTypesByUUID.atx",
+        "wellspringdata.gdb/a00000007.gdbindexes",
+        "wellspringdata.gdb/a00000007.gdbtable",
+        "wellspringdata.gdb/a00000007.gdbtablx",
+        "wellspringdata.gdb/a00000009.gdbindexes",
+        "wellspringdata.gdb/a00000009.gdbtable",
+        "wellspringdata.gdb/a00000009.gdbtablx",
+        "wellspringdata.gdb/a00000009.spx",
+        "wellspringdata.gdb/a0000000a.gdbindexes",
+        "wellspringdata.gdb/a0000000a.gdbtable",
+        "wellspringdata.gdb/a0000000a.gdbtablx",
+        "wellspringdata.gdb/a0000000a.spx",
+        "wellspringdata.gdb/a0000000b.gdbindexes",
+        "wellspringdata.gdb/a0000000b.gdbtable",
+        "wellspringdata.gdb/a0000000b.gdbtablx",
+        "wellspringdata.gdb/a0000000b.spx",
+        "wellspringdata.gdb/a0000000c.gdbindexes",
+        "wellspringdata.gdb/a0000000c.gdbtable",
+        "wellspringdata.gdb/a0000000c.gdbtablx",
+        "wellspringdata.gdb/a0000000c.spx",
+        "wellspringdata.gdb/a0000000d.gdbindexes",
+        "wellspringdata.gdb/a0000000d.gdbtable",
+        "wellspringdata.gdb/a0000000d.gdbtablx",
+        "wellspringdata.gdb/a0000000d.spx",
+        "wellspringdata.gdb/a0000000e.gdbindexes",
+        "wellspringdata.gdb/a0000000e.gdbtable",
+        "wellspringdata.gdb/a0000000e.gdbtablx",
+        "wellspringdata.gdb/a0000000e.spx",
+        "wellspringdata.gdb/gdb",
+        "wellspringdata.gdb/timestamps"
+      ]
+    },
+    "study_area": {
+      "url": "https://gdr.openei.org/files/1391/study_area_boundary_INGENIOUS_regional_data.zip",
+      "bytes": 6838,
+      "sha256": "9b758aaecd3321e8ec994cdbe5d3b0a9d0c52bddffdd23911c1012db8efe9495",
+      "members": [
+        "study_area_boundary_INGENIOUS_regional_data_bp1/GB_study_area_NAD83.cpg",
+        "study_area_boundary_INGENIOUS_regional_data_bp1/GB_study_area_NAD83.dbf",
+        "study_area_boundary_INGENIOUS_regional_data_bp1/GB_study_area_NAD83.prj",
+        "study_area_boundary_INGENIOUS_regional_data_bp1/GB_study_area_NAD83.sbn",
+        "study_area_boundary_INGENIOUS_regional_data_bp1/GB_study_area_NAD83.sbx",
+        "study_area_boundary_INGENIOUS_regional_data_bp1/GB_study_area_NAD83.shp",
+        "study_area_boundary_INGENIOUS_regional_data_bp1/GB_study_area_NAD83.shp.xml",
+        "study_area_boundary_INGENIOUS_regional_data_bp1/GB_study_area_NAD83.shx"
+      ]
+    }
+  },
+  "fault_sets": {
+    "usgs_qffd": {
+      "layers": [
+        {
+          "path": "SHP/Qfaults_US_Database.shp",
+          "layer": null,
+          "rows_in_template_bbox": 14419,
+          "geom_types": [
+            "LineString",
+            "MultiLineString"
+          ],
+          "columns": [
+            "Location",
+            "Shape_Leng",
+            "age",
+            "certainty",
+            "class",
+            "cooperator",
+            "dip_direct",
+            "earthquake",
+            "fault_id",
+            "fault_leng",
+            "fault_name",
+            "fault_url",
+            "linetype",
+            "ref_id",
+            "review_dat",
+            "scale",
+            "section_id",
+            "section_na",
+            "slip_rate",
+            "slip_sense",
+            "strike",
+            "symbology"
+          ],
+          "line_features": 14419
+        },
+        {
+          "path": "SHP/ca_offshore.shp",
+          "layer": null,
+          "rows_in_template_bbox": 0,
+          "geom_types": [],
+          "line_features": 0
+        },
+        {
+          "path": "SHP/fault_areas.shp",
+          "layer": null,
+          "rows_in_template_bbox": 0,
+          "geom_types": [],
+          "line_features": 0
+        }
+      ],
+      "traces_in_bbox": 14419,
+      "attribute_counts": {
+        "age": {
+          "undifferentiated Quaternary": 6691,
+          "latest Quaternary": 4549,
+          "late Quaternary": 1884,
+          "historic": 1180,
+          "middle and late Quaternary": 115
+        },
+        "slip_rate": {
+          "Less than 0.2 mm/yr": 8199,
+          "Between 0.2 and 1.0 mm/yr": 2776,
+          "Between 1.0 and 5.0 mm/yr": 2082,
+          "Unspecified": 872,
+          "Greater than 5.0 mm/yr": 344,
+          "None": 146
+        }
+      },
+      "center": {
+        "pixels": 60939,
+        "on_label_pixels": 60839,
+        "within_300m_not_on_label": 99,
+        "beyond_300m_of_labels": 1,
+        "beyond_300m_components": 1,
+        "beyond_300m_components_ge8px": 0,
+        "label_pixels_beyond_300m_of_this_set": 2,
+        "iou_with_labels": 0.9959239130434783
+      },
+      "all_touched": {
+        "pixels": 82841,
+        "on_label_pixels": 58800,
+        "within_300m_not_on_label": 24040,
+        "beyond_300m_of_labels": 1,
+        "beyond_300m_components": 1,
+        "beyond_300m_components_ge8px": 0,
+        "label_pixels_beyond_300m_of_this_set": 2,
+        "iou_with_labels": 0.6915287725364287
+      }
+    },
+    "ingenious_v1": {
+      "layers": [
+        {
+          "path": "faults_quaternary_INGENIOUS_regional_data/faults_quaternary_regional.shp",
+          "layer": null,
+          "rows_in_template_bbox": 1148,
+          "geom_types": [
+            "LineString",
+            "MultiLineString"
+          ],
+          "columns": [
+            "ACODE",
+            "AGE",
+            "CFM_URL",
+            "CODE",
+            "Comments",
+            "DIPDIRECT",
+            "FCODE",
+            "FTYPE_",
+            "Geometry_C",
+            "MAPPEDSCAL",
+            "NAME",
+            "NUM",
+            "Notes",
+            "RECENCY_N",
+            "Recency_ci",
+            "SECONDARYS",
+            "SLIPCODE",
+            "SLIPDIRECT",
+            "SLIPRATE_N",
+            "SLIPRTmmyr",
+            "SLIPSENSE",
+            "SlipRate_c"
+          ],
+          "line_features": 1148
+        }
+      ],
+      "traces_in_bbox": 1148,
+      "attribute_counts": {
+        "AGE": {
+          "<1,600,000": 630,
+          "<15,000": 257,
+          "<130,000": 206,
+          "<150": 36,
+          "<750,000": 19
+        }
+      },
+      "center": {
+        "pixels": 60982,
+        "on_label_pixels": 60958,
+        "within_300m_not_on_label": 23,
+        "beyond_300m_of_labels": 1,
+        "beyond_300m_components": 1,
+        "beyond_300m_components_ge8px": 0,
+        "label_pixels_beyond_300m_of_this_set": 0,
+        "iou_with_labels": 0.9991149282108438
+      },
+      "all_touched": {
+        "pixels": 82871,
+        "on_label_pixels": 58876,
+        "within_300m_not_on_label": 23994,
+        "beyond_300m_of_labels": 1,
+        "beyond_300m_components": 1,
+        "beyond_300m_components_ge8px": 0,
+        "label_pixels_beyond_300m_of_this_set": 0,
+        "iou_with_labels": 0.692797383006013
+      }
+    },
+    "ingenious_v2": {
+      "layers": [
+        {
+          "path": "qfaults_ingenious_nad83conus117_2023-06-27.shp",
+          "layer": null,
+          "rows_in_template_bbox": 1148,
+          "geom_types": [
+            "LineString",
+            "MultiLineString"
+          ],
+          "columns": [
+            "CODE2023",
+            "COMMENTS",
+            "DIPDIRECT",
+            "FCODE2023",
+            "FTYPE_",
+            "GEOCOMM",
+            "MAPSCALE",
+            "NAME",
+            "NUM",
+            "RCODE2023",
+            "REC2023",
+            "RECINFO",
+            "RECNUM",
+            "SCODE2023",
+            "SECONDARY",
+            "SLIPDIRECT",
+            "SLIPINFO",
+            "SLIPRT2023",
+            "SLIPRTNUM",
+            "SLIPSENSE",
+            "Shape_Leng"
+          ],
+          "line_features": 1148
+        }
+      ],
+      "traces_in_bbox": 1148,
+      "center": {
+        "pixels": 60982,
+        "on_label_pixels": 60958,
+        "within_300m_not_on_label": 23,
+        "beyond_300m_of_labels": 1,
+        "beyond_300m_components": 1,
+        "beyond_300m_components_ge8px": 0,
+        "label_pixels_beyond_300m_of_this_set": 0,
+        "iou_with_labels": 0.9991149282108438
+      },
+      "all_touched": {
+        "pixels": 82871,
+        "on_label_pixels": 58876,
+        "within_300m_not_on_label": 23994,
+        "beyond_300m_of_labels": 1,
+        "beyond_300m_components": 1,
+        "beyond_300m_components_ge8px": 0,
+        "label_pixels_beyond_300m_of_this_set": 0,
+        "iou_with_labels": 0.692797383006013
+      }
+    }
+  },
+  "point_sets": {
+    "paleo_geothermal": {
+      "layers": [
+        {
+          "path": "Paleo_geothermal_final.shp",
+          "layer": null,
+          "rows": 709,
+          "geom_types": [
+            "Point"
+          ],
+          "columns": [
+            "Comments",
+            "Deposit_ty",
+            "FID_",
+            "Lat_deg",
+            "Location",
+            "Long_deg",
+            "Map_unit",
+            "Ref_source",
+            "State"
+          ],
+          "points_in_template": 402,
+          "points_in_footprint": 281,
+          "points_csv": "paleo_geothermal_Paleo_geothermal_final_layer_points_utm.csv",
+          "points_csv_sha256": "d38efa6c30e8611518c6613225955c682857aba57a9f20c06a3fd4e6df9233a8"
+        }
+      ]
+    },
+    "probes_2m": {
+      "layers": [
+        {
+          "path": "2m_temperature_probe_INGENIOUS_regional_data/2m_temperature_probe_n83geo/2m_temperature_probe_n83geo.shp",
+          "layer": null,
+          "rows": 3800,
+          "geom_types": [
+            "Point"
+          ],
+          "columns": [
+            "Area",
+            "Citation",
+            "Contact",
+            "County",
+            "Date",
+            "Date_2",
+            "Date_3",
+            "Date_4",
+            "Date_5",
+            "Date_6",
+            "Date_7",
+            "F2mDAB",
+            "LatDegreeN",
+            "Link",
+            "LongDegree",
+            "Note",
+            "Notes",
+            "OBJECTID",
+            "Org_Stn",
+            "Organizati",
+            "Project",
+            "State",
+            "Station",
+            "T15m",
+            "T15m_2",
+            "T15m_3",
+            "T15m_4",
+            "T15m_5",
+            "T15m_6",
+            "T15m_7",
+            "T1m",
+            "T1m_2",
+            "T1m_3",
+            "T1m_4",
+            "T1m_5",
+            "T1m_6",
+            "T1m_7",
+            "T2m",
+            "T2m_2",
+            "T2m_3",
+            "T2m_4",
+            "T2m_5",
+            "T2m_6",
+            "T2m_7",
+            "UTM_E",
+            "UTM_N"
+          ],
+          "points_in_template": 3439,
+          "points_in_footprint": 2782,
+          "points_csv": "probes_2m_2m_temperature_probe_n83geo_layer_points_utm.csv",
+          "points_csv_sha256": "4d7a8b2b17c83cb868281efb7ec5e237e163026f9b2229a9fd0d747e7b72c17c"
+        }
+      ]
+    },
+    "wellspring": {
+      "layers": []
+    },
+    "study_area": {
+      "layers": [
+        {
+          "path": "study_area_boundary_INGENIOUS_regional_data_bp1/GB_study_area_NAD83.shp",
+          "layer": null,
+          "rows": 1,
+          "geom_types": [
+            "Polygon"
+          ],
+          "columns": [
+            "AREA",
+            "CLASS",
+            "PERIMETER"
+          ]
+        }
+      ]
+    }
+  },
+  "github_run_id": "36326816737",
+  "code_sha256": "66e541b0bd2275cbfeea5f1626c14dbce3e842e96ff261acbe167719579f1564",
+  "elapsed_seconds": 14.1,
+  "files": {
+    "ingenious_v1_all_touched.packbits.npy": {
+      "bytes": 1535023,
+      "sha256": "403f8a3ccdf356d054e418f56dcf5d4d45a5f6b3cad153f76167e1727b2afd6e"
+    },
+    "ingenious_v1_all_touched_beyond300m.packbits.npy": {
+      "bytes": 1535023,
+      "sha256": "90b72ea5efb5b2701709ec8ae3574bbeb91d6f40b959b6e8b3aefc53d64dfd07"
+    },
+    "ingenious_v1_center.packbits.npy": {
+      "bytes": 1535023,
+      "sha256": "ad0feb53e8c52822e6ff527ed8659a3268020fc673e2e4608f4c60e5a3fe83d1"
+    },
+    "ingenious_v1_center_beyond300m.packbits.npy": {
+      "bytes": 1535023,
+      "sha256": "90b72ea5efb5b2701709ec8ae3574bbeb91d6f40b959b6e8b3aefc53d64dfd07"
+    },
+    "ingenious_v2_all_touched.packbits.npy": {
+      "bytes": 1535023,
+      "sha256": "403f8a3ccdf356d054e418f56dcf5d4d45a5f6b3cad153f76167e1727b2afd6e"
+    },
+    "ingenious_v2_all_touched_beyond300m.packbits.npy": {
+      "bytes": 1535023,
+      "sha256": "90b72ea5efb5b2701709ec8ae3574bbeb91d6f40b959b6e8b3aefc53d64dfd07"
+    },
+    "ingenious_v2_center.packbits.npy": {
+      "bytes": 1535023,
+      "sha256": "ad0feb53e8c52822e6ff527ed8659a3268020fc673e2e4608f4c60e5a3fe83d1"
+    },
+    "ingenious_v2_center_beyond300m.packbits.npy": {
+      "bytes": 1535023,
+      "sha256": "90b72ea5efb5b2701709ec8ae3574bbeb91d6f40b959b6e8b3aefc53d64dfd07"
+    },
+    "usgs_qffd_all_touched.packbits.npy": {
+      "bytes": 1535023,
+      "sha256": "b7be34f688adbc0526e3dc2e7e9e53633f95f30ae574b8e3de6ce9cb87e6e5cd"
+    },
+    "usgs_qffd_all_touched_beyond300m.packbits.npy": {
+      "bytes": 1535023,
+      "sha256": "90b72ea5efb5b2701709ec8ae3574bbeb91d6f40b959b6e8b3aefc53d64dfd07"
+    },
+    "usgs_qffd_center.packbits.npy": {
+      "bytes": 1535023,
+      "sha256": "7614ecdf31f506d0a5bc9f5527486fcc4adc1ed8dd7a69917d6f77f860e86c6b"
+    },
+    "usgs_qffd_center_beyond300m.packbits.npy": {
+      "bytes": 1535023,
+      "sha256": "90b72ea5efb5b2701709ec8ae3574bbeb91d6f40b959b6e8b3aefc53d64dfd07"
+    },
+    "paleo_geothermal_Paleo_geothermal_final_layer_points_utm.csv": {
+      "bytes": 129745,
+      "sha256": "d38efa6c30e8611518c6613225955c682857aba57a9f20c06a3fd4e6df9233a8"
+    },
+    "probes_2m_2m_temperature_probe_n83geo_layer_points_utm.csv": {
+      "bytes": 1098391,
+      "sha256": "4d7a8b2b17c83cb868281efb7ec5e237e163026f9b2229a9fd0d747e7b72c17c"
+    }
+  }
+}
