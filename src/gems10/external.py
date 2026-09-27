@@ -61,6 +61,45 @@ def read_u8_stack(path: str, expect_shape: tuple[int, int] | None = None,
     return np.moveaxis(arr, 0, -1)  # (H, W, C)
 
 
+U8_NAMES = {"lidar": "lidar_scarp_features_u8.tif",
+            "rad": "geodawn_rad_u8.tif"}
+
+
+def prepare_memmaps(data_dir: str, height: int = 3730, width: int = 3292) -> dict[str, str]:
+    """Convert u8 externals to float32 disk memmaps (NaN for nodata) once.
+
+    The float32 grids (lidar 590 MB + rad 196 MB) OOM-killed a 3.8 GB host
+    when held in RAM next to HGB training (2026-09-27) — always consume them
+    via open_memmaps() (read-only), never via read_u8_stack(), in pipelines.
+    Returns {name: npy_path}.
+    """
+    import os
+
+    from . import spec as _spec
+
+    out: dict[str, str] = {}
+    ext_dir = os.path.join(data_dir, "external")
+    for name, fname in U8_NAMES.items():
+        npy = os.path.join(ext_dir, f"{name}.f32.npy")
+        if not os.path.exists(npy):
+            g = read_u8_stack(
+                os.path.join(ext_dir, fname),
+                expect_shape=(height, width),
+                grid_transform=(100.0, 0.0, 243350.0, 0.0, -100.0, 4508550.0),
+                grid_crs="EPSG:32611")
+            np.save(npy, np.ascontiguousarray(g))
+        out[name] = npy
+    return out
+
+
+def open_memmaps(data_dir: str, names: list[str]) -> list[np.ndarray]:
+    """Open prepared externals read-only (see prepare_memmaps)."""
+    import os
+
+    paths = prepare_memmaps(data_dir)
+    return [np.lib.format.open_memmap(paths[n], mode="r") for n in names]
+
+
 def lidar_ridge_from_exmax(lidar: np.ndarray, footprint: np.ndarray,
                            top_frac: float = 0.02) -> np.ndarray:
     """Unsupervised scarp-ridge mask: top `top_frac` of ex_max within lidar-valid."""

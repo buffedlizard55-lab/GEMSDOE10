@@ -45,6 +45,8 @@ def main() -> int:
     ap.add_argument("--with-discovery", action="store_true")
     ap.add_argument("--discovery-w", default="0.5,0.4")
     ap.add_argument("--with-selftrain", action="store_true")
+    ap.add_argument("--with-proximity", action="store_true",
+                    help="ablation only: dist-to-catalogue channel (memorises)")
     args = ap.parse_args()
     t0 = time.time()
 
@@ -62,18 +64,16 @@ def main() -> int:
 
     ext_grids: list[np.ndarray] = []
     if args.externals:
-        for name in args.externals.split(","):
-            p = data_dir / "external" / ({"lidar": "lidar_scarp_features_u8.tif",
-                                          "rad": "geodawn_rad_u8.tif"}[name])
-            g = external.read_u8_stack(
-                str(p), expect_shape=(spec.HEIGHT, spec.WIDTH),
-                grid_transform=(100.0, 0.0, 243350.0, 0.0, -100.0, 4508550.0),
-                grid_crs="EPSG:32611")
-            ext_grids.append(g)
+        names = args.externals.split(",")
+        ext_grids = external.open_memmaps(str(data_dir), names)
+        for name, g in zip(names, ext_grids):
             channels += [f"{name}_u8_{i}" for i in range(g.shape[2])]
-            print(f"external {name}: {g.shape}")
-    prox = train_proximity_channel(pos)
-    channels = channels + ["dist_to_catalogue"]
+            print(f"external {name}: {g.shape} (disk memmap)")
+    # Proximity OFF by default (harness: it memorises, DTI 0.012). Only for
+    # ablation via --with-proximity.
+    prox = train_proximity_channel(pos) if args.with_proximity else None
+    if prox is not None:
+        channels = channels + ["dist_to_catalogue"]
 
     rng = np.random.default_rng(args.seed)
     py, px = np.nonzero(pos)
@@ -86,18 +86,15 @@ def main() -> int:
     X = feat[rows, cols].astype(np.float32)
     for g in ext_grids:
         X = np.concatenate([X, g[rows, cols].astype(np.float32)], axis=1)
-    X = np.concatenate([X, prox[rows, cols].reshape(-1, 1)], axis=1)
+    if prox is not None:
+        X = np.concatenate([X, prox[rows, cols].reshape(-1, 1)], axis=1)
     print(f"train X={X.shape}", flush=True)
     clf = modeling.fit_hgb(X, y, iterations=args.iterations, lr=args.lr,
                            depth=args.depth, l2=args.l2, seed=args.seed)
 
-    ext_full = None
-    if ext_grids:
-        ext_full = np.concatenate(
-            [np.concatenate(ext_grids, axis=2), prox[:, :, None]], axis=2)
-    else:
-        ext_full = prox[:, :, None]
-    prob = modeling.predict_grid(clf, feat, footprint, extra=ext_full)
+    extra = prox[:, :, None] if prox is not None else None
+    prob = modeling.predict_grid(clf, feat, footprint, extra=extra,
+                                 extra_grids=ext_grids or None)
 
     if args.with_selftrain:
         elig = footprint & ~pos
@@ -111,7 +108,8 @@ def main() -> int:
             Xp = feat[pr, pc].astype(np.float32)
             for g in ext_grids:
                 Xp = np.concatenate([Xp, g[pr, pc].astype(np.float32)], axis=1)
-            Xp = np.concatenate([Xp, prox[pr, pc].reshape(-1, 1)], axis=1)
+            if prox is not None:
+                Xp = np.concatenate([Xp, prox[pr, pc].reshape(-1, 1)], axis=1)
             X2 = np.concatenate([X, Xp])
             y2 = np.concatenate([y, np.ones(pr.size, dtype=np.int8)])
             w2 = np.concatenate([np.ones(y.size), np.full(pr.size, 0.5)])
@@ -120,7 +118,8 @@ def main() -> int:
                                    depth=args.depth, l2=args.l2,
                                    seed=args.seed + 1)
             prob = modeling.predict_grid(clf, feat, footprint,
-                                         extra=ext_full)
+                                         extra=extra,
+                                         extra_grids=ext_grids or None)
     if args.with_discovery:
         sys_id, n, _ = systems.label_systems(labels)
         strikes = discovery.system_strikes(sys_id, np.arange(1, n + 1))

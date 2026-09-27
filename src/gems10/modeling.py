@@ -38,10 +38,14 @@ def fit_hgb(X: np.ndarray, y: np.ndarray,
 
 def predict_grid(model, feat: np.ndarray, footprint: np.ndarray,
                  extra: np.ndarray | None = None,
+                 extra_grids: list | None = None,
                  batch_rows: int = 256) -> np.ndarray:
     """Probability grid (float64, NaN outside footprint), row-batched.
 
-    `feat` is (H, W, C) float32 (memmap ok); `extra` is optional (H, W, E).
+    `feat` is (H, W, C) float32 (memmap ok); `extra` is optional (H, W, E);
+    `extra_grids` is an optional list of additional (H, W, Ei) grids that are
+    concatenated PER BATCH (so disk memmaps are never materialised in RAM —
+    concatenating the 800 MB externals eagerly OOM-killed a 3.8 GB host).
     Only footprint rows are scored; NaN rows inside the footprint still get a
     prediction (HGB handles NaN natively).
     """
@@ -53,6 +57,11 @@ def predict_grid(model, feat: np.ndarray, footprint: np.ndarray,
         if not blk_fp.any():
             continue
         X = feat[r0:r1].reshape(-1, feat.shape[2]).astype(np.float32)
+        # column order must match training: [feat | extra_grids... | extra]
+        if extra_grids:
+            for g in extra_grids:
+                G = g[r0:r1].reshape(-1, g.shape[2]).astype(np.float32)
+                X = np.concatenate([X, G], axis=1)
         if extra is not None:
             E = extra[r0:r1].reshape(-1, extra.shape[2]).astype(np.float32)
             X = np.concatenate([X, E], axis=1)

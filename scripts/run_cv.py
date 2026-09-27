@@ -81,14 +81,9 @@ def run_fold(feat: np.ndarray, channels: list[str], labels: np.ndarray,
         X = np.concatenate([X, prox[rows, cols].reshape(-1, 1)], axis=1)
     print(f"[fold {k}] train X={X.shape} pos={int(y.sum())}", flush=True)
 
-    extra = None
-    if prox is not None or ext_grids:
-        parts = []
-        if ext_grids:
-            parts.append(np.concatenate(ext_grids, axis=2))
-        if prox is not None:
-            parts.append(prox[:, :, None])
-        extra = parts[0] if len(parts) == 1 else np.concatenate(parts, axis=2)
+    # prox is a small in-RAM grid; ext_grids stay on disk (memmap) and are
+    # concatenated per batch inside predict_grid (never materialised).
+    extra = prox[:, :, None] if prox is not None else None
     if args.pu_bags and args.pu_bags > 1:
         # Bagging PU (Mordelet & Vert 2014): negatives are contaminated by
         # unmapped faults, so average K models trained on all positives plus
@@ -109,13 +104,15 @@ def run_fold(feat: np.ndarray, channels: list[str], labels: np.ndarray,
                                     lr=args.lr, depth=args.depth, l2=args.l2,
                                     seed=7 + b)
             probs.append(modeling.predict_grid(clfb, feat, footprint,
-                                               extra=extra))
+                                               extra=extra,
+                                               extra_grids=ext_grids or None))
             print(f"[fold {k}] pu bag {b + 1}/{args.pu_bags} done", flush=True)
         prob = np.nanmean(np.stack(probs), axis=0)
     else:
         clf = modeling.fit_hgb(X, y, iterations=args.iterations, lr=args.lr,
                                depth=args.depth, l2=args.l2, seed=7)
-        prob = modeling.predict_grid(clf, feat, footprint, extra=extra)
+        prob = modeling.predict_grid(clf, feat, footprint, extra=extra,
+                                     extra_grids=ext_grids or None)
     if args.with_selftrain:
         elig = trainable & footprint & ~train_sys
         # agreement grid, row-batched (the unbatched 5.2M×107 sample OOMs)
@@ -137,7 +134,8 @@ def run_fold(feat: np.ndarray, channels: list[str], labels: np.ndarray,
             clf = modeling.fit_hgb(X2, y2, sample_weight=w2,
                                    iterations=args.iterations, lr=args.lr,
                                    depth=args.depth, l2=args.l2, seed=8)
-            prob = modeling.predict_grid(clf, feat, footprint, extra=extra)
+            prob = modeling.predict_grid(clf, feat, footprint, extra=extra,
+                                     extra_grids=ext_grids or None)
     if args.with_discovery:
         use = np.unique(sf.system_id[train_sys])
         strikes = discovery.system_strikes(sf.system_id, use)
@@ -219,16 +217,11 @@ def main() -> int:
 
     ext_grids: list[np.ndarray] = []
     if args.externals:
-        for name in args.externals.split(","):
-            p = data_dir / "external" / ({"lidar": "lidar_scarp_features_u8.tif",
-                                          "rad": "geodawn_rad_u8.tif"}[name])
-            g = external.read_u8_stack(
-                str(p), expect_shape=(spec.HEIGHT, spec.WIDTH),
-                grid_transform=(100.0, 0.0, 243350.0, 0.0, -100.0, 4508550.0),
-                grid_crs="EPSG:32611")
-            ext_grids.append(g)
+        names = args.externals.split(",")
+        ext_grids = external.open_memmaps(str(data_dir), names)
+        for name, g in zip(names, ext_grids):
             channels += [f"{name}_u8_{i}" for i in range(g.shape[2])]
-            print(f"external {name}: {g.shape}")
+            print(f"external {name}: {g.shape} (disk memmap)")
 
     work_dir = Path(args.work_dir)
     work_dir.mkdir(parents=True, exist_ok=True)
