@@ -81,8 +81,6 @@ def run_fold(feat: np.ndarray, channels: list[str], labels: np.ndarray,
         X = np.concatenate([X, prox[rows, cols].reshape(-1, 1)], axis=1)
     print(f"[fold {k}] train X={X.shape} pos={int(y.sum())}", flush=True)
 
-    clf = modeling.fit_hgb(X, y, iterations=args.iterations, lr=args.lr,
-                           depth=args.depth, l2=args.l2, seed=7)
     extra = None
     if prox is not None or ext_grids:
         parts = []
@@ -91,7 +89,33 @@ def run_fold(feat: np.ndarray, channels: list[str], labels: np.ndarray,
         if prox is not None:
             parts.append(prox[:, :, None])
         extra = parts[0] if len(parts) == 1 else np.concatenate(parts, axis=2)
-    prob = modeling.predict_grid(clf, feat, footprint, extra=extra)
+    if args.pu_bags and args.pu_bags > 1:
+        # Bagging PU (Mordelet & Vert 2014): negatives are contaminated by
+        # unmapped faults, so average K models trained on all positives plus
+        # independent negative subsamples. Costs Kx training, decided by FAR.
+        probs = []
+        for b in range(args.pu_bags):
+            rb, cb, yb = systems.sample_training_pixels(
+                trainable, train_sys, footprint, n_neg=args.negatives,
+                seed=1000 + k + 7919 * (b + 1))
+            Xb = feat[rb, cb].astype(np.float32)
+            if ext_grids:
+                for g in ext_grids:
+                    Xb = np.concatenate([Xb, g[rb, cb].astype(np.float32)],
+                                        axis=1)
+            if prox is not None:
+                Xb = np.concatenate([Xb, prox[rb, cb].reshape(-1, 1)], axis=1)
+            clfb = modeling.fit_hgb(Xb, yb, iterations=args.iterations,
+                                    lr=args.lr, depth=args.depth, l2=args.l2,
+                                    seed=7 + b)
+            probs.append(modeling.predict_grid(clfb, feat, footprint,
+                                               extra=extra))
+            print(f"[fold {k}] pu bag {b + 1}/{args.pu_bags} done", flush=True)
+        prob = np.nanmean(np.stack(probs), axis=0)
+    else:
+        clf = modeling.fit_hgb(X, y, iterations=args.iterations, lr=args.lr,
+                               depth=args.depth, l2=args.l2, seed=7)
+        prob = modeling.predict_grid(clf, feat, footprint, extra=extra)
     if args.with_selftrain:
         elig = trainable & footprint & ~train_sys
         # agreement on a stable full-grid sample (no labels involved)
@@ -172,6 +196,8 @@ def main() -> int:
     ap.add_argument("--with-selftrain", action="store_true")
     ap.add_argument("--with-proximity", action="store_true",
                     help="ablation only: add dist-to-train channel (memorises)")
+    ap.add_argument("--pu-bags", type=int, default=0,
+                    help="bagging-PU bags (0/1 = off)")
     ap.add_argument("--policies", default=",".join(DEFAULT_POLICIES))
     args = ap.parse_args()
     args.policies = args.policies.split(",")
