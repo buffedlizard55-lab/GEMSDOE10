@@ -37,7 +37,7 @@ from scipy import ndimage
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from gems10 import discovery, metric, modeling, selftrain, spec, systems  # noqa: E402
+from gems10 import discovery, external, metric, modeling, selftrain, spec, systems  # noqa: E402
 
 DEFAULT_POLICIES = [f"topk{b:02d}_{m}" for b in (1, 2, 3, 4, 5)
                     for m in ("binary", "soft")]
