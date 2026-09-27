@@ -6,10 +6,13 @@ name: external-data
 # The sandbox restores them with `python scripts/fetch_external.py --tag ...`.
 # Nothing here trains a model, touches DrivenData, or spends a submission slot.
 #
-# Dispatch-only (the sandbox runs `gh workflow run external-data.yml --ref <branch>
-# -f jobs=dem10,catalogue`). Step logs are captured to out/<job>/build.log and
-# published even when the build fails (tag `ext/failed-<job>-<run_id>`), because
-# the sandbox cannot read Actions logs (they redirect to Azure blob storage).
+# Triggering: the sandbox token cannot dispatch workflows (403), so the run is
+# triggered by pushing a change under scripts/ext/ (or this file); the job list
+# is read from scripts/ext/JOBS (comma list: dem10,catalogue) so a push can
+# re-run one job without repeating the multi-hour DEM job. Step logs are
+# captured to out/<job>/build.log and published even when the build fails (tag
+# `ext/failed-<job>-<run_id>`), because the sandbox cannot read Actions logs
+# (they redirect to Azure blob storage).
 on:
   workflow_dispatch:
     inputs:
@@ -19,14 +22,28 @@ on:
       max_blocks:
         description: "debug: limit DEM blocks (0 = all)"
         default: "0"
+  push:
+    branches: ["**"]
+    paths: [".github/workflows/external-data.yml", "scripts/ext/**"]
 permissions:
   contents: write
 concurrency:
   group: external-data-${{ github.ref }}
   cancel-in-progress: false
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      jobs: ${{ steps.cfg.outputs.jobs }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: cfg
+        run: |
+          if [ -n "${{ github.event.inputs.jobs }}" ]; then J="${{ github.event.inputs.jobs }}"; else J="$(tr -d ' \n' < scripts/ext/JOBS)"; fi
+          echo "jobs=$J" >> "$GITHUB_OUTPUT"; echo "jobs to run: $J"
   dem10:
-    if: ${{ contains(github.event.inputs.jobs, 'dem10') }}
+    needs: setup
+    if: ${{ contains(needs.setup.outputs.jobs, 'dem10') }}
     runs-on: ubuntu-latest
     timeout-minutes: 300
     steps:
@@ -56,7 +73,8 @@ jobs:
           echo "build=${{ steps.build.outcome }} run=${{ github.run_id }} sha=${{ github.sha }}" > out/dem10/STATUS.txt
           bash scripts/ext/publish_tag.sh out/dem10 "$TAG" "H20 3DEP 10 m scarp channels (label-free), run ${{ github.run_id }}, build=${{ steps.build.outcome }}"
   catalogue:
-    if: ${{ contains(github.event.inputs.jobs, 'catalogue') }}
+    needs: setup
+    if: ${{ contains(needs.setup.outputs.jobs, 'catalogue') }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
