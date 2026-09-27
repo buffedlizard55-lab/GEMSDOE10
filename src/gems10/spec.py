@@ -36,8 +36,8 @@ Measured facts (all reproduced by scripts/verify_spec.py):
 Consequences used elsewhere in this repo:
   * 300 m triangular kernel = exactly 3.0 pixels on this grid (metric.py).
   * The authoritative "inside the footprint" mask for a submission is the sample
-    submission's non-NaN mask; a NaN anywhere inside it is what makes the
-    DrivenData form reject a file with "Predicted values must be in range [0, 1]".
+    submission's non-NaN mask; a NaN anywhere inside it violates the finite
+    confidence contract. The original backend rejection cause is not known.
     That is a hard gate in raster.py.
   * Faults occupy 60,988 / 5,167,373 = 1.1803% of the scored footprint and
     0.4967% of the full grid. The task brief's "roughly 1% of the area" holds for

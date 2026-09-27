@@ -1,0 +1,19 @@
+{
+  "built_utc": "2026-09-27T05:28:16+00:00",
+  "reports": [
+    "cv_baseline.json",
+    "cv_discovery.json",
+    "cv_selftrain.json",
+    "data_measurements.json",
+    "diagnostic_validation.json",
+    "h12_blocked.json",
+    "h12_reproduction.json",
+    "official_feed.json",
+    "rescore_baseline.json",
+    "rescore_discovery.json",
+    "submission_audit.json",
+    "verification_run.json"
+  ],
+  "submissions": [],
+  "refused_publications": []
+}

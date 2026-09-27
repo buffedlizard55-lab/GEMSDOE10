@@ -1,0 +1,76 @@
+{
+  "schema": 1,
+  "last_attempt_utc": "2026-09-27T05:12:53.132716+00:00",
+  "retrieval_method": "fetch_page tool in this session; subsequent checks use refresh_sources.py",
+  "sources": [
+    {
+      "id": "problem",
+      "url": "https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/",
+      "required_excerpt": "structures that are indicative of geothermal resources",
+      "status": "stale_check_failed",
+      "last_success_date": "2026-09-27",
+      "claim": "Target: geological faults; pixel confidences in [0,1]; float32 single-band, UTM 11N, 100 m, same bounds. DTI alpha=.2, beta=.8, radius=300 m.",
+      "scope": "Published specification; exact private scorer implementation unavailable.",
+      "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>"
+    },
+    {
+      "id": "masking",
+      "url": "https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2",
+      "required_excerpt": "Pixels corresponding to known USGS/INGENIOUS faults",
+      "status": "stale_check_failed",
+      "last_success_date": "2026-09-27",
+      "claim": "Staff confirms known catalogue pixels excluded in both rounds.",
+      "scope": "Does not disclose the order of masking relative to kernel dilation.",
+      "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>"
+    },
+    {
+      "id": "new_geometry",
+      "url": "https://community.drivendata.org/t/where-do-you-draw-the-line/11536/2",
+      "required_excerpt": "any fault pixel not already captured by USGS/INGENIOUS",
+      "status": "stale_check_failed",
+      "last_success_date": "2026-09-27",
+      "claim": "New geometry of existing fault systems can qualify.",
+      "scope": "No justification for excluding every pixel within 1 km of a known trace.",
+      "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>"
+    },
+    {
+      "id": "hidden_sources",
+      "url": "https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527/7",
+      "required_excerpt": "not sharing details about the data sources, fault types, or coverage",
+      "status": "stale_check_failed",
+      "last_success_date": "2026-09-27",
+      "claim": "Staff declines to disclose hidden test data sources, fault types or coverage.",
+      "scope": "No claim about hidden faults' median catalogue distance is verified.",
+      "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>"
+    },
+    {
+      "id": "cadence",
+      "url": "https://community.drivendata.org/t/weekly-submissions/11524/2",
+      "required_excerpt": "submission allowance resets based on a rolling window",
+      "status": "stale_check_failed",
+      "last_success_date": "2026-09-27",
+      "claim": "The submission allowance uses a rolling window.",
+      "scope": "Current account slot usage cannot be read without that account's authenticated history.",
+      "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>"
+    },
+    {
+      "id": "ingenious",
+      "url": "https://gdr.openei.org/submissions/1391",
+      "required_excerpt": "2-meter temperature probe surveys",
+      "status": "stale_check_failed",
+      "last_success_date": "2026-09-27",
+      "claim": "Official regional dataset provides temperature probes, paleo features and well/spring resources under CC BY 4.0.",
+      "scope": "Landing page verified; binary archives not obtained here (TLS failures).",
+      "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>"
+    }
+  ],
+  "leaderboard": {
+    "url": "https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/",
+    "status": "stale_check_failed",
+    "last_success_date": "2026-09-27",
+    "rank1": "DARD",
+    "score": 0.3049,
+    "note": "Public snapshot, not a forecast or a verified mapping of group uploads.",
+    "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>"
+  }
+}

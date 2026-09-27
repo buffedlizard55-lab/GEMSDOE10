@@ -1,23 +1,14 @@
-# Limitations — what this entry cannot do (yet), and what it needs
+# Limitations and access needs
 
-## Honest limits of the current system
+1. **No private new-fault labels or guaranteed leaderboard uplift.** Spatial CV still scores held-out catalogue faults. Component holdouts and FAR10 subsets are different proxies. Hidden source/type/coverage is explicitly undisclosed by staff. Neither can certify geothermal resources.
+2. **No DrivenData account session.** We can read public leaderboard/forum through the research fetch tool, but cannot verify authenticated upload hashes, remaining slots or eligibility. Never request credentials in chat; use the authorized account holder's normal platform workflow.
+3. **Binary network access is uneven.** Dropbox and GDR archive requests fail TLS from this runtime. Public GitHub API transport works. Feature data were restored from an immutable team mirror and matched inherited hashes, not independently authenticated official bytes. H15 remains blocked, not advertised as usable data.
+4. **CPU only, ~4 GB RAM.** Bounded HGB training works here. A GPU is not required for the implemented experiment. Raw 1 m DEM processing and U-Net comparisons need additional storage/compute and their own frozen protocols; no assertion that GPU training is already complete.
+5. **No final H12 artifact without a positive experiment.** The inherited `train_final.py` fits baseline107. A passing novel candidate needs a correct final feature/training manifest before publisher approval; a failed one must not ship. No submission slot was spent.
+6. **Feature semantics/normalization issues.** `tc` and depth-to-base metadata need official release comparison. Existing Frangi normalization depends on tile-local maxima; new paired experiments fix the tile height and hash the resulting stack. Fixing this changes the baseline and needs a new recorded run.
+7. **Masking surrogate is not backend source code.** Known pixels are excluded officially, but order relative to the metric dilation is not disclosed. The optional FP-ignore metric is an explicit surrogate, not a byte-for-byte official scorer claim.
+8. **Current-best scope.** Reproducible persisted campaign arms are baseline/discovery/selftrain; some claimed external runs have no persisted grids/results. No claim of beating every historic group method or the neural ensemble that scored .1563 without matched retraining.
+9. **Live checks are not continuous science.** Daily scheduled workflow checks availability, quotations and the leaderboard. Changed text or failures require review; it does not autonomously certify newly downloaded data, account compliance or geologic interpretations. GitHub schedules may be delayed/disabled by platform policy.
+10. **Legal/user obligations remain.** Rules eligibility, AI-disclosure accuracy and account/entity submission allowance require participant attestation. A repo count is not proof of a rules violation. Final upload/sign-off cannot honestly be declared fully autonomous here.
 
-1. **The harness is still a catalogue proxy.** System-holdout simulates *unmapped catalogue-like* faults; truly novel faults (new areas, new styles) cannot be validated offline. Absolute harness numbers (≈0.09) are not leaderboard predictions.
-2. **No GPU here.** The model is gradient boosting over sampled pixels, not the reference U-Net. A ResNet U-Net with the true distance-weighted loss on a GPU host remains untested by this group.
-3. **The 1 m DEM link list is unused.** Lidar enters only via the sibling-built 100 m scarp aggregates (12 bands, 75% coverage). Raw 1 m tiles (100s of GB) need an unrestricted host.
-4. **Forum clarifications are second-hand.** Masking (11516), corrections (11536), cadence (11524) come via sibling-session records; the account holder must re-verify each on the forum before the final blind choice.
-5. **Single-model family.** No CNN, no transformer, no physics inversion; the ensemble is same-family seeds at most.
-6. **Phase-2 narratives unwritten.** Per-candidate geological reasoning (trend, agreeing signals, depth, confidence) and the Winning Model Documentation Template are still open.
-
-## What we need (access / compute)
-
-- DrivenData credentials to read the public leaderboard + submission history (slot accounting) and to re-verify the three forum rulings.
-- A GPU host (or patience) for the U-Net comparison run.
-- An unrestricted-egress host + ~500 GB scratch for the 1 m DEM pilot.
-- The account holder's eligibility confirmation (§1.3) and AI-disclosure sign-off (§3.2).
-
-## Known-good (do not redo)
-
-- Metric (+ masked variant), spec pins, format gate, system-holdout harness, 107-channel streaming builder — all tested (71/71).
-- Proximity-to-catalogue features: measured poison for hidden faults (kept behind `--with-proximity` for ablation only).
-- SGMC-gap traces: measured 0.0000, excluded. QF-gap: negligible, excluded.
+Do not claim all original goals are finished: no demonstrated >.3049 model, no new geothermal-vent catalogue, no high-resolution external pilot, no private-score verification. See NEXT_STEPS.md for the next measurable work.

@@ -8,11 +8,11 @@ model selected by how well it reproduces the catalogue is selected for the
 wrong skill — 6GEMSDOE's HGB reached 0.17 blocked-CV catalogue DTI and scored
 0.0286 on the leaderboard.
 
-The honest offline simulation of the official scoring is therefore:
+One imperfect catalogue-generalization proxy is therefore:
 
-  * hold out WHOLE FAULT SYSTEMS (8-connected components of the label raster),
+  * hold out raster components (not verified geological fault systems),
     never random pixels — the held-out systems play the role of "unmapped
-    faults", exactly like the private test set;
+    faults"; this does not recreate the private test population;
   * train on the remaining systems;
   * score the FULL footprint with GT = held-out systems and
     fp_ignore_mask = train systems — mirroring the official masking of the

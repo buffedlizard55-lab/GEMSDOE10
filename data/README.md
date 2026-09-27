@@ -12,24 +12,29 @@ https://www.drivendata.org/competitions/306/competition-doe-gems/data/
 
 Pins live in `src/gems10/spec.py` (`PINS`, `BRIDGE_PARTS`).
 
-## Placement
+## Automatic placement (working in this session)
 
-1. Download the three files from the data tab into `data/` (names above), **or**
-2. Copy the five bridge parts (`gems-geodawn-numerical-features.tif.part-000..004`, same layout as sibling repo 6GEMSDOE `data/bridge/`) anywhere and assemble:
-   `python scripts/fetch_data.py --data-dir data --bridge-dir <parts-dir>`
-3. Verify: `python scripts/fetch_data.py --data-dir data` → `ALL OK` (3/3).
+`python scripts/fetch_data.py --download` restores the feature file from public team
+mirror `buffedlizard55-lab/6GEMSDOE` at commit
+`e2fe3f41c6f5dd2dcb2fc91958ee67698f114ada` through GitHub's API via `gh`.
+Each part and the assembled file are verified before atomic placement. Temporary
+parts are removed; the large raster is ignored. This verifies continuity with
+inherited team pins, not independent official authenticity.
 
-## External priors (`data/external/`, gitignored, fetched at build time)
+The user-provided Dropbox feature link failed TLS from this runtime. The official
+data tab redirects to login. The mirror is a transport fallback, not an official
+publisher. Existing `--bridge-dir` assembly and `--no-features` small-file checks
+remain available. No GPU is needed for HGB training.
 
-| File | Source | Provenance |
-|---|---|---|
-| `lidar_scarp_features_u8.tif` (12 bands) + `.json` | USGS 3DEP lidar → 100 m grid | sibling 7GEMSDOE `external/dem/` |
-| `geodawn_rad_u8.tif` (4 bands) + `.json` | GeoDAWN radiometrics, doi:10.5066/P93LGLVQ | sibling 7GEMSDOE `external/geodawn_rad/` |
-| `qfaults_prior_u8.tif` + `.json` | USGS QFaults `Qfaults_GIS.zip` sha256 `447eadc5…` | sibling 7GEMSDOE `external/qfaults/` |
-| `sgmc_gap.tif` | GapFinder v2 (GEMSDOE3) | rejected for submission — see `src/gems10/external.py` |
+## External priors: historical, not present here
 
-All are verified to the official grid (3730×3292, EPSG:32611, 100 m) on load by `src/gems10/external.py::read_u8_stack`.
+Earlier sessions reference sibling 7GEMSDOE lidar scarp and radiometric aggregates,
+QFault priors, and an SGMC-gap raster. Those files are NOT present in this checkout
+and have not been independently regenerated in this session. Do not claim a model
+used them based on filenames in an old report. New experiments use provided data
+only. H15's exact official archives, CC BY 4.0 attribution and failed accessibility
+checks are in HYPOTHESES.md. Large external data belong in ignored `data/external/`.
 
 ## Measured facts (re-verified 2026-09-27)
 
-Grid 3730×3292 = 12,279,160 px; footprint 5,167,373 finite px; labels 60,988 positive (1.18% of footprint); sample submission is **not** all-zero — it carries 1.0 at exactly the 60,988 catalogue pixels; feature nodata sentinel is float32-min `-3.4028234663852886e+38` (not NaN); 3,199 fault systems (8-conn), median 12 px, max 360 px.
+Grid 3730×3292 = 12,279,160 px; footprint 5,167,373 finite px; labels 60,988 positive (1.18% of footprint); sample submission is **not** all-zero — it carries 1.0 at exactly the 60,988 catalogue pixels; feature nodata sentinel is float32-min `-3.4028234663852886e+38` (not NaN); 3,199 raster components (8-conn, not necessarily geological systems), median 12 px, max 360 px.

@@ -1,0 +1,39 @@
+{
+  "started_utc": "2026-09-27T05:27:52.663227+00:00",
+  "status": "passed",
+  "checks": [
+    {
+      "command": "/home/user/GEMSDOE10/.venv/bin/python scripts/fetch_data.py",
+      "exit_code": 0,
+      "stdout": "[OK] training_features.tif: 418912844 B sha256 4371c82e3b8339b8...\n[OK] labels.tif: 425830 B sha256 7ba308ccdc4418b3...\n[OK] sample_submission.tif: 1599597 B sha256 2176d08e485aa2cd...\nALL OK\n",
+      "stderr": ""
+    },
+    {
+      "command": "/home/user/GEMSDOE10/.venv/bin/python -m pytest -q --junitxml=scratch/test-results.xml",
+      "exit_code": 0,
+      "stdout": "........................................................................ [ 76%]\n......................                                                   [100%]\n",
+      "stderr": ""
+    },
+    {
+      "command": "/home/user/GEMSDOE10/.venv/bin/python scripts/build_site.py",
+      "exit_code": 0,
+      "stdout": "6 pages; 0 approved downloads; 0 refused\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "local tests, data integrity and static site links; not all scientific claims or private backend behavior",
+  "tests": {
+    "tests": 94,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "site_links": {
+    "checked_internal_links": 83,
+    "missing": [],
+    "ok": true
+  },
+  "approved_downloads": 0,
+  "refused_publications": [],
+  "finished_utc": "2026-09-27T05:28:06.088826+00:00"
+}

@@ -1,0 +1,44 @@
+{
+  "labels.tif": {
+    "shape": [
+      3730,
+      3292
+    ],
+    "crs": "EPSG:32611",
+    "transform": [
+      100.0,
+      0.0,
+      243350.0,
+      0.0,
+      -100.0,
+      4508550.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "positive_pixels": 60988,
+    "bytes": 425830,
+    "raster_components": 3199
+  },
+  "sample_submission.tif": {
+    "shape": [
+      3730,
+      3292
+    ],
+    "crs": "EPSG:32611",
+    "transform": [
+      100.0,
+      0.0,
+      243350.0,
+      0.0,
+      -100.0,
+      4508550.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "positive_pixels": 60988,
+    "bytes": 1599597,
+    "finite_pixels": 5167373
+  }
+}

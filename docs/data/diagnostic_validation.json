@@ -1,0 +1,107 @@
+{
+  "status": "format_diagnostic_passed_not_approved",
+  "artifact": {
+    "field_sha256": "4f5849df26d338afc3f03478087e1fcc1ce2cf419b096b51a8caf819817d7a46",
+    "noncatalogue_sha256": "a0e159472d0efe131b950b2e9336e046f48090a922b28ebc66284a6408bd8876",
+    "positive_pixels": 103347,
+    "noncatalogue_positive_pixels": 97209,
+    "name": "gems10-h12-oof-rejected",
+    "policy": "topk02_binary",
+    "generated_utc": "20260927T052659510081Z",
+    "status": "experimental_do_not_submit",
+    "probability_sha256": "97efcb157a2f7804d2fd3705286e3ee3596d4eaa63c5fb6153102db1fc4073ae",
+    "file": "gems10-h12-oof-rejected-20260927T052659510081Z-97efcb157a.tif",
+    "sha256": "28fc93bc15d8483ee5ff3c29e9048498839ef54a60034acb7d534d3723387f85",
+    "bytes": 1609845,
+    "zip": "gems10-h12-oof-rejected-20260927T052659510081Z-97efcb157a.zip",
+    "zip_sha256": "a458eefe4e9da79d04d5c17d1522e28113d020ab14b5318dbdf0a65e1e93f908",
+    "validation_sha256": null,
+    "validation_file": null,
+    "suggested_note": "EXPERIMENT ONLY - DO NOT SUBMIT | H12 OOF | confirmation failed",
+    "footprint_px": 5167373,
+    "positive_px": 103347,
+    "mass": 103347.0,
+    "gate": [
+      {
+        "name": "file-exists",
+        "ok": true,
+        "detail": "1609845 bytes",
+        "hard": true
+      },
+      {
+        "name": "single-band",
+        "ok": true,
+        "detail": "band count = 1",
+        "hard": true
+      },
+      {
+        "name": "dtype-float32",
+        "ok": true,
+        "detail": "dtype = float32",
+        "hard": true
+      },
+      {
+        "name": "crs-epsg32611",
+        "ok": true,
+        "detail": "CRS = EPSG:32611 (epsg 32611)",
+        "hard": true
+      },
+      {
+        "name": "resolution-100m",
+        "ok": true,
+        "detail": "resolution = (100.0, 100.0)",
+        "hard": true
+      },
+      {
+        "name": "shape",
+        "ok": true,
+        "detail": "shape = (3730, 3292), expected (3730, 3292)",
+        "hard": true
+      },
+      {
+        "name": "geotransform",
+        "ok": true,
+        "detail": "transform = (100.0, 0.0, 243350.0, 0.0, -100.0, 4508550.0)",
+        "hard": true
+      },
+      {
+        "name": "nodata-nan",
+        "ok": true,
+        "detail": "declared nodata = nan",
+        "hard": true
+      },
+      {
+        "name": "values-in-0-1",
+        "ok": true,
+        "detail": "finite range = [0.0, 1.0]",
+        "hard": true
+      },
+      {
+        "name": "no-inf",
+        "ok": true,
+        "detail": "inf pixels = 0",
+        "hard": true
+      },
+      {
+        "name": "template-verified",
+        "ok": true,
+        "detail": "official sample submission sha256 ok, footprint = 5167373 px",
+        "hard": true
+      },
+      {
+        "name": "NAN-INSIDE-FOOTPRINT",
+        "ok": true,
+        "detail": "0 non-finite pixels inside the scored footprint (non-finite scored values violate the [0,1] contract; the original backend rejection cause is not known)",
+        "hard": true
+      },
+      {
+        "name": "footprint-matches-official",
+        "ok": true,
+        "detail": "0 finite pixels outside the official footprint (use --allow-footprint-subset for experiments only)",
+        "hard": true
+      }
+    ]
+  },
+  "validation_report_sha256": "bcab1cdaa3d8be900f346112b9d2f65efa1b16c6142c65810cd80d139c5733be",
+  "notice": "OOF-only diagnostic. No full-data final model. Do not submit. Not exposed as a site download."
+}
