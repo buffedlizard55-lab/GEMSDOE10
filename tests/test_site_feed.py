@@ -67,3 +67,9 @@ def test_submission_panel_has_no_dead_download_links():
     html = mod.submission_panel([])
     assert 'No approved submission' in html
     assert 'href="downloads/' not in html
+
+
+def test_leaderboard_rank_split_across_spans_and_profile_without_slash():
+    mod = load_script('refresh_sources')
+    html = '<table><tr><td><span>#</span> <strong>1</strong></td><td><a href="/users/DARD">DARD</a></td><td>0.3049</td></tr></table>'
+    assert mod.parse_leaderboard(html) == {'rank1': 'DARD', 'score': .3049}

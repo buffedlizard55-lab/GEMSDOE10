@@ -37,12 +37,17 @@ def read_page(url):
 def parse_leaderboard(html):
     for row in re.findall(r'<tr\b[^>]*>(.*?)</tr>', html, re.S | re.I):
         text = plain(row)
-        if re.search(r'(?<!\d)#1(?!\d)', text):
+        cells = re.findall(r'<t[dh]\b[^>]*>(.*?)</t[dh]>', row, re.S | re.I)
+        rank_cell = plain(cells[0]) if cells else ''
+        # The site can split '#' and the digit across nested spans/whitespace.
+        if re.fullmatch(r'#?\s*1', rank_cell) or re.search(r'(?<!\d)#\s*1(?!\d)', text):
             values = re.findall(r'(?<![\d.])0\.\d{4}(?!\d)', text)
-            participants = re.findall(r'/users/([^/"?]+)/', row)
+            participants = re.findall(r'''/users/([^/"'?<>\s]+)(?:[/"'])''', row)
             if len(set(values)) == 1 and len(set(participants)) == 1:
                 return {'rank1': unescape(participants[0]), 'score': float(values[0])}
-    raise ValueError('rank-one row ambiguous or markup changed; previous snapshot retained')
+    raise ValueError('rank-one row ambiguous or markup changed; previous snapshot retained; '
+                     + 'first rows: ' + ' | '.join(plain(r)[:180] for r in
+                         re.findall(r'<tr\b[^>]*>(.*?)</tr>', html, re.S | re.I)[:3]))
 
 
 def refresh(feed, getter=read_page):
