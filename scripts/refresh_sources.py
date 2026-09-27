@@ -13,6 +13,9 @@ from html.parser import HTMLParser
 import json
 from pathlib import Path
 import re
+import shutil
+import subprocess
+import tempfile
 import urllib.request
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -33,6 +36,29 @@ def read_page(url):
         if response.status != 200:
             raise ValueError(f'HTTP {response.status}')
     return raw.decode('utf-8'), hashlib.sha256(raw).hexdigest()
+
+
+def read_rendered_page(url):
+    """Render the official JS-loaded leaderboard using runner-installed Chrome.
+
+    No login, credentials or submissions. If Chrome or the page is unavailable,
+    preserve stale evidence. A 200 response containing Loading... is not a score.
+    """
+    expected = 'https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/'
+    if url != expected:
+        raise ValueError('browser fallback restricted to official leaderboard URL')
+    browser = next((shutil.which(name) for name in
+                    ('google-chrome', 'chromium', 'chromium-browser') if shutil.which(name)), None)
+    if not browser:
+        raise OSError('JavaScript leaderboard requires Chrome; no installed browser available')
+    with tempfile.TemporaryDirectory(prefix='gems-public-leaderboard-') as profile:
+        command = [browser, '--headless', '--no-sandbox', '--disable-gpu',
+                   '--disable-dev-shm-usage', '--no-first-run', '--disable-background-networking',
+                   '--user-data-dir=' + profile, '--virtual-time-budget=15000', '--dump-dom', url]
+        result = subprocess.run(command, capture_output=True, timeout=60, check=True)
+    if len(result.stdout) > 4_000_000:
+        raise ValueError('rendered page exceeds safety size limit')
+    return result.stdout.decode('utf-8'), hashlib.sha256(result.stdout).hexdigest()
 
 
 class LeaderboardText(HTMLParser):
@@ -81,18 +107,28 @@ def parse_leaderboard(html):
 
 
 
-def refresh(feed, getter=read_page):
+def refresh(feed, getter=read_page, renderer=read_rendered_page):
     now = datetime.datetime.now(datetime.timezone.utc).isoformat()
     feed['last_attempt_utc'] = now
     for source in feed['sources'] + [feed['leaderboard']]:
         try:
             html, sha = getter(source['url'])
+            method = 'http_excerpt_check'
             if source is feed['leaderboard']:
-                source.update(parse_leaderboard(html))
+                try:
+                    parsed = parse_leaderboard(html)
+                except ValueError:
+                    # The official response is a JS shell, not an HTML table.
+                    if 'Loading...' not in plain(html) or 'Leaderboard' not in plain(html):
+                        raise
+                    html, sha = renderer(source['url'])
+                    parsed = parse_leaderboard(html)
+                    method = 'headless_chrome_public_page'
+                source.update(parsed)
             elif source['required_excerpt'].casefold() not in plain(html).casefold():
                 raise ValueError('expected official excerpt missing; needs review')
             source.update(status='verified_http', last_success_date=now[:10],
-                          last_success_utc=now, response_sha256=sha)
+                          last_success_utc=now, response_sha256=sha, last_check_method=method)
             source.pop('error', None)
         except Exception as exc:
             source.update(status='stale_check_failed', error=f'{type(exc).__name__}: {exc}')
