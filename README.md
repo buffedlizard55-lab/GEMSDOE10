@@ -10,7 +10,7 @@
 | 2 | Metric = official distance-weighted Tversky (α=0.2, β=0.8, R=300 m) + masked variant; worked example reproduces 0.60 | `tests/test_metric.py` |
 | 3 | Format gate catches the reported *"Predicted values must be in range [0, 1]"* rejection (NaN inside footprint) | `tests/test_gate.py` |
 | 4 | Proximity-to-catalogue features **memorise**: train systems 0.98, held-out = background → masked DTI 0.012. Removed. | [HARNESS finding](#key-harness-findings) |
-| 5 | Geophysics-only HGB (107 ch), fold 0: masked DTI **0.0895** (topk02_binary) | `/tmp/smoke2.json` → `reports/` |
+| 5 | Geophysics-only HGB (107 ch), 5-fold: GT_ALL **0.0929** @topk02_binary; GT_FAR10 **0.0508** @topk01_binary; GT_FAR20 0.0293 @topk01_binary | `reports/cv_baseline.json`, `reports/rescore_baseline.json` |
 | 6 | Unsupervised lidar scarp ridge (no training): masked DTI **0.0254** | `src/gems10/external.py` |
 | 7 | SGMC-gap traces score **0.0000** by construction → excluded (documented negative) | `src/gems10/external.py` |
 | 8 | 71/71 tests pass; submission writer refuses byte-duplicates of known artifacts | `tests/`, `scripts/build_submission.py` |
