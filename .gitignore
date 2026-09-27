@@ -17,6 +17,7 @@ scratch/
 
 data/features*.meta.json
 final_out/
+final_out_*/
 cv_out/
 data/.bridge-*/
 data/external/

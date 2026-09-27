@@ -1,96 +1,114 @@
 {
- "schema": 1,
- "last_attempt_utc": "2026-09-27T06:01:04.688235+00:00",
- "retrieval_method": "fetch_page tool in this session (succeeds); refresh_sources.py urllib auto-check fails in-sandbox on TLS \u2014 treat stale_check_failed as an auto-check artifact, not content staleness",
- "sources": [
-  {
-   "id": "problem",
-   "url": "https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/",
-   "required_excerpt": "structures that are indicative of geothermal resources",
-   "status": "verified",
-   "last_success_date": "2026-09-27",
-   "claim": "Target: geological faults; pixel confidences in [0,1]; float32 single-band, UTM 11N, 100 m, same bounds. DTI alpha=.2, beta=.8, radius=300 m.",
-   "scope": "Published specification; exact private scorer implementation unavailable.",
-   "error": "automated urllib refresh fails in-sandbox (TLS); manual re-verification via fetch_page succeeded 2026-09-27",
-   "reverified_utc": "2026-09-27T06:01:04.688187+00:00",
-   "reverified_by": "fetch_page tool, session 2026-09-27",
-   "note": "Re-verified 2026-09-27 via fetch_page: task, DTI alpha=0.2/beta=0.8/R=300m (3 px), linear p(x), one final submission chosen blind to private score, two-round prizes."
-  },
-  {
-   "id": "masking",
-   "url": "https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2",
-   "required_excerpt": "Pixels corresponding to known USGS/INGENIOUS faults",
-   "status": "verified",
-   "last_success_date": "2026-09-27",
-   "claim": "Staff confirms known catalogue pixels excluded in both rounds.",
-   "scope": "Does not disclose the order of masking relative to kernel dilation.",
-   "error": "automated urllib refresh fails in-sandbox (TLS); manual re-verification via fetch_page succeeded 2026-09-27",
-   "reverified_utc": "2026-09-27T06:01:04.688217+00:00",
-   "reverified_by": "fetch_page tool, session 2026-09-27",
-   "note": "Re-verified 2026-09-27 via fetch_page (posts /2 staff and /4 staff): mask is PIXEL-EXACT provided labels, no buffer, applied in both rounds; a predicted pixel near a known trace but far from new ground truth is FULLY penalized; new ground truth may lie within 300 m of known traces ('corrections or modifications to existing fault traces') in both the new-fault and final-round sets."
-  },
-  {
-   "id": "new_geometry",
-   "url": "https://community.drivendata.org/t/where-do-you-draw-the-line/11536/2",
-   "required_excerpt": "any fault pixel not already captured by USGS/INGENIOUS",
-   "status": "verified",
-   "last_success_date": "2026-09-27",
-   "claim": "New geometry of existing fault systems can qualify.",
-   "scope": "No justification for excluding every pixel within 1 km of a known trace.",
-   "error": "automated urllib refresh fails in-sandbox (TLS); manual re-verification via fetch_page succeeded 2026-09-27",
-   "reverified_utc": "2026-09-27T06:01:04.688220+00:00",
-   "reverified_by": "fetch_page tool, session 2026-09-27",
-   "note": "Re-verified 2026-09-27 via fetch_page: 'new fault' = any fault pixel not already captured by USGS/INGENIOUS, INCLUDING newly mapped geometry of an existing fault system (splays, continuations eligible)."
-  },
-  {
-   "id": "hidden_sources",
-   "url": "https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527/7",
-   "required_excerpt": "not sharing details about the data sources, fault types, or coverage",
-   "status": "verified",
-   "last_success_date": "2026-09-27",
-   "claim": "Staff declines to disclose hidden test data sources, fault types or coverage.",
-   "scope": "No claim about hidden faults' median catalogue distance is verified.",
-   "error": "automated urllib refresh fails in-sandbox (TLS); manual re-verification via fetch_page succeeded 2026-09-27",
-   "reverified_utc": "2026-09-27T06:01:04.688223+00:00",
-   "reverified_by": "fetch_page tool, session 2026-09-27",
-   "note": "Re-verified 2026-09-27 via fetch_page: staff will not disclose test-fault sources/types; Phase 2 test set updated by expert review of ALL Phase 1 submissions, so novel verified predictions matter for final evaluation."
-  },
-  {
-   "id": "cadence",
-   "url": "https://community.drivendata.org/t/weekly-submissions/11524/2",
-   "required_excerpt": "submission allowance resets based on a rolling window",
-   "status": "verified",
-   "last_success_date": "2026-09-27",
-   "claim": "The submission allowance uses a rolling window.",
-   "scope": "Current account slot usage cannot be read without that account's authenticated history.",
-   "error": "automated urllib refresh fails in-sandbox (TLS); manual re-verification via fetch_page succeeded 2026-09-27",
-   "reverified_utc": "2026-09-27T06:01:04.688225+00:00",
-   "reverified_by": "fetch_page tool, session 2026-09-27",
-   "note": "Re-verified 2026-09-27 via fetch_page: 3 submissions per week, rolling 7-day window reset."
-  },
-  {
-   "id": "ingenious",
-   "url": "https://gdr.openei.org/submissions/1391",
-   "required_excerpt": "2-meter temperature probe surveys",
-   "status": "verified",
-   "last_success_date": "2026-09-27",
-   "claim": "Official regional dataset provides temperature probes, paleo features and well/spring resources under CC BY 4.0.",
-   "scope": "Landing page verified; binary archives not obtained here (TLS failures).",
-   "error": "automated urllib refresh fails in-sandbox (TLS); manual re-verification via fetch_page succeeded 2026-09-27",
-   "reverified_utc": "2026-09-27T06:01:04.688227+00:00",
-   "reverified_by": "fetch_page tool, session 2026-09-27",
-   "note": "Re-verified 2026-09-27 via fetch_page: INGENIOUS Great Basin Regional Dataset Compilation (Ayling et al. 2022, DOI 10.15121/1881483, CC BY 4.0); Quaternary Faults v2 (2023-06-27) supersedes v1; binaries not fetchable from this sandbox (TLS) \u2014 obtainable by user/CI."
+  "schema": 1,
+  "last_attempt_utc": "2026-09-27T15:30:24.043124+00:00",
+  "retrieval_method": "fetch_page tool in this session (succeeds); refresh_sources.py urllib auto-check fails in-sandbox on TLS \u2014 treat stale_check_failed as an auto-check artifact, not content staleness | session 3: fetch_page first-hand reads (leaderboard p1-2, problem page, forum 111/11527, ScienceBase 3DEP item, USGS faults page, GDR 1391); automated urllib refresh still TLS-fails in-sandbox",
+  "sources": [
+    {
+      "id": "problem",
+      "url": "https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/",
+      "required_excerpt": "structures that are indicative of geothermal resources",
+      "status": "verified",
+      "last_success_date": "2026-09-27",
+      "claim": "Hidden test faults were manually identified by fault experts and are NOT in the current public USGS database; the competition distributes 1 m DEM download links (1m_DEM_links.csv); external data allowed when its licence permits use and sharing with the sponsor.",
+      "scope": "Problem-description page, re-read first-hand this session. It does not disclose fault types, coverage or the mapping method beyond 'expert-labelled'.",
+      "error": "automated urllib refresh fails in-sandbox (TLS); manual re-verification via fetch_page succeeded 2026-09-27",
+      "reverified_utc": "2026-09-27T06:01:04.688187+00:00",
+      "reverified_by": "fetch_page tool, session 2026-09-27",
+      "note": "Re-verified 2026-09-27 via fetch_page: task, DTI alpha=0.2/beta=0.8/R=300m (3 px), linear p(x), one final submission chosen blind to private score, two-round prizes."
+    },
+    {
+      "id": "masking",
+      "url": "https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2",
+      "required_excerpt": "Pixels corresponding to known USGS/INGENIOUS faults",
+      "status": "verified",
+      "last_success_date": "2026-09-27",
+      "claim": "Staff confirms known catalogue pixels excluded in both rounds.",
+      "scope": "Does not disclose the order of masking relative to kernel dilation.",
+      "error": "automated urllib refresh fails in-sandbox (TLS); manual re-verification via fetch_page succeeded 2026-09-27",
+      "reverified_utc": "2026-09-27T06:01:04.688217+00:00",
+      "reverified_by": "fetch_page tool, session 2026-09-27",
+      "note": "Re-verified 2026-09-27 via fetch_page (posts /2 staff and /4 staff): mask is PIXEL-EXACT provided labels, no buffer, applied in both rounds; a predicted pixel near a known trace but far from new ground truth is FULLY penalized; new ground truth may lie within 300 m of known traces ('corrections or modifications to existing fault traces') in both the new-fault and final-round sets."
+    },
+    {
+      "id": "new_geometry",
+      "url": "https://community.drivendata.org/t/where-do-you-draw-the-line/11536/2",
+      "required_excerpt": "any fault pixel not already captured by USGS/INGENIOUS",
+      "status": "verified",
+      "last_success_date": "2026-09-27",
+      "claim": "New geometry of existing fault systems can qualify.",
+      "scope": "No justification for excluding every pixel within 1 km of a known trace.",
+      "error": "automated urllib refresh fails in-sandbox (TLS); manual re-verification via fetch_page succeeded 2026-09-27",
+      "reverified_utc": "2026-09-27T06:01:04.688220+00:00",
+      "reverified_by": "fetch_page tool, session 2026-09-27",
+      "note": "Re-verified 2026-09-27 via fetch_page: 'new fault' = any fault pixel not already captured by USGS/INGENIOUS, INCLUDING newly mapped geometry of an existing fault system (splays, continuations eligible)."
+    },
+    {
+      "id": "hidden_sources",
+      "url": "https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527/7",
+      "required_excerpt": "not sharing details about the data sources, fault types, or coverage",
+      "status": "verified",
+      "last_success_date": "2026-09-27",
+      "claim": "Staff declines to disclose hidden test data sources, fault types or coverage.",
+      "scope": "No claim about hidden faults' median catalogue distance is verified.",
+      "error": "automated urllib refresh fails in-sandbox (TLS); manual re-verification via fetch_page succeeded 2026-09-27",
+      "reverified_utc": "2026-09-27T06:01:04.688223+00:00",
+      "reverified_by": "fetch_page tool, session 2026-09-27",
+      "note": "Re-verified 2026-09-27 via fetch_page: staff will not disclose test-fault sources/types; Phase 2 test set updated by expert review of ALL Phase 1 submissions, so novel verified predictions matter for final evaluation."
+    },
+    {
+      "id": "cadence",
+      "url": "https://community.drivendata.org/t/weekly-submissions/11524/2",
+      "required_excerpt": "submission allowance resets based on a rolling window",
+      "status": "verified",
+      "last_success_date": "2026-09-27",
+      "claim": "The submission allowance uses a rolling window.",
+      "scope": "Current account slot usage cannot be read without that account's authenticated history.",
+      "error": "automated urllib refresh fails in-sandbox (TLS); manual re-verification via fetch_page succeeded 2026-09-27",
+      "reverified_utc": "2026-09-27T06:01:04.688225+00:00",
+      "reverified_by": "fetch_page tool, session 2026-09-27",
+      "note": "Re-verified 2026-09-27 via fetch_page: 3 submissions per week, rolling 7-day window reset."
+    },
+    {
+      "id": "ingenious",
+      "url": "https://gdr.openei.org/submissions/1391",
+      "required_excerpt": "2-meter temperature probe surveys",
+      "status": "verified",
+      "last_success_date": "2026-09-27",
+      "claim": "Official regional dataset provides temperature probes, paleo features and well/spring resources under CC BY 4.0.",
+      "scope": "Landing page verified; binary archives not obtained here (TLS failures).",
+      "error": "automated urllib refresh fails in-sandbox (TLS); manual re-verification via fetch_page succeeded 2026-09-27",
+      "reverified_utc": "2026-09-27T06:01:04.688227+00:00",
+      "reverified_by": "fetch_page tool, session 2026-09-27",
+      "note": "Re-verified 2026-09-27 via fetch_page: INGENIOUS Great Basin Regional Dataset Compilation (Ayling et al. 2022, DOI 10.15121/1881483, CC BY 4.0); Quaternary Faults v2 (2023-06-27) supersedes v1; binaries not fetchable from this sandbox (TLS) \u2014 obtainable by user/CI."
+    },
+    {
+      "claim": "USGS 3DEP 1/3 arc-second (~10 m) seamless DEM is public domain and staged as GeoTIFF tiles at prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/<tile>/USGS_13_<tile>.tif (H20 source; 12 tiles cover the footprint).",
+      "url": "https://www.sciencebase.gov/catalog/item/4f70aa9fe4b058caae3f8de5",
+      "status": "verified",
+      "last_success_date": "2026-09-27",
+      "scope": "Catalogue item + S3 listing read first-hand; per-tile size/ETag/sha256 recorded in the ext/dem10-36326816737 manifest. Not reachable from the sandbox itself (TLS); fetched on the GitHub runner."
+    },
+    {
+      "claim": "USGS Quaternary Fault and Fold Database GIS download (Qfaults_GIS.zip) is public domain; cite USGS 2020, doi:10.5066/P9BCVRCK. Interactive database search retired 2026-02-26.",
+      "url": "https://www.usgs.gov/programs/earthquake-hazards/faults",
+      "status": "verified",
+      "last_success_date": "2026-09-27",
+      "scope": "Programme page read first-hand; archive sha256 447eadc5\u2026 recorded in data/external/catalogue/catalogue_diff.json (H21)."
+    }
+  ],
+  "leaderboard": {
+    "url": "https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/",
+    "status": "verified",
+    "last_success_date": "2026-09-27",
+    "rank1": "DARD",
+    "score": 0.3049,
+    "note": "Public snapshot, not a forecast or a verified mapping of group uploads. Re-verified 2026-09-27 (later session, pages 1-2 read first-hand): rank1 DARD 0.3049 (10 submissions), #2 alexoktaba 0.2993, #3 HardcoreTechGod 0.2854, #4 mzoorob 0.2843, #5 joeyfezster 0.2806; an account named doegemsDrivendata sits at 0.1847 (role not stated on the page); 0.1563 appears three times (extradr19 #25, SDCF9 #26, smashi34 #27) \u2014 consistent with the byte-identical artifact audit; metric column 'DW-Tversky'.",
+    "error": "automated urllib refresh fails in-sandbox (TLS); manual re-verification via fetch_page succeeded 2026-09-27",
+    "reverified_utc": "2026-09-27T15:30:24.043124+00:00",
+    "reverified_by": "fetch_page tool, session 2026-09-27 (session 3)",
+    "irregularities": [
+      "0.1563 listed for three different accounts (ranks 25-27) \u2014 the same artifact bytes were uploaded under several accounts (reports/submission_audit.json)",
+      "doegemsDrivendata (0.1847, 5 submissions) is plausibly an organiser account; not confirmed by any official text"
+    ]
   }
- ],
- "leaderboard": {
-  "url": "https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/",
-  "status": "verified",
-  "last_success_date": "2026-09-27",
-  "rank1": "DARD",
-  "score": 0.3049,
-  "note": "Public snapshot, not a forecast or a verified mapping of group uploads. Re-verified 2026-09-27: rank1 DARD 0.3049; top-25 floor 0.1587 (extradr19); group best 0.1563.",
-  "error": "automated urllib refresh fails in-sandbox (TLS); manual re-verification via fetch_page succeeded 2026-09-27",
-  "reverified_utc": "2026-09-27T06:01:04.688233+00:00",
-  "reverified_by": "fetch_page tool, session 2026-09-27"
- }
 }

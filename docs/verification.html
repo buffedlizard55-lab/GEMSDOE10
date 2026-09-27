@@ -174,12 +174,85 @@
 </tr>
 </tbody>
 </table>
+<h2>Session-3 review additions (2026-09-27, later session)</h2>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Finding</th>
+<th>Evidence / action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>High (process)</td>
+<td>The first external-data run failed at publication because <code>GITHUB_TOKEN</code> is not an implicit environment variable in <code>run:</code> steps, and the failure could not be diagnosed from the sandbox (Actions logs redirect to Azure blob storage).</td>
+<td>Run 36326112036. Fixed by exporting <code>github.token</code> in the publish step; every job now <code>tee</code>s its log into the published tag and publishes even on failure (<code>ext/failed-&lt;job&gt;-&lt;run_id&gt;</code>).</td>
+</tr>
+<tr>
+<td>High (evidence)</td>
+<td><strong>Provided labels = current public catalogue.</strong> USGS QFFD 2020 and INGENIOUS v1/v2 each have exactly 1 rasterised pixel &gt;300 m from any label pixel; IoU 0.996/0.999.</td>
+<td><code>data/external/catalogue/catalogue_diff.json</code> (tag <code>ext/catalogue-36326816737</code>). H21 closed; no catalogue-lag validation population exists; earlier NEXT_STEPS item "audit INGENIOUS v2 for traces absent from the labels" is answered: none.</td>
+</tr>
+<tr>
+<td>High (result)</td>
+<td>H19 thin-line emission passed the development mean (+0.00744 vs incumbent) and failed the confirmation fold (−0.02111).</td>
+<td><code>reports/h19_blocked.json</code>. Preregistered rule applied; not released; mechanism (skeleton of wide blobs leaves the 300 m corridor) recorded in HYPOTHESES.md. The temptation to re-select on fold 3 was refused.</td>
+</tr>
+<tr>
+<td>Medium (result)</td>
+<td>Emission budget optimum is truth-density dependent (dev folds → 6%, sparser fold 3 → 3%); the hidden truth is sparser than any local fold.</td>
+<td><code>reports/h19_blocked.json</code> fold table; <code>reports/budget_density_sweep.json</code>. The released 6% budget is a development-fold choice, not a hidden-density calibration — flagged as the top open question in NEXT_STEPS.md.</td>
+</tr>
+<tr>
+<td>Medium (reproducibility)</td>
+<td>The frozen protocol reproduced all 96 session-2 DTI values exactly on a rebuilt feature stack (sha256 identical).</td>
+<td><code>reports/h19_blocked.json → reproduction</code>. Removes the session-2 caveat that a clean re-run was still owed.</td>
+</tr>
+<tr>
+<td>Medium (gate)</td>
+<td>Release gate did not know the v3 protocol or incumbent comparisons.</td>
+<td><code>src/gems10/release.py</code> accepts <code>policy-sweep-v3</code> and requires every recorded comparison (same-run H16 arm, external incumbent report) to pass; <code>tests/test_novelty_release.py</code> covers pass/fail/wrong-policy cases and asserts the real H19 report is refused.</td>
+</tr>
+<tr>
+<td>Low (irregularity, public)</td>
+<td>The public leaderboard lists 0.1563 for three different accounts (ranks 25–27); <code>doegemsDrivendata</code> at 0.1847 is plausibly an organiser account.</td>
+<td>Leaderboard pages 1–2 read first-hand 2026-09-27; recorded in <code>reports/official_feed.json → leaderboard.irregularities</code>. Consistent with the byte-identical artifact audit; the account mapping is not authenticated here.</td>
+</tr>
+<tr>
+<td>High (result)</td>
+<td><strong>H20 3DEP 10 m scarp channels beat the H16 incumbent on every preregistered comparison</strong> (dev mean +0.01473, confirmation +0.01406; also better under the incumbent's own topk06 policy) and was released after a hash-bound full-data fit.</td>
+<td><code>reports/h20_blocked.json</code>, <code>reports/final_manifest_h20.json</code>, <code>docs/downloads/gems10-h20-dem10-scarp-thin-…-ffc91a1686.*</code>; hub now lists it as RECOMMENDED and keeps H16 as superseded provenance. Fold 1 is the one geography where H20 is not better at top-k budgets — reported, not hidden.</td>
+</tr>
+<tr>
+<td>Medium (gate)</td>
+<td><code>verify_training_binding</code> compared manifest code hashes with the <em>working tree</em>, so the H16 artifact would have failed re-verification after this session's edits to <code>validate_candidate.py</code> / <code>HYPOTHESES.md</code>, and the H20 report's pinned <code>validate_candidate.py</code> hash would fail as soon as that script changes.</td>
+<td><code>release.py</code> now requires <code>manifest.code == report.code</code> and accepts a validated hash if that exact blob exists in git history (<code>git log --all</code> + <code>git show</code>); both artifacts re-verify; a tampered hash absent from history still fails closed (tests).</td>
+</tr>
+<tr>
+<td>Medium (interpretation)</td>
+<td>The budget-density sweep simulates sparsity by deleting truth <em>after</em> training on the full catalogue, so it overstates the penalty of wide budgets.</td>
+<td>Recorded beside every use of <code>reports/budget_density_sweep.json</code>; treated as a direction (thinner emission for sparser truth), not a calibration.</td>
+</tr>
+<tr>
+<td>Low (site)</td>
+<td>With two approved artifacts the download panel listed them alphabetically (H16 first), which would have pointed a user at the superseded file.</td>
+<td><code>build_site.py</code> sorts by <code>generated_utc</code> (newest first) and labels the first card RECOMMENDED and the rest SUPERSEDED / PROVENANCE.</td>
+</tr>
+<tr>
+<td>Low</td>
+<td><code>wellspringdata.gdb</code> layers were not enumerated by the runner's <code>ogrinfo</code> parser.</td>
+<td>Recorded in <code>catalogue_diff.json</code>; only affects H15 wells/springs; fix noted in NEXT_STEPS.md.</td>
+</tr>
+</tbody>
+</table>
 <h2>Three review passes</h2>
 <ol>
 <li><strong>Implementation:</strong> restored input; re-read official rules/forum; fetched all ten published artifacts; preregistered four hypotheses; implemented H12 and paired buffered spatial runner; added content novelty and holdout release gates; updated site and dated source feed.</li>
 <li><strong>Adversarial review:</strong> tests for planar-ramp false response, step/valley distinction, missing-data halos, tile equivalence, catalogue-only duplicates, nonfinite input, empty/incomplete/tied/failed confirmation, and policy changes. Check existing code for misleading scientific or access claims. Fail closed on incomplete audit or evidence.</li>
 <li><strong>End-to-end:</strong> rerun tests, real-data format gate and data pins; build site from reports; check local links and download selection; review actual H12 outcome before any release; CI and Pages deployment verification recorded in session handoff. See <code>reports/verification_run.json</code> for completed commands, not this checklist alone.</li>
 </ol>
+<p>Session 3 repeated the three passes: (1) implement + verify — thin policy, generalized validator with incumbent comparison and exact-reproduction check, runner-side external-data pipeline with immutable-tag transport, restore + assembly scripts, 110 tests; (2) adversarial review — token/env failure diagnosed blind and fixed with self-published logs, GDAL-mixing risk removed (system <code>ogr2ogr</code>), relative-path failures in the validator fixed, gate extended and tested against the real failing report; (3) re-check against the original request — hypotheses new vs repo code (register), top candidates validated on the blocked holdout before any slot, external sources named/obtained/hashed, site rebuilt from reports, PR + merge, remaining-work list. Second half of the session: H20 finished ELIGIBLE, the all-systems continuation grid and the 130-column final fit were rebuilt with the same column order as the validated arm, the binding wrote <code>final_manifest_h20.json</code>, <code>build_submission.py</code> passed release/binding/format/novelty gates, <code>scripts/verify_project.py</code> re-ran tests and link checks, and the budget-density sweep was executed rather than merely referenced; every document that named the H20 outcome as pending was re-read and rewritten (HYPOTHESES, KNOWLEDGE, NEXT_STEPS, LIMITATIONS, VERIFICATION, README, SUBMISSION_GUIDE).</p>
 <h2>Scope boundary</h2>
 <p>A verified source supports the statement beside it, not every inference made from that statement. These are candidate <em>fault</em> detectors, not confirmed geothermal vents. The hidden truth, account eligibility and private upload history are unavailable. No claim is made that this work beats the leaderboard, verifies every external dataset line, or removes the need for the account holder's legal attestation.</p>
 <h2>Completed H12 result and second-pass integrity finding</h2>
@@ -227,13 +300,15 @@
 <ol>
 <li><strong>No private new-fault labels or guaranteed leaderboard uplift.</strong> Spatial CV still scores held-out catalogue faults. Component holdouts and FAR10 subsets are different proxies. Hidden source/type/coverage is explicitly undisclosed by staff. Neither can certify geothermal resources.</li>
 <li><strong>No DrivenData account session.</strong> We can read public leaderboard/forum through the research fetch tool, but cannot verify authenticated upload hashes, remaining slots or eligibility. Never request credentials in chat; use the authorized account holder's normal platform workflow.</li>
-<li><strong>Binary network access is uneven.</strong> Dropbox and GDR archive requests fail TLS from this runtime. Public GitHub API transport works. Feature data were restored from an immutable team mirror and matched inherited hashes, not independently authenticated official bytes. H15 remains blocked, not advertised as usable data.</li>
+<li><strong>Binary network access is uneven.</strong> Dropbox, GDR, USGS and DrivenData binary requests fail TLS from this runtime; Actions logs/artifacts are unreadable here. Public GitHub API/git transport works, so external products are built on a GitHub-hosted runner and moved through immutable <code>ext/*</code> tags (session 3). Feature data were restored from an immutable team mirror and matched inherited hashes, not independently authenticated official bytes. H15 archives are now in hand (hashed) but unmodelled.</li>
 <li><strong>CPU only, ~4 GB RAM.</strong> Bounded HGB training works here. A GPU is not required for the implemented experiment. Raw 1 m DEM processing and U-Net comparisons need additional storage/compute and their own frozen protocols; no assertion that GPU training is already complete.</li>
-<li><strong>No artifact without a positive experiment AND a bound final fit.</strong> H12 was measured and rejected; H13 failed its preregistered rule (development improved, confirmation regressed); H16 is ELIGIBLE and is the only candidate that may proceed to the final-data fit, hash-bound training manifest and release gates. No submission slot was spent by this session.</li>
+<li><strong>No artifact without a positive experiment AND a bound final fit.</strong> H12 was measured and rejected; H13 and H19 failed the preregistered rule (development improved, confirmation regressed); H16 (session 2) and H20 (session 3) are the released, hash-bound candidates — H20 beat H16 on the development mean and the confirmation fold and is the hub's recommended download (<code>reports/h20_blocked.json</code>, <code>reports/final_manifest_h20.json</code>). No submission slot was spent by any session; neither artifact has a leaderboard measurement.
+5b. <strong>The emission budget is not calibrated to the hidden truth density.</strong> The released budgets (H16 6%, H20 ~3% after thinning) were selected on development folds whose truth density (1.1–1.3%) is the catalogue's; the hidden truth (new faults only) is sparser, and locally the sparser fold prefers 2–3%. The hidden density is unknown; <code>reports/budget_density_sweep.json</code> maps the sensitivity (thinner is better as truth gets sparser), it does not resolve it.
+5c. <strong>The provided labels are the current public catalogue</strong> (session-3 measurement): no public catalogue offers held-out "new" traces, so every local proxy scores catalogue generalisation only.</li>
 <li><strong>Feature semantics/normalization issues.</strong> <code>tc</code> and depth-to-base metadata need official release comparison. Existing Frangi normalization depends on tile-local maxima; new paired experiments fix the tile height and hash the resulting stack. Fixing this changes the baseline and needs a new recorded run.</li>
 <li><strong>Masking surrogate is not backend source code.</strong> Known pixels are excluded officially, but order relative to the metric dilation is not disclosed. The optional FP-ignore metric is an explicit surrogate, not a byte-for-byte official scorer claim.</li>
 <li><strong>Current-best scope.</strong> Reproducible persisted campaign arms are baseline/discovery/selftrain; some claimed external runs have no persisted grids/results. No claim of beating every historic group method or the neural ensemble that scored .1563 without matched retraining.</li>
 <li><strong>Live checks are not continuous science.</strong> Daily scheduled workflow checks availability, quotations and the leaderboard. Changed text or failures require review; it does not autonomously certify newly downloaded data, account compliance or geologic interpretations. GitHub schedules may be delayed/disabled by platform policy.</li>
 <li><strong>Legal/user obligations remain.</strong> Rules eligibility, AI-disclosure accuracy and account/entity submission allowance require participant attestation. A repo count is not proof of a rules violation. Final upload/sign-off cannot honestly be declared fully autonomous here.</li>
 </ol>
-<p>Do not claim all original goals are finished: no demonstrated &gt;.3049 model, no new geothermal-vent catalogue, no high-resolution external pilot, no private-score verification. H16's +0.0037 dev / +0.0007 confirmation margin is a catalogue-generalization proxy on four correlated stripe folds, not a leaderboard forecast; the confirmation fold is re-used geography, and the selected policy was chosen on the development folds. See HYPOTHESES.md (session-2 results) for the next measurable work.</p></article></main><footer class="wrap"><b>Maximize P(Win). Own the Outcome.</b><p>Local evidence is not a private competition score. AI-assisted research; official links and limitations are explicit.</p><p>Site built 2026-09-27T06:55:51+00:00 · <a href="https://github.com/buffedlizard55-lab/GEMSDOE10">Repository</a> · <a href="data/site.json">Machine-readable manifest</a></p></footer></body></html>
+<p>Do not claim all original goals are finished: no demonstrated &gt;.3049 model, no new geothermal-vent catalogue, no private-score verification; the 10 m DEM pilot (H20) is a first external-resolution test, not a 1 m lidar study. H16's +0.0037 dev / +0.0007 confirmation margin and H20's +0.0147 dev / +0.0141 confirmation margin are catalogue-generalization proxies on four correlated stripe folds, not leaderboard forecasts; the confirmation fold is re-used geography (now for a third decision), the selected policies were chosen on the development folds from a 16-policy set, and the emission budget was tuned to the catalogue's density rather than the unknown hidden density (<code>reports/budget_density_sweep.json</code>). See HYPOTHESES.md (session-2 results) for the next measurable work.</p></article></main><footer class="wrap"><b>Maximize P(Win). Own the Outcome.</b><p>Local evidence is not a private competition score. AI-assisted research; official links and limitations are explicit.</p><p>Site built 2026-09-27T19:03:26+00:00 · <a href="https://github.com/buffedlizard55-lab/GEMSDOE10">Repository</a> · <a href="data/site.json">Machine-readable manifest</a></p></footer></body></html>

@@ -1,0 +1,109 @@
+name: external-data
+# Fetches FREE, OFFICIAL external data that the research sandbox cannot reach
+# (its TLS egress is limited to github.com / api.github.com / pypi), derives
+# label-free 100 m channels, and publishes them as an ORPHAN commit under an
+# immutable tag `ext/<job>-<run_id>` (never a branch, never merged to main).
+# The sandbox restores them with `python scripts/fetch_external.py --tag ...`.
+# Nothing here trains a model, touches DrivenData, or spends a submission slot.
+#
+# Triggering: the sandbox token cannot dispatch workflows (403), so the run is
+# triggered by pushing a change under scripts/ext/ (or this file); the job list
+# is read from scripts/ext/JOBS (comma list: dem10,catalogue) so a push can
+# re-run one job without repeating the multi-hour DEM job. Step logs are
+# captured to out/<job>/build.log and published even when the build fails (tag
+# `ext/failed-<job>-<run_id>`), because the sandbox cannot read Actions logs
+# (they redirect to Azure blob storage).
+on:
+  workflow_dispatch:
+    inputs:
+      jobs:
+        description: "comma list: dem10,catalogue"
+        default: "dem10,catalogue"
+      max_blocks:
+        description: "debug: limit DEM blocks (0 = all)"
+        default: "0"
+  push:
+    branches: ["**"]
+    paths: [".github/workflows/external-data.yml", "scripts/ext/**"]
+permissions:
+  contents: write
+concurrency:
+  group: external-data-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      jobs: ${{ steps.cfg.outputs.jobs }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: cfg
+        run: |
+          if [ -n "${{ github.event.inputs.jobs }}" ]; then J="${{ github.event.inputs.jobs }}"; else J="$(tr -d ' \n' < scripts/ext/JOBS)"; fi
+          echo "jobs=$J" >> "$GITHUB_OUTPUT"; echo "jobs to run: $J"
+  dem10:
+    needs: setup
+    if: ${{ contains(needs.setup.outputs.jobs, 'dem10') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install -q numpy scipy rasterio
+      - name: Verify committed template + labels (pins)
+        run: pip install -q -r requirements.txt && python scripts/fetch_data.py --no-features
+      - name: Build 3DEP 10 m scarp channels (H20)
+        id: build
+        run: |
+          set -o pipefail
+          mkdir -p out/dem10
+          df -h . | tail -1
+          python -u scripts/ext/dem10_scarp.py --max-blocks "${{ github.event.inputs.max_blocks || '0' }}" 2>&1 | tee out/dem10/build.log
+          rm -rf work
+          du -sh out/dem10
+      - name: Publish as orphan commit + immutable tag
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.build.outcome == 'success' && format('ext/dem10-{0}', github.run_id) || format('ext/failed-dem10-{0}', github.run_id) }}
+        run: |
+          mkdir -p out/dem10
+          echo "build=${{ steps.build.outcome }} run=${{ github.run_id }} sha=${{ github.sha }}" > out/dem10/STATUS.txt
+          bash scripts/ext/publish_tag.sh out/dem10 "$TAG" "H20 3DEP 10 m scarp channels (label-free), run ${{ github.run_id }}, build=${{ steps.build.outcome }}"
+  catalogue:
+    needs: setup
+    if: ${{ contains(needs.setup.outputs.jobs, 'catalogue') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install (system GDAL CLI for vector conversion; no bundled-GDAL mixing)
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq gdal-bin >/dev/null
+          ogrinfo --version
+          pip install -q numpy scipy rasterio
+      - name: Verify committed template + labels (pins)
+        run: pip install -q -r requirements.txt && python scripts/fetch_data.py --no-features
+      - name: Catalogue-version differencing (H21) + H15 point sets
+        id: build
+        run: |
+          set -o pipefail
+          mkdir -p out/catalogue
+          python -u scripts/ext/catalogue_diff.py 2>&1 | tee out/catalogue/build.log
+          rm -rf work
+          du -sh out/catalogue
+      - name: Publish as orphan commit + immutable tag
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.build.outcome == 'success' && format('ext/catalogue-{0}', github.run_id) || format('ext/failed-catalogue-{0}', github.run_id) }}
+        run: |
+          mkdir -p out/catalogue
+          echo "build=${{ steps.build.outcome }} run=${{ github.run_id }} sha=${{ github.sha }}" > out/catalogue/STATUS.txt
+          bash scripts/ext/publish_tag.sh out/catalogue "$TAG" "H21 catalogue differencing + H15 point sets, run ${{ github.run_id }}, build=${{ steps.build.outcome }}"

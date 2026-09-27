@@ -60,3 +60,21 @@ def test_evaluate_reports_masked_and_unmasked():
     row = res["topk02_binary"]
     assert row["dti_masked"] >= row["dti_unmasked"]  # masking can only help
     assert row["tp_w"] + row["fn_w"] == pytest.approx(2.0)
+
+
+def test_thin_policy_is_a_subset_skeleton_of_topk():
+    """H19 (session 3): thinNN_binary = Zhang-Suen skeleton of the top-NN% mask."""
+    assert modeling.parse_policy("thin06_binary") == (0.06, "thin")
+    with pytest.raises(AssertionError):
+        modeling.parse_policy("thin06_soft")
+    prob, fp = _prob_footprint()
+    # A thick diagonal ridge: top-k selects a band several pixels wide.
+    rr, cc = np.mgrid[:prob.shape[0], :prob.shape[1]]
+    prob = np.where(np.abs(rr - cc) <= 2, 1.0, prob * 0.5)
+    core = modeling.apply_policy(prob, fp, "topk04_binary")
+    thin = modeling.apply_policy(prob, fp, "thin04_binary")
+    assert thin.shape == prob.shape
+    assert bool((~np.isfinite(thin[~fp])).all())
+    assert set(np.unique(thin[fp]).tolist()) <= {0.0, 1.0}
+    assert bool(((thin == 1.0) <= (core == 1.0)).all())   # subset of the top-k core
+    assert 0 < int((thin == 1.0).sum()) < int((core == 1.0).sum())
