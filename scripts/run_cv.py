@@ -133,6 +133,17 @@ def run_fold(feat: np.ndarray, channels: list[str], labels: np.ndarray,
     scored_gt = held & footprint
     res = modeling.evaluate_policies(prob, footprint, scored_gt, train_sys,
                                      args.policies)
+    # Distance-stratified GT: hidden faults are anti-selected AWAY from the
+    # catalogue (median unseen-fault distance 2.2 km, r7 audit), so GT_FAR10
+    # (>1 km from train systems) is the decision column; GT_ALL is reference.
+    d_to_train = ndimage.distance_transform_edt(~train_sys)
+    for gt_name, gt in (("FAR10", scored_gt & (d_to_train > 10)),
+                        ("FAR20", scored_gt & (d_to_train > 20))):
+        if gt.sum() == 0:
+            continue
+        for pol, row in modeling.evaluate_policies(
+                prob, footprint, gt, train_sys, args.policies).items():
+            res[f"{gt_name}/{pol}"] = row
     dt = time.time() - t0
     print(f"[fold {k}] done in {dt:.0f}s; " +
           " ".join(f"{p}={res[p]['dti_masked']:.4f}/{res[p]['dti_unmasked']:.4f}"
