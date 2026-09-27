@@ -74,18 +74,54 @@ def fetch(url: str, dest: Path) -> dict:
     return {"url": url, "bytes": dest.stat().st_size, "sha256": sha256_file(dest)}
 
 
-def vector_layers(root: Path) -> list[tuple[str, str | None]]:
-    """(path, layer) pairs for every shapefile / file geodatabase under root."""
+def ogr_layers(path: Path) -> list[str]:
+    """Layer names of a vector datasource via `ogrinfo -so -q`."""
+    try:
+        res = subprocess.run(["ogrinfo", "-so", "-q", str(path)], capture_output=True,
+                             text=True, timeout=600)
+    except Exception as exc:  # pragma: no cover
+        print("ogrinfo failed", path, exc)
+        return []
+    layers = []
+    for line in res.stdout.splitlines():
+        line = line.strip()
+        if line[:1].isdigit() and ":" in line:
+            name = line.split(":", 1)[1].strip()
+            name = name.split(" (")[0].strip()
+            layers.append(name)
+    return layers
+
+
+def vector_sources(root: Path) -> list[tuple[Path, str | None]]:
+    """(datasource, layer) pairs for every shapefile / file geodatabase under root."""
+    out = [(p, None) for p in sorted(root.rglob("*.shp"))]
+    for gdb in sorted(d for d in root.rglob("*.gdb") if d.is_dir()):
+        for lyr in ogr_layers(gdb):
+            out.append((gdb, lyr))
+    return out
+
+
+def to_geojson(src: Path, layer: str | None, dest: Path, epsg: int, clip_bounds) -> dict:
+    """Reproject (+clip to the template bbox) with system GDAL; returns parsed GeoJSON."""
+    cmd = ["ogr2ogr", "-f", "GeoJSON", "-t_srs", f"EPSG:{epsg}", "-skipfailures",
+           "-lco", "RFC7946=NO", "-lco", "COORDINATE_PRECISION=3"]
+    if clip_bounds is not None:
+        x0, y0, x1, y1 = clip_bounds
+        cmd += ["-clipdst", str(x0), str(y0), str(x1), str(y1)]
+    cmd += [str(dest), str(src)] + ([layer] if layer else [])
+    res = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
+    if res.returncode != 0 or not dest.exists():
+        raise RuntimeError(f"ogr2ogr rc={res.returncode}: {res.stderr[-800:]}")
+    with dest.open() as fh:
+        return json.load(fh)
+
+
+def line_geoms(gj: dict) -> list[dict]:
     out = []
-    for p in sorted(root.rglob("*.shp")):
-        out.append((str(p), None))
-    for p in sorted(root.rglob("*.gdb")):
-        try:
-            import pyogrio
-            for lyr in pyogrio.list_layers(str(p))[:, 0]:
-                out.append((str(p), str(lyr)))
-        except Exception as exc:  # pragma: no cover
-            print("gdb listing failed", p, exc)
+    for f in gj.get("features", []):
+        g = f.get("geometry")
+        if g and g.get("type") in ("LineString", "MultiLineString"):
+            out.append(g)
     return out
 
 
@@ -98,26 +134,34 @@ def main() -> int:
     args = ap.parse_args()
     args.work.mkdir(parents=True, exist_ok=True)
     args.out.mkdir(parents=True, exist_ok=True)
-    import geopandas as gpd
-    import pyogrio  # noqa: F401
-    from shapely.geometry import box
+    import traceback
 
     started = time.time()
     with rasterio.open(args.template) as ds:
         fp = np.isfinite(ds.read(1))
         T, crs, shape = ds.transform, ds.crs, ds.shape
         bounds = ds.bounds
+    epsg = crs.to_epsg()
     with rasterio.open(args.labels) as ds:
         labels = ds.read(1) == 1
+    gdal_version = subprocess.run(["ogrinfo", "--version"], capture_output=True,
+                                  text=True).stdout.strip()
     report = {"generated_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
               "template_sha256": sha256_file(args.template),
               "labels_sha256": sha256_file(args.labels),
+              "template_epsg": epsg, "gdal": gdal_version,
               "label_pixels": int(labels.sum()), "footprint_pixels": int(fp.sum()),
               "archives": {}, "fault_sets": {}, "point_sets": {},
               "github_run_id": os.environ.get("GITHUB_RUN_ID"),
               "code_sha256": sha256_file(Path(__file__))}
     d_label = ndimage.distance_transform_edt(~labels)  # px to nearest label pixel
-    clip = box(bounds.left - 2000, bounds.bottom - 2000, bounds.right + 2000, bounds.top + 2000)
+    clip_bounds = (bounds.left - 2000, bounds.bottom - 2000, bounds.right + 2000, bounds.top + 2000)
+
+    def save():
+        report["elapsed_seconds"] = round(time.time() - started, 1)
+        (args.out / "catalogue_diff.json").write_text(
+            json.dumps(report, indent=2, default=str) + "\n")
+    save()
 
     for key, (url, fname) in ARCHIVES.items():
         dest = args.work / fname
@@ -137,43 +181,47 @@ def main() -> int:
         except zipfile.BadZipFile as exc:
             report["archives"][key]["error"] = f"bad zip: {exc}"
             continue
+        save()
 
-    for key in FAULT_SETS:
-        if "error" in report["archives"].get(key, {"error": "missing"}):
-            continue
+    def fault_set(key: str):
         ex = args.work / key
         entry = {"layers": []}
-        frames = []
-        for path, layer in vector_layers(ex):
-            try:
-                gdf = gpd.read_file(path, layer=layer) if layer else gpd.read_file(path)
-            except Exception as exc:
-                entry["layers"].append({"path": path, "layer": layer, "error": str(exc)})
-                continue
-            geom_types = sorted(set(gdf.geom_type.dropna().unique().tolist()))
-            info = {"path": os.path.relpath(path, ex), "layer": layer, "rows": int(len(gdf)),
-                    "crs": str(gdf.crs), "geom_types": geom_types,
-                    "columns": [str(c) for c in gdf.columns][:60]}
+        geoms, props = [], []
+        for src, layer in vector_sources(ex):
+            info = {"path": os.path.relpath(src, ex), "layer": layer}
             entry["layers"].append(info)
-            if not any(t.endswith("LineString") for t in geom_types) or gdf.crs is None:
+            dest = ex / f"__{src.stem}_{layer or 'layer'}.geojson"
+            try:
+                gj = to_geojson(src, layer, dest, epsg, clip_bounds)
+            except Exception as exc:
+                info["error"] = str(exc)
                 continue
-            g = gdf[gdf.geom_type.str.endswith("LineString")].to_crs(crs)
-            g = g[g.intersects(clip)]
-            info["rows_in_template_bbox"] = int(len(g))
-            if len(g):
-                frames.append(g)
-        if not frames:
+            feats = gj.get("features", [])
+            info["rows_in_template_bbox"] = len(feats)
+            info["geom_types"] = sorted({(f.get("geometry") or {}).get("type", "None")
+                                         for f in feats})
+            if feats:
+                info["columns"] = sorted(feats[0].get("properties", {}).keys())[:60]
+            lines = line_geoms(gj)
+            info["line_features"] = len(lines)
+            geoms.extend(lines)
+            props.extend(f.get("properties", {}) for f in feats
+                         if (f.get("geometry") or {}).get("type") in ("LineString", "MultiLineString"))
+        entry["traces_in_bbox"] = len(geoms)
+        if not geoms:
             report["fault_sets"][key] = entry
-            continue
-        import pandas as pd
-        g = pd.concat(frames, ignore_index=True)
-        entry["traces_in_bbox"] = int(len(g))
+            return
         for col in ("age", "AGE", "Age", "slip_rate", "SLIP_RATE", "fault_type", "mapped_sca",
-                    "MAPPED_SCA", "num_sectio", "FaultAge", "fault_age", "Age_Cat"):
-            if col in g.columns:
-                vc = g[col].astype(str).value_counts().head(20)
-                entry.setdefault("attribute_counts", {})[col] = {str(k): int(v) for k, v in vc.items()}
-        shapes = [(geom, 1) for geom in g.geometry if geom is not None and not geom.is_empty]
+                    "MAPPED_SCA", "num_sectio", "FaultAge", "fault_age", "Age_Cat", "sliprate",
+                    "slipsense", "fault_class", "confidence", "Confidence"):
+            vals = [str(pr.get(col)) for pr in props if col in pr]
+            if vals:
+                counts = {}
+                for v in vals:
+                    counts[v] = counts.get(v, 0) + 1
+                top = dict(sorted(counts.items(), key=lambda kv: -kv[1])[:20])
+                entry.setdefault("attribute_counts", {})[col] = top
+        shapes = [(g, 1) for g in geoms]
         for touched in (False, True):
             mask = features.rasterize(shapes, out_shape=shape, transform=T, fill=0,
                                       all_touched=touched, dtype="uint8").astype(bool)
@@ -200,52 +248,75 @@ def main() -> int:
         report["fault_sets"][key] = entry
         print(key, json.dumps({k: v for k, v in entry.items() if k != "layers"}, indent=1), flush=True)
 
+    for key in FAULT_SETS:
+        if "error" in report["archives"].get(key, {"error": "missing"}):
+            continue
+        try:
+            fault_set(key)
+        except Exception:
+            tb = traceback.format_exc()
+            print("FAULT SET FAILED", key, tb, flush=True)
+            report["fault_sets"].setdefault(key, {})["error"] = tb
+        save()
+
     # Point sets for H15 (counts only; no modelling here).
+    def point_set(key: str):
+        ex = args.work / key
+        entry = {"layers": []}
+        for src, layer in vector_sources(ex):
+            info = {"path": os.path.relpath(src, ex), "layer": layer}
+            entry["layers"].append(info)
+            dest = ex / f"__{src.stem}_{layer or 'layer'}.geojson"
+            try:
+                gj = to_geojson(src, layer, dest, epsg, None)
+            except Exception as exc:
+                info["error"] = str(exc)
+                continue
+            feats = gj.get("features", [])
+            info["rows"] = len(feats)
+            info["geom_types"] = sorted({(f.get("geometry") or {}).get("type", "None")
+                                         for f in feats})
+            if feats:
+                info["columns"] = sorted(feats[0].get("properties", {}).keys())[:80]
+            pts = [f for f in feats if (f.get("geometry") or {}).get("type") == "Point"]
+            if not pts:
+                continue
+            xs = np.array([f["geometry"]["coordinates"][0] for f in pts], dtype=float)
+            ys = np.array([f["geometry"]["coordinates"][1] for f in pts], dtype=float)
+            rows, cols = rasterio.transform.rowcol(T, xs, ys)
+            rows = np.asarray(rows)
+            cols = np.asarray(cols)
+            ok = (rows >= 0) & (rows < shape[0]) & (cols >= 0) & (cols < shape[1])
+            info["points_in_template"] = int(ok.sum())
+            info["points_in_footprint"] = int(fp[rows[ok], cols[ok]].sum())
+            keys = sorted({k for f in pts for k in f.get("properties", {}).keys()})
+            target = args.out / f"{key}_{src.stem}_{layer or 'layer'}_points_utm.csv"
+            import csv
+            with target.open("w", newline="") as fh:
+                w = csv.writer(fh)
+                w.writerow(["utm_x", "utm_y", "row", "col", "in_footprint"] + keys)
+                for f, x, y, r, c, o in zip(pts, xs, ys, rows, cols, ok):
+                    pr = f.get("properties", {})
+                    w.writerow([f"{x:.3f}", f"{y:.3f}", int(r), int(c),
+                                int(bool(o and fp[r, c]))] + [pr.get(k) for k in keys])
+            info["points_csv"] = target.name
+            info["points_csv_sha256"] = sha256_file(target)
+        report["point_sets"][key] = entry
+
     for key in ("paleo_geothermal", "probes_2m", "wellspring", "study_area"):
         if "error" in report["archives"].get(key, {"error": "missing"}):
             continue
-        ex = args.work / key
-        entry = {"layers": []}
-        for path, layer in vector_layers(ex):
-            try:
-                gdf = gpd.read_file(path, layer=layer) if layer else gpd.read_file(path)
-            except Exception as exc:
-                entry["layers"].append({"path": path, "layer": layer, "error": str(exc)})
-                continue
-            info = {"path": os.path.relpath(path, ex), "layer": layer, "rows": int(len(gdf)),
-                    "crs": str(gdf.crs), "columns": [str(c) for c in gdf.columns][:80],
-                    "geom_types": sorted(set(gdf.geom_type.dropna().unique().tolist()))}
-            if gdf.crs is not None and len(gdf):
-                try:
-                    gg = gdf.to_crs(crs)
-                    inside = gg[gg.intersects(box(*bounds))]
-                    info["rows_in_template_bbox"] = int(len(inside))
-                    pts = inside[inside.geom_type == "Point"]
-                    if len(pts):
-                        rows, cols = rasterio.transform.rowcol(T, pts.geometry.x.values,
-                                                               pts.geometry.y.values)
-                        rows = np.asarray(rows)
-                        cols = np.asarray(cols)
-                        ok = (rows >= 0) & (rows < shape[0]) & (cols >= 0) & (cols < shape[1])
-                        info["points_in_footprint"] = int(fp[rows[ok], cols[ok]].sum())
-                        csv = ex / f"{Path(path).stem}_{layer or 'layer'}_points_utm.csv"
-                        pd_out = pts.drop(columns="geometry").copy()
-                        pd_out["utm_x"] = pts.geometry.x.values
-                        pd_out["utm_y"] = pts.geometry.y.values
-                        pd_out.to_csv(csv, index=False)
-                        target = args.out / csv.name
-                        target.write_bytes(csv.read_bytes())
-                        info["points_csv"] = target.name
-                        info["points_csv_sha256"] = sha256_file(target)
-                except Exception as exc:
-                    info["error"] = str(exc)
-            entry["layers"].append(info)
-        report["point_sets"][key] = entry
+        try:
+            point_set(key)
+        except Exception:
+            tb = traceback.format_exc()
+            print("POINT SET FAILED", key, tb, flush=True)
+            report["point_sets"].setdefault(key, {})["error"] = tb
+        save()
 
-    for p in sorted(args.out.glob("*.npy")):
+    for p in sorted(args.out.glob("*.npy")) + sorted(args.out.glob("*.csv")):
         report.setdefault("files", {})[p.name] = {"bytes": p.stat().st_size, "sha256": sha256_file(p)}
-    report["elapsed_seconds"] = round(time.time() - started, 1)
-    (args.out / "catalogue_diff.json").write_text(json.dumps(report, indent=2, default=str) + "\n")
+    save()
     print(json.dumps({k: v for k, v in report.items() if k not in ("archives", "point_sets")},
                      indent=1, default=str)[:6000], flush=True)
     return 0

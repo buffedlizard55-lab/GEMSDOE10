@@ -5,6 +5,11 @@ name: external-data
 # immutable tag `ext/<job>-<run_id>` (never a branch, never merged to main).
 # The sandbox restores them with `python scripts/fetch_external.py --tag ...`.
 # Nothing here trains a model, touches DrivenData, or spends a submission slot.
+#
+# Dispatch-only (the sandbox runs `gh workflow run external-data.yml --ref <branch>
+# -f jobs=dem10,catalogue`). Step logs are captured to out/<job>/build.log and
+# published even when the build fails (tag `ext/failed-<job>-<run_id>`), because
+# the sandbox cannot read Actions logs (they redirect to Azure blob storage).
 on:
   workflow_dispatch:
     inputs:
@@ -14,9 +19,6 @@ on:
       max_blocks:
         description: "debug: limit DEM blocks (0 = all)"
         default: "0"
-  push:
-    branches: ["**"]
-    paths: [".github/workflows/external-data.yml", "scripts/ext/**"]
 permissions:
   contents: write
 concurrency:
@@ -24,7 +26,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   dem10:
-    if: ${{ github.event_name == 'push' || contains(github.event.inputs.jobs, 'dem10') }}
+    if: ${{ contains(github.event.inputs.jobs, 'dem10') }}
     runs-on: ubuntu-latest
     timeout-minutes: 300
     steps:
@@ -37,17 +39,24 @@ jobs:
       - name: Verify committed template + labels (pins)
         run: pip install -q -r requirements.txt && python scripts/fetch_data.py --no-features
       - name: Build 3DEP 10 m scarp channels (H20)
+        id: build
         run: |
+          set -o pipefail
+          mkdir -p out/dem10
           df -h . | tail -1
-          python scripts/ext/dem10_scarp.py --max-blocks "${{ github.event.inputs.max_blocks || '0' }}"
+          python -u scripts/ext/dem10_scarp.py --max-blocks "${{ github.event.inputs.max_blocks || '0' }}" 2>&1 | tee out/dem10/build.log
           rm -rf work
           du -sh out/dem10
       - name: Publish as orphan commit + immutable tag
+        if: always()
         env:
-          TAG: ext/dem10-${{ github.run_id }}
-        run: bash scripts/ext/publish_tag.sh out/dem10 "$TAG" "H20 3DEP 10 m scarp channels (label-free), run ${{ github.run_id }}"
+          TAG: ${{ steps.build.outcome == 'success' && format('ext/dem10-{0}', github.run_id) || format('ext/failed-dem10-{0}', github.run_id) }}
+        run: |
+          mkdir -p out/dem10
+          echo "build=${{ steps.build.outcome }} run=${{ github.run_id }} sha=${{ github.sha }}" > out/dem10/STATUS.txt
+          bash scripts/ext/publish_tag.sh out/dem10 "$TAG" "H20 3DEP 10 m scarp channels (label-free), run ${{ github.run_id }}, build=${{ steps.build.outcome }}"
   catalogue:
-    if: ${{ github.event_name == 'push' || contains(github.event.inputs.jobs, 'catalogue') }}
+    if: ${{ contains(github.event.inputs.jobs, 'catalogue') }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -55,16 +64,26 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Install
-        run: pip install -q numpy scipy rasterio pyogrio shapely geopandas pandas
+      - name: Install (system GDAL CLI for vector conversion; no bundled-GDAL mixing)
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq gdal-bin >/dev/null
+          ogrinfo --version
+          pip install -q numpy scipy rasterio
       - name: Verify committed template + labels (pins)
         run: pip install -q -r requirements.txt && python scripts/fetch_data.py --no-features
       - name: Catalogue-version differencing (H21) + H15 point sets
+        id: build
         run: |
-          python scripts/ext/catalogue_diff.py
+          set -o pipefail
+          mkdir -p out/catalogue
+          python -u scripts/ext/catalogue_diff.py 2>&1 | tee out/catalogue/build.log
           rm -rf work
           du -sh out/catalogue
       - name: Publish as orphan commit + immutable tag
+        if: always()
         env:
-          TAG: ext/catalogue-${{ github.run_id }}
-        run: bash scripts/ext/publish_tag.sh out/catalogue "$TAG" "H21 catalogue differencing + H15 point sets, run ${{ github.run_id }}"
+          TAG: ${{ steps.build.outcome == 'success' && format('ext/catalogue-{0}', github.run_id) || format('ext/failed-catalogue-{0}', github.run_id) }}
+        run: |
+          mkdir -p out/catalogue
+          echo "build=${{ steps.build.outcome }} run=${{ github.run_id }} sha=${{ github.sha }}" > out/catalogue/STATUS.txt
+          bash scripts/ext/publish_tag.sh out/catalogue "$TAG" "H21 catalogue differencing + H15 point sets, run ${{ github.run_id }}, build=${{ steps.build.outcome }}"

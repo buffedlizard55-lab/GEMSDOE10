@@ -72,8 +72,17 @@ def predict_grid(model, feat: np.ndarray, footprint: np.ndarray,
 
 
 def parse_policy(policy: str) -> tuple[float, str]:
-    """'topk03_binary' -> (0.03, 'binary'). Budgets in whole percent."""
+    """'topk03_binary' -> (0.03, 'binary'); 'thin06_binary' -> (0.06, 'thin').
+
+    Budgets are whole percents of the footprint. `thinNN_binary` (session 3,
+    H19) is the top-NN% mask reduced to its Zhang-Suen skeleton and emitted at
+    1.0 — NN is the PRE-thinning budget; the emitted pixel count is smaller and
+    is reported by the scorer (`n_pos_pred`).
+    """
     budget_s, mode = policy.split("_", 1)
+    if budget_s.startswith("thin"):
+        assert mode == "binary", policy
+        return int(budget_s[4:]) / 100.0, "thin"
     assert budget_s.startswith("topk"), policy
     frac = int(budget_s[4:]) / 100.0
     assert mode in ("binary", "soft", "envelope", "halo2"), policy
@@ -88,13 +97,17 @@ def apply_policy(prob: np.ndarray, footprint: np.ndarray, policy: str) -> np.nda
       soft     — top-k pixels keep their probability, rest 0.0
       envelope — binary core + 1-px ring at 0.5 (off-by-one insurance)
       halo2    — binary core + ring1 at 2/3 + ring2 at 1/3 (metric-shaped)
+      thin     — skeleton of the top-k mask at 1.0 (H19: across-strike width
+                 is pure FP under the published metric; the truth is a 1-px line)
     """
     frac, mode = parse_policy(policy)
     fp = np.asarray(footprint, dtype=bool)
     p = np.where(fp, np.nan_to_num(np.asarray(prob, dtype=np.float64),
                                    nan=0.0), 0.0)
     core = placement.topk_mask(p, fp, frac)
-    if mode == "binary":
+    if mode == "thin":
+        out = np.where(placement._skeleton(core) & fp, 1.0, 0.0)
+    elif mode == "binary":
         out = np.where(core, 1.0, 0.0)
     elif mode == "soft":
         out = np.where(core, np.clip(p, 0.0, 1.0), 0.0)
