@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GEMSDOE10 — Hidden-Fault Discovery for the DOE GEMS Prize</title>
+<link rel="stylesheet" href="assets/style.css"></head>
+<body><header class="top"><div class="wrap">
+<div class="brand"><div><h1>GEMSDOE10 <small>· DOE GEMS Prize entry</small></h1>
+<small>Hidden-fault discovery · system-holdout selection · gated submission</small></div></div>
+<nav><a class="on" href="index.html">Home</a><a href="executive_summary.html">Executive summary</a>
+<a href="how_to_submit.html">How to submit</a><a href="results.html">Results</a>
+<a href="verification.html">Verification</a><a href="sources.html">Sources</a></nav>
+</div></header>
+<main><div class="wrap">
+<div class="card"><h2>⬇ Download the submission</h2>
+<p id="dl-status" class="mut">Loading published files…</p>
+<div id="dl-list"></div>
+<p class="mut">Every file passed the 9-rule hard gate (EPSG:32611 · 100 m · 3292×3730 · float32 in [0,1] · no NaN inside the footprint). See <a href="how_to_submit.html">how to submit</a>.</p></div>
+<div class="card"><h2>Thesis</h2>
+<p>Both prize rounds score faults <b>missing</b> from the catalogue, with known-catalogue pixels <b>masked</b> from evaluation.
+Optimising catalogue reproduction is the wrong objective — our sibling 6GEMSDOE reached 0.17 blocked-CV catalogue DTI and scored <b>0.0286</b> on the leaderboard.
+GEMSDOE10 selects on <b>hidden-fault simulation</b>: whole fault systems are held out, the model trains on the rest from geophysics alone, and policies are ranked by masked distance-weighted Tversky on the held-out systems.</p>
+<p><span class="pill">harness: system-holdout ×5</span><span class="pill">107 channels</span><span class="pill">71/71 tests</span></p></div>
+<div class="grid2">
+<div class="card"><h2>Key findings</h2>
+<ul><li>Catalogue proximity memorises (DTI 0.012) → <b>removed</b></li>
+<li>Geophysics-only HGB: masked DTI <b>0.0895</b> (fold 0, topk02_binary)</li>
+<li>Unsupervised lidar ridge alone: <b>0.0254</b></li>
+<li>SGMC-gap traces: <b>0.0000</b> → excluded (documented negative)</li></ul></div>
+<div class="card"><h2>Competition</h2>
+<p>$300,000 pool · closes <b>Dec 3, 2026 23:59 UTC</b><br>
+Public #1: DARD <b>0.3049</b> · our group best: 0.1563 (a duplicated file)</p>
+<p><a class="btn ghost" href="https://www.drivendata.org/competitions/306/competition-doe-gems/">Competition home</a>
+<a class="btn ghost" href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/">Problem &amp; metric</a></p></div>
+</div>
+<div class="card"><h2>Reproduce</h2>
+<code>fetch_data → build_features → run_cv → train_final → build_submission → validate → pytest</code>
+<p class="mut">All scripted, no manual steps. <a href="https://github.com/buffedlizard55-lab/GEMSDOE10">Repo</a></p></div>
+</div></main>
+<footer><div class="wrap">GEMSDOE10 · AI-assisted entry (disclosure in repo) · data: official competition rasters (hash-verified) + public-domain USGS/GeoDAWN externals</div></footer>
+<script>
+fetch('data/site.json').then(r=>r.json()).then(m=>{
+  const el=document.getElementById('dl-list'),st=document.getElementById('dl-status');
+  if(!m.submissions.length){st.textContent='No submission published yet — the CV campaign decides the file. Check Results for the harness.';return;}
+  st.textContent='';
+  m.submissions.forEach(s=>{
+    const d=document.createElement('div');d.className='card';
+    d.innerHTML=`<b>${s.file}</b> <span class="mut">${s.policy} · ${s.generated_utc} · sha ${String(s.sha256).slice(0,10)}</span><br>
+    <a class="btn" href="downloads/${s.file}">Download .tif</a><a class="btn ghost" href="downloads/${s.zip}">.zip</a>
+    <br><small class="mut">submission note: <code>${s.suggested_note}</code></small>`;
+    el.appendChild(d);});
+}).catch(()=>{document.getElementById('dl-status').textContent='Site data not built yet.';});
+</script></body></html>

@@ -1,0 +1,23 @@
+[project]
+name = "gems10-gemsdoe10"
+version = "10.0.0"
+description = "GEMS Prize (DOE/DrivenData) — GEMSDOE10 hidden-fault discovery entry: system-holdout CV, masked scoring, discovery fusion, gated submission"
+requires-python = ">=3.10"
+dependencies = ["numpy", "scipy", "rasterio", "scikit-learn", "tifffile", "pillow", "pandas", "joblib"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["gems10"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning"]

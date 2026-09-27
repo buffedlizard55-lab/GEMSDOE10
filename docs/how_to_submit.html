@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to submit — GEMSDOE10</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><header class="top"><div class="wrap">
+<div class="brand"><div><h1>GEMSDOE10 <small>· how to submit</small></h1></div></div>
+<nav><a href="index.html">Home</a><a href="executive_summary.html">Executive summary</a>
+<a class="on" href="how_to_submit.html">How to submit</a><a href="results.html">Results</a>
+<a href="verification.html">Verification</a><a href="sources.html">Sources</a></nav>
+</div></header>
+<main><div class="wrap">
+<div class="card"><h2>Step by step</h2>
+<ol><li>Download the <code>.tif</code> (or <code>.zip</code>) from the <a href="index.html">home page</a>.</li>
+<li>Sign in at <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/">the competition</a>.</li>
+<li>Click <b>Submit</b> → <b>Make new submission</b>.</li>
+<li><b>File to submit:</b> choose the downloaded file. The form accepts a single-band GeoTIFF or a .zip containing one.</li>
+<li><b>Note (optional):</b> paste the suggested note shown with the file (strategy + sha) so submissions stay identifiable.</li>
+<li>Submit. If the form reports <i>"Predicted values must be in range [0, 1]"</i>, the file has NaN inside the footprint — ours cannot: the writer refuses such files and the gate re-checks.</li></ol></div>
+<div class="card"><h2>Slot strategy</h2>
+<p>Only <b>3 scored submissions per rolling 7 days</b>. Spend slot 1 on the current file, read the public score, then decide. One submission is chosen <b>blind</b> (no private-score knowledge) for both prize rounds before Dec 3 2026. Public ≠ private: treat the public score as directional, not final.</p></div>
+<div class="card"><h2>What the gate checked</h2>
+<p class="mut">single-band float32 · EPSG:32611 · 100 m · 3292×3730 · exact geotransform · finite values in [0,1] · zero NaN/Inf inside the 5,167,373-px footprint · footprint equals the official mask · nodata NaN. See <a href="verification.html">verification</a>.</p></div>
+</div></main>
+<footer><div class="wrap">GEMSDOE10</div></footer></body></html>

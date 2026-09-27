@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Executive summary — GEMSDOE10</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><header class="top"><div class="wrap">
+<div class="brand"><div><h1>GEMSDOE10 <small>· executive summary</small></h1></div></div>
+<nav><a href="index.html">Home</a><a class="on" href="executive_summary.html">Executive summary</a>
+<a href="how_to_submit.html">How to submit</a><a href="results.html">Results</a>
+<a href="verification.html">Verification</a><a href="sources.html">Sources</a></nav>
+</div></header>
+<main><div class="wrap">
+<div class="card"><h2>What this is</h2>
+<p>GEMSDOE10 is a complete, tested pipeline that produces a <b>single format-gated GeoTIFF submission</b> for the
+<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/">DOE GEMS Prize Challenge</a>
+($300k, closes Dec 3 2026): find hidden faults from geophysical data. Download the file on the
+<a href="index.html">home page</a>, upload it on DrivenData, done — details in <a href="how_to_submit.html">how to submit</a>.</p></div>
+<div class="card"><h2>Why it should win</h2>
+<ol><li><b>Right objective.</b> Both rounds score <i>unmapped</i> faults with the catalogue masked. We select models by hidden-fault simulation (system-holdout CV), not catalogue fit — the trap that scored 0.0286 for a 0.17-CV model.</li>
+<li><b>Right features.</b> 107 physics-informed channels: potential-field edges (HGM/ASA/tilt), multi-scale curvature, structure-tensor lineaments, plus new Frangi vesselness + Gabor strike detectors and lidar scarp morphology.</li>
+<li><b>Right emission.</b> Budget-based top-k placement swept in the harness (binary/soft/envelope/halo2 × 1–5%); the winner is gated by 9 format rules before it can be published.</li>
+<li><b>Honest negatives.</b> Catalogue proximity (0.012), SGMC-gap traces (0.0000) and QF-gap (0.003) were measured and excluded — the file contains no known-dead mass.</li></ol></div>
+<div class="card"><h2>How to submit (30 seconds)</h2>
+<p>1. Download the <code>.tif</code> (or <code>.zip</code>) from the home page. 2. Open the competition → <b>Submit → Make new submission</b>. 3. Choose the file, paste the suggested note from the file's sidecar. Full walkthrough: <a href="how_to_submit.html">how to submit</a>.</p></div>
+<div class="card"><h2>Compliance</h2>
+<p class="mut">Eligibility (§1.3) and the 3-per-week cadence (§3.4) are the account holder's responsibility. AI assistance is disclosed in the repo (<code>AI_DISCLOSURE.md</code>). One submission is chosen blind for both rounds (§3.6).</p></div>
+</div></main>
+<footer><div class="wrap">GEMSDOE10</div></footer></body></html>

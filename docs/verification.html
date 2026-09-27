@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verification — GEMSDOE10</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><header class="top"><div class="wrap">
+<div class="brand"><div><h1>GEMSDOE10 <small>· verification</small></h1></div></div>
+<nav><a href="index.html">Home</a><a href="executive_summary.html">Executive summary</a>
+<a href="how_to_submit.html">How to submit</a><a href="results.html">Results</a>
+<a class="on" href="verification.html">Verification</a><a href="sources.html">Sources</a></nav>
+</div></header>
+<main><div class="wrap">
+<div class="card"><h2>Byte-level facts (measured 2026-09-27)</h2>
+<table><tr><th>File</th><th>Bytes</th><th>sha256</th></tr>
+<tr><td>training_features.tif</td><td>418,912,844</td><td><code>4371c82e…3123bc5</code></td></tr>
+<tr><td>labels.tif</td><td>425,830</td><td><code>7ba308cc…5ae4093</code></td></tr>
+<tr><td>sample_submission.tif</td><td>1,599,597</td><td><code>2176d08e…5c35cbc</code></td></tr></table>
+<p>Grid 3730×3292 · EPSG:32611 · 100 m · origin (243350, 4508550) · footprint 5,167,373 px · 60,988 fault px (1.18%) · 3,199 fault systems. Sample submission is <b>not</b> all-zero (ones at the 60,988 catalogue pixels). Feature nodata = float32-min sentinel, not NaN.</p></div>
+<div class="card"><h2>Checks</h2>
+<ul><li>Official worked example reproduces <b>0.60</b> (<code>tests/test_metric.py</code>)</li>
+<li>71/71 tests pass (<code>pytest tests/</code>); CI re-runs tests + pin checks + gate fixtures on every push</li>
+<li>Format gate: 9 rules incl. the NaN-inside-footprint hard fail (<code>tests/test_gate.py</code>)</li>
+<li>Submission writer refuses byte-duplicates of known sibling artifacts</li></ul></div>
+<div class="card"><h2>Second-hand rulings (account holder must re-verify)</h2>
+<p class="mut">Catalogue masking (forum 11516), near-fault corrections (11536), 3/week cadence (11524) come via sibling-session records. The harness reports masked <i>and</i> unmasked numbers so the policy choice is robust either way.</p></div>
+</div></main>
+<footer><div class="wrap">GEMSDOE10 · full ledger: <code>VERIFICATION.md</code></div></footer></body></html>
