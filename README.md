@@ -12,8 +12,9 @@
 
 - **Duplicate cause measured:** GEMSDOE1 = 5GEMSDOE = GEMSDOE2 recall, byte-for-byte and pixel-for-pixel. Current 8GEMSDOE hedge changes only known catalogue pixels. [Immutable artifact audit](reports/submission_audit.json).
 - **Data placement resolved:** automatic pinned public-team-mirror restoration works here; no manual download or GPU needed for HGB. Integrity with inherited pins is verified, independent official-file authentication is not.
-- **Validation repaired:** historical reports use interleaved raster-component holdouts, not geographic blocks. New H12 uses four spatial stripes, a 4 km training exclusion, fixed top-2% emission, paired baseline/discovery comparisons and a confirmation fold. [Preregistration](HYPOTHESES.md), [measured report](reports/h12_blocked.json).
-- **Official evidence checked:** public leader DARD **0.3049 on 2026-09-27**; group scores remain user-reported. Staff confirms masking and that new geometry of existing systems qualifies; hidden data types/coverage are undisclosed. [Dated source ledger](reports/official_feed.json).
+- **Validation repaired and extended (session 2):** historical reports use interleaved raster-component holdouts, not geographic blocks. The spatial protocol (four stripe folds, 4 km training exclusion, confirmation fold, paired baseline/discovery) now also sweeps a preregistered 8-policy set on saved OOF probabilities. Results: **H12 rejected**, **H13 not eligible** (confirmation regressed), **H16 eligible** (dev mean +0.00373, confirmation +0.00070 vs both baselines under topk06_binary). [Preregistration + calibration record](HYPOTHESES.md), [H16 report](reports/h16_blocked.json), [H13 report](reports/h13_blocked.json).
+- **Official evidence re-verified 2026-09-27:** public leader DARD **0.3049**; group scores remain user-reported. Staff confirms pixel-exact masking, that new geometry of existing systems qualifies, and that new ground truth may lie within 300 m of known traces; hidden data types/coverage are undisclosed. [Dated source ledger](reports/official_feed.json).
+- **Durable knowledge base:** [KNOWLEDGE.md](KNOWLEDGE.md) distills the verified mechanics, sources, implementation map and dead ends for future sessions.
 
 ## Core values
 
@@ -28,8 +29,9 @@ pip install -r requirements.txt
 python scripts/fetch_data.py --download       # immutable mirror through gh; all pins checked
 python scripts/audit_submissions.py           # ten published files, immutable source links
 OMP_NUM_THREADS=2 python scripts/build_features.py --tile-rows 128
-python scripts/build_scarp.py                 # six H12 odd-step features
-OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 python scripts/validate_hypothesis.py
+python scripts/build_offset.py                # H13 39-channel strip-NCC grid (tiled, low-mem)
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 python scripts/validate_candidate.py --hypothesis H16
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 python scripts/validate_candidate.py --hypothesis H13 --extra data/features_offset.npy
 python -m pytest -q
 python scripts/build_site.py
 ```
@@ -39,14 +41,19 @@ Allow ~7 GB scratch for source/derived features and OOF grids; ~4 GB RAM worked 
 ### Publication contract
 
 ```bash
-# Only AFTER a candidate passes and a final-training manifest binds these probabilities:
+# H16 pipeline, only AFTER the clean re-run's decision is eligible:
+python scripts/build_continuation.py          # all-systems 10-channel H16 grid
+python scripts/train_final.py --extra data/features_continuation.npy \
+  --hypothesis H16 --bind-to reports/h16_blocked.json \
+  --work-dir final_out
 python scripts/build_submission.py --prob final_out/prob_final.npy \
-  --policy topk02_binary --name gems10-hypothesis-version \
-  --validation reports/approved_validation.json
+  --policy topk06_binary --name gems10-h16-continuation \
+  --validation reports/h16_blocked.json \
+  --note "H16 endpoint-continuation features (tmi/det_elev/rtp), 117-feature HGB, topk06_binary"
 # A diagnostic can instead use --experiment; output is forced into scratch, never Pages.
 ```
 
-`approved_validation.json` above is an example future evidence file, not a file shipped by this project. The old `train_final.py` fits baseline107, **not H12**; do not use it to claim final H12 provenance. Failing H12 must not trigger final training or publication. [Submission guide](SUBMISSION_GUIDE.md).
+`train_final.py --bind-to` refuses to write the binding unless the validation report's decision is eligible, and `build_submission.py` re-verifies every hash, the format gate and the duplicate registry before anything reaches `docs/downloads`. A failed candidate must never trigger final training or publication. [Submission guide](SUBMISSION_GUIDE.md).
 
 ## Reusable knowledge and operations
 

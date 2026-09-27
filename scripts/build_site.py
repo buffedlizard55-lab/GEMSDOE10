@@ -89,16 +89,63 @@ def submission_panel(submissions):
     return ''.join(cards)
 
 
-def results_html(audit, experiment):
+def _arm_dti(row, arm, selection):
+    """DTI for (fold, arm): v2 reports score per policy and select per arm on
+    development folds; v1 reports carry a scalar dti per arm."""
+    scores = row.get('scores', {}).get(arm)
+    if scores is None:
+        return None
+    if isinstance(scores, dict) and 'dti' not in scores:
+        pol = (selection or {}).get(arm)
+        if pol and pol in scores and isinstance(scores[pol], dict):
+            v = scores[pol].get('dti')
+            return v if isinstance(v, (int, float)) else None
+        return None
+    v = scores.get('dti')
+    return v if isinstance(v, (int, float)) else None
+
+
+def _experiment_section(exp, filename):
+    hyp = exp.get('hypothesis', 'H12')
+    is_v2 = exp.get('protocol', '').endswith('policy-sweep-v2')
+    selection = exp.get('policy_selection', {}) if is_v2 else {}
+    decision = exp.get('decision', {})
+    status = str(exp.get('status', 'unknown')).upper()
+    reason = decision.get('reason', 'Evaluation has not finished; no release.')
+    protocol_line = (
+        'Per-arm policy selected on development folds only (preregistered 8-policy '
+        'set); no confirmation-fold tuning.'
+        if is_v2 else
+        'Fixed top 2%, HGB 200 iterations. Four geographic stripe folds; 4 km '
+        'training exclusion. Fold 3 is confirmation.')
+    binding = exp.get('final_prediction') or {}
+    binding_line = ''
+    if binding.get('training_manifest_file'):
+        binding_line = (f'<p><b>Final prediction hash-bound</b> '
+                        f'({esc(binding["training_manifest_file"])}) — release '
+                        f'evidence complete; approved artifact below.</p>')
+    content = f'<section class="card"><h2>{esc(hyp)} spatial holdout</h2><p><strong>{esc(status)}</strong> · {esc(reason)}</p>{binding_line}<p>{protocol_line} Scores below are catalogue-generalization proxies, not new-fault leaderboard estimates.</p>'
+    arms = ['baseline107', 'baseline107_discovery', hyp, 'random_budget_control']
+    content += '<div class="table-scroll"><table><thead><tr><th>Fold / role</th>' + ''.join(f'<th>{esc(a)}</th>' for a in arms) + f'<th>{esc(hyp)} − baseline</th></tr></thead><tbody>'
+    for f in exp.get('folds', []):
+        vals = [_arm_dti(f, a, selection) for a in arms]
+        base = vals[0]; cand = vals[2]
+        cells = ''.join(('<td>{:.6f}</td>'.format(v)) if v is not None else '<td>—</td>' for v in vals)
+        delta = f'{cand-base:+.6f}' if (base is not None and cand is not None) else '—'
+        if is_v2 and selection:
+            pol = selection.get(hyp, '?')
+        else:
+            pol = ''
+        content += f'<tr><td>{f["fold"]} / {esc(f["role"])}{f" ({esc(pol)})" if pol and f.get("role")=="development" else ""}</td>{cells}<td>{delta}</td></tr>'
+    content += '</tbody></table></div><p><a href="data/' + esc(filename) + '">Full experiment: inputs, code hashes, masks, weighted metric terms →</a></p></section>'
+    return content
+
+
+def results_html(audit, experiments):
     content = '<div class="intro"><span class="eyebrow">MEASURE / COMPARE / REJECT WHEN NECESSARY</span><h1>What actually changed?</h1><p>Scores are not identities. This audit reads the files, the geography and the predictions.</p></div>'
-    if experiment:
-        decision = experiment.get('decision', {})
-        content += f'<section class="card"><h2>H12 spatial holdout</h2><p><strong>{esc(experiment.get("status", "unknown").upper())}</strong> · {esc(decision.get("reason", "Evaluation has not finished; no release."))}</p><p>Fixed top 2%, HGB 200 iterations, 107 baseline channels versus 113 with H12. Four geographic stripe folds; 4 km training exclusion. Fold 3 is confirmation. Scores below are catalogue-generalization proxies, not new-fault leaderboard estimates.</p>'
-        content += '<div class="table-scroll"><table><thead><tr><th>Fold / role</th><th>Baseline107</th><th>+ discovery</th><th>+ H12</th><th>Random control</th><th>H12 − baseline</th></tr></thead><tbody>'
-        for f in experiment.get('folds', []):
-            s = f['scores']; base = s['baseline107']['dti']; candidate = s['H12']['dti']
-            content += f'<tr><td>{f["fold"]} / {esc(f["role"])}</td>' + ''.join(f'<td>{s[name]["dti"]:.6f}</td>' for name in ('baseline107', 'baseline107_discovery', 'H12', 'random_budget_control')) + f'<td>{candidate-base:+.6f}</td></tr>'
-        content += '</tbody></table></div><p><a href="data/h12_blocked.json">Full experiment: inputs, code hashes, masks, weighted metric terms →</a></p></section>'
+    for name, exp in experiments:
+        if exp:
+            content += _experiment_section(exp, name)
     content += f'<section class="card"><h2>Published artifact census</h2><p>Artifact snapshot: {esc(audit.get("checked_utc", "unknown"))}.</p><p>Scores supplied by the user; exact file-to-upload associations remain unverified. Files below are audited evidence, <b>not download recommendations</b>.</p><div class="table-scroll"><table><thead><tr><th>Artifact</th><th>User score</th><th>Positive cells</th><th>File SHA</th><th>Evidence</th></tr></thead><tbody>'
     for a in audit.get('artifacts', []):
         score = a.get('user_reported_score')
@@ -120,13 +167,16 @@ def main():
                 'refused_publications': refused}
     (docs / 'data/site.json').write_text(json.dumps(manifest, indent=2) + '\n')
     audit = read_json(ROOT / 'reports/submission_audit.json', {})
-    experiment = read_json(ROOT / 'reports/h12_blocked.json', {})
+    experiments = [(name, read_json(ROOT / 'reports' / name, {}))
+                   for name in ('h12_blocked.json', 'h16_blocked.json',
+                                'h13_blocked.json')
+                   if (ROOT / 'reports' / name).exists()]
     feed = read_json(ROOT / 'reports/official_feed.json', {})
     board = feed.get('leaderboard', {})
     panel = submission_panel(submissions)
     home = '''<div class="intro"><span class="eyebrow">RESEARCH LOG / NORTHWESTERN GREAT BASIN</span><h1>Find a different fault.<br><em>Not a different filename.</em></h1><p>Scientific hypotheses, spatially separated tests and auditable predictions. Built to discover missing geological structure—not repeat the same submission.</p></div>''' + panel
-    home += f'''<div class="stats"><div><span>PUBLIC LEADER SNAPSHOT</span><strong>{board.get('score', 0):.4f}</strong><small>{esc(board.get('rank1', 'Unknown'))} · {esc(board.get('last_success_date', 'unknown date'))}<br>{esc(board.get('status', 'unverified'))}</small></div><div><span>GROUP BEST / USER-REPORTED</span><strong>0.1563</strong><small>Exact duplicate identified<br>Upload history not authenticated</small></div><div><span>NEW PHYSICAL HYPOTHESES</span><strong>04</strong><small>One tested on spatial blocks<br>One blocked by external data access</small></div></div>'''
-    home += '''<div class="grid"><section class="card"><span class="eyebrow">01 / AUDIT</span><h2>Copying is measurable.</h2><p>Ten published artifacts, immutable source commits, file hashes and canonical prediction hashes. Renamed and recompressed duplicates are refused.</p><a href="results.html">See the comparison →</a></section><section class="card"><span class="eyebrow">02 / EXPERIMENT</span><h2>A scarp is not a channel.</h2><p>H12 tests an odd, planar-detrended step profile against symmetric valley/ridge shape, with along-strike polarity persistence. Six channels. A falsifiable alternative to generic lineaments.</p><a href="hypotheses.html">Read all four hypotheses →</a></section></div><section class="card"><h2>Evidence has a boundary.</h2><p>Official staff confirm that new geometry of existing systems can count. They do not disclose the hidden faults’ data sources, types or coverage. A proxy score is not a promise of first place; fault pixels are not confirmed geothermal vents.</p><a href="sources.html">Official sources and freshness →</a> · <a href="verification.html">Limitations and irregularities →</a></section>'''
+    home += f'''<div class="stats"><div><span>PUBLIC LEADER SNAPSHOT</span><strong>{board.get('score', 0):.4f}</strong><small>{esc(board.get('rank1', 'Unknown'))} · {esc(board.get('last_success_date', 'unknown date'))}<br>{esc(board.get('status', 'unverified'))}</small></div><div><span>GROUP BEST / USER-REPORTED</span><strong>0.1563</strong><small>Exact duplicate identified<br>Upload history not authenticated</small></div><div><span>NEW PHYSICAL HYPOTHESES</span><strong>05</strong><small>H13/H16 on spatial-block holdouts<br>H12 rejected · H15 blocked by data access</small></div></div>'''
+    home += '''<div class="grid"><section class="card"><span class="eyebrow">01 / AUDIT</span><h2>Copying is measurable.</h2><p>Ten published artifacts, immutable source commits, file hashes and canonical prediction hashes. Renamed and recompressed duplicates are refused.</p><a href="results.html">See the comparison →</a></section><section class="card"><span class="eyebrow">02 / EXPERIMENT</span><h2>Two faults, one offset.</h2><p>H16 lights rays that continue a discovered system's strike past its mapped end; H13 measures the zero-lag alignment dip of strip pairs across candidate traces. Both are tested on spatially blocked folds before any submission slot is spent. H12 (scarp polarity) was measured and rejected on the same geography.</p><a href="hypotheses.html">Read all five hypotheses →</a></section></div><section class="card"><h2>Evidence has a boundary.</h2><p>Official staff confirm that new geometry of existing systems can count. They do not disclose the hidden faults’ data sources, types or coverage. A proxy score is not a promise of first place; fault pixels are not confirmed geothermal vents.</p><a href="sources.html">Official sources and freshness →</a> · <a href="verification.html">Limitations and irregularities →</a></section>'''
     sources = '<div class="intro"><span class="eyebrow">OFFICIAL / DATED / REVIEWABLE</span><h1>Source ledger</h1><p>Daily checks preserve the last-good evidence when a page is unavailable. A failed refresh is not a new verification.</p></div>'
     for s in feed.get('sources', []):
         sources += f'<section class="card"><span class="eyebrow">{esc(s["status"])} · LAST SUCCESS {esc(s["last_success_date"])}</span><h2>{esc(s["claim"])}</h2><p>{esc(s["scope"])}</p><a href="{esc(s["url"])}">Read official source ↗</a>'
@@ -138,7 +188,7 @@ def main():
     pages = {
         'index': ('Submission hub', home),
         'executive_summary': ('How to submit', panel + '<article>' + md((ROOT/'SUBMISSION_GUIDE.md').read_text()) + '</article>'),
-        'results': ('Results & audit', results_html(audit, experiment)),
+        'results': ('Results & audit', results_html(audit, experiments)),
         'hypotheses': ('Geological hypotheses', '<article>' + md((ROOT/'HYPOTHESES.md').read_text()) + '</article>'),
         'sources': ('Official sources', sources),
         'verification': ('Review & limitations', '<article>' + md((ROOT/'REVIEW.md').read_text()) + md((ROOT/'LIMITATIONS.md').read_text()) + '</article>'),

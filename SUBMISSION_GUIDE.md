@@ -6,9 +6,14 @@ Open the [submission hub](https://buffedlizard55-lab.github.io/GEMSDOE10/).
 If it says **NO APPROVED SUBMISSION**, stop: an experiment has not satisfied the evidence gates.
 A format-valid TIFF alone is not a reason to spend one of the three weekly slots.
 
-No new candidate is approved by default. The H12 decision is in `reports/h12_blocked.json`.
-The website is static: CPU scripts generate files; approved files are then one-click downloads.
-It does not secretly train a model in the browser or upload to DrivenData.
+No candidate is approved by default. Session-2 decisions (protocol
+`spatial-4x4-strided-v1-buffer40-policy-sweep-v2`): **H16 ELIGIBLE**
+(`reports/h16_blocked.json`), **H13 NOT ELIGIBLE** (`reports/h13_blocked.json`),
+H12 rejected earlier (`reports/h12_blocked.json`). H16 still requires the
+full-data final fit with a hash-bound training manifest before any download
+appears on the hub. The website is static: CPU scripts generate files;
+approved files are then one-click downloads. It does not secretly train a
+model in the browser or upload to DrivenData.
 
 ## 2. When a candidate is approved
 
@@ -41,9 +46,10 @@ A local pass is not a guarantee of backend acceptance or a competitive score.
 
 ## 4. Build and release
 
-See README.md for data → features → blocked comparison. **Do not run old baseline final training and label it H12.**
-The final-prediction manifest for a future passing candidate must tie the generated NPY hash to its training recipe and the compatible completed validation report.
-`build_submission.py --validation ...` refuses missing, non-improving, incomplete, mismatched-policy or unbound evidence.
+See README.md for data → features → blocked comparison. **Do not run old baseline final training and label it a passing candidate.**
+For H16 the bound pipeline is: `build_continuation.py` (all-systems 10-channel grid) → `train_final.py --extra data/features_continuation.npy --hypothesis H16 --bind-to reports/h16_blocked.json` (refuses to bind unless the report's decision is eligible; writes the training manifest, sets `promotion_allowed`, and records `final_prediction` in the report) → `build_submission.py --prob ... --policy topk06_binary --validation reports/h16_blocked.json`.
+The final-prediction manifest must tie the generated NPY hash to its training recipe and the compatible completed validation report.
+`build_submission.py --validation ...` refuses missing, non-improving, incomplete, mismatched-policy or unbound evidence (fail-closed gates in `src/gems10/release.py`, protocol-aware for v1 and v2 reports).
 `--experiment` writes diagnostics only into `scratch/experiments/`, never the download hub.
 
 The canonical field hash detects renamed/recompressed copies; the noncatalogue hash catches catalogue-only changes.

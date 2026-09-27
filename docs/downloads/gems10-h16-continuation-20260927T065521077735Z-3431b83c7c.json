@@ -1,0 +1,102 @@
+{
+  "field_sha256": "3c962f13ef494c04fde8746dba2ae6771c3c21d5df24a1a9a1d7827ef879d26a",
+  "noncatalogue_sha256": "3cfcdb7e7fc8e10628696b27426f5484a7b5faa746bfa7eeec76bb300d60e065",
+  "positive_pixels": 310042,
+  "noncatalogue_positive_pixels": 283532,
+  "name": "gems10-h16-continuation",
+  "policy": "topk06_binary",
+  "generated_utc": "20260927T065521077735Z",
+  "status": "approved",
+  "probability_sha256": "3431b83c7cf4b25b3fbaabcc2b136a27e07f4cb867f892989e12919ed5fb5a2c",
+  "file": "gems10-h16-continuation-20260927T065521077735Z-3431b83c7c.tif",
+  "sha256": "b33684ae033512a1a1c7d2cfccd128955fedfdff2a8fed6c7585a755b1b58b3c",
+  "bytes": 1765159,
+  "zip": "gems10-h16-continuation-20260927T065521077735Z-3431b83c7c.zip",
+  "zip_sha256": "f29fdff54dc75203ea7e1523e375498f2f458385c0de66a5df52019fe5ac501d",
+  "validation_sha256": "0f51f5f19ef7a724a736a591559610ed5ef0b1e95a22b74fae6653d6a0e4c667",
+  "validation_file": "h16_blocked.json",
+  "suggested_note": "H16 endpoint-continuation features (tmi/det_elev/rtp ray channels), 117-feature HGB, topk06_binary; spatial holdout dev +0.0037 / confirm +0.0007 vs matched baselines (reports/h16_blocked.json)",
+  "footprint_px": 5167373,
+  "positive_px": 310042,
+  "mass": 310042.0,
+  "gate": [
+    {
+      "name": "file-exists",
+      "ok": true,
+      "detail": "1765159 bytes",
+      "hard": true
+    },
+    {
+      "name": "single-band",
+      "ok": true,
+      "detail": "band count = 1",
+      "hard": true
+    },
+    {
+      "name": "dtype-float32",
+      "ok": true,
+      "detail": "dtype = float32",
+      "hard": true
+    },
+    {
+      "name": "crs-epsg32611",
+      "ok": true,
+      "detail": "CRS = EPSG:32611 (epsg 32611)",
+      "hard": true
+    },
+    {
+      "name": "resolution-100m",
+      "ok": true,
+      "detail": "resolution = (100.0, 100.0)",
+      "hard": true
+    },
+    {
+      "name": "shape",
+      "ok": true,
+      "detail": "shape = (3730, 3292), expected (3730, 3292)",
+      "hard": true
+    },
+    {
+      "name": "geotransform",
+      "ok": true,
+      "detail": "transform = (100.0, 0.0, 243350.0, 0.0, -100.0, 4508550.0)",
+      "hard": true
+    },
+    {
+      "name": "nodata-nan",
+      "ok": true,
+      "detail": "declared nodata = nan",
+      "hard": true
+    },
+    {
+      "name": "values-in-0-1",
+      "ok": true,
+      "detail": "finite range = [0.0, 1.0]",
+      "hard": true
+    },
+    {
+      "name": "no-inf",
+      "ok": true,
+      "detail": "inf pixels = 0",
+      "hard": true
+    },
+    {
+      "name": "template-verified",
+      "ok": true,
+      "detail": "official sample submission sha256 ok, footprint = 5167373 px",
+      "hard": true
+    },
+    {
+      "name": "NAN-INSIDE-FOOTPRINT",
+      "ok": true,
+      "detail": "0 non-finite pixels inside the scored footprint (non-finite scored values violate the [0,1] contract; the original backend rejection cause is not known)",
+      "hard": true
+    },
+    {
+      "name": "footprint-matches-official",
+      "ok": true,
+      "detail": "0 finite pixels outside the official footprint (use --allow-footprint-subset for experiments only)",
+      "hard": true
+    }
+  ]
+}

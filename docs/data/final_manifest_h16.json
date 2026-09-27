@@ -1,0 +1,34 @@
+{
+  "hypothesis": "H16",
+  "probability_sha256": "3431b83c7cf4b25b3fbaabcc2b136a27e07f4cb867f892989e12919ed5fb5a2c",
+  "validation_protocol": "spatial-4x4-strided-v1-buffer40-policy-sweep-v2",
+  "validated_inputs": {
+    "features107.f32.npy": "fb0cfb4060474b374bbfabd431cd8ab9c4ef1c55c322244295e326c259a4fe80",
+    "labels.tif": "7ba308ccdc4418b31a178f4f1ef21aaa6e152e4028f2f6f64b01f7eb25ae4093",
+    "sample_submission.tif": "2176d08e485aa2cd2860ce8df539db4faf4d76163b38a4dd8c30a40454d35cbc",
+    "training_features.tif": "4371c82e3b8339b807bdffcf4ef59a225520fe2988d521be208ae33743123bc5"
+  },
+  "config": {
+    "iterations": 200,
+    "lr": 0.05,
+    "depth": 7,
+    "l2": 1,
+    "seed": 7,
+    "negatives": 200000,
+    "buffer_px": 40
+  },
+  "model_sha256": "d0f6b6ff69cf88fcfd15cbc49cc030a2a7ffc41cc4ffc63e9342aff84f0e72cc",
+  "final_prob_file": "prob_final.npy",
+  "code": {
+    "scripts/validate_candidate.py": "b00f5fa0b0fbfd0bd7fff1ec3db16f03587665177a78dad8e4dfba84770f2263",
+    "src/gems10/alignment.py": "8d061ad11baf13882cc7234e6faae837db44821eca7c2875e3401e6eebd41965",
+    "src/gems10/cv.py": "3b9eccab9cd463dee220a5e1dd80280c684e217e8505a52edafd43f2404a1a4f",
+    "src/gems10/modeling.py": "8dddfa4e82ee1861912951d1bd5f3bef15698196592743a7d53037b44edc5314",
+    "src/gems10/metric.py": "272aca85dab7af88a562994e7112d27f7aeb5561e051684be8ef56d5a9763d6e",
+    "src/gems10/discovery.py": "56c802cb250be03837bf12d6a210eee899c43c9c6e95a0290c6cd53600c9f153",
+    "src/gems10/systems.py": "802bec30affea03cf3bc88e428bc39aa05a2eb1dcda4ec27c21e606dd62b0086",
+    "src/gems10/features.py": "ff6b81240dbaaa7bc73ca5ba89574b4aef5e8f7e54a6752947094f4c77d80331",
+    "scripts/build_features.py": "a46d7c97c93a425b71f5f77b03f2e3f03a55031ddd6725cc0736ad56dd7a4d93",
+    "HYPOTHESES.md": "e2877ce008d9bc5487bfcc164c5e0c560267a0e3424115932d1e83a487f00ab3"
+  }
+}
