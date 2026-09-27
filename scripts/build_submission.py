@@ -75,7 +75,8 @@ def main() -> int:
         "footprint_px": int(footprint.sum()),
         "positive_px": int((np.nan_to_num(emis, nan=0.0) > 0).sum()),
         "mass": float(np.nan_to_num(emis, nan=0.0).sum()),
-        "gate": [c.__dict__ for c in report.checks],
+        "gate": [{"name": c.name, "ok": bool(c.ok), "detail": str(c.detail),
+                    "hard": bool(c.hard)} for c in report.checks],
     }
     tif.with_suffix(".json").write_text(json.dumps(meta, indent=1) + "\n")
     print(json.dumps({k: v for k, v in meta.items() if k != "gate"}, indent=1))
