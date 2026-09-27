@@ -1,0 +1,341 @@
+usgs_qffd {
+ "traces_in_bbox": 14419,
+ "attribute_counts": {
+  "age": {
+   "undifferentiated Quaternary": 6691,
+   "latest Quaternary": 4549,
+   "late Quaternary": 1884,
+   "historic": 1180,
+   "middle and late Quaternary": 115
+  },
+  "slip_rate": {
+   "Less than 0.2 mm/yr": 8199,
+   "Between 0.2 and 1.0 mm/yr": 2776,
+   "Between 1.0 and 5.0 mm/yr": 2082,
+   "Unspecified": 872,
+   "Greater than 5.0 mm/yr": 344,
+   "None": 146
+  }
+ },
+ "center": {
+  "pixels": 60939,
+  "on_label_pixels": 60839,
+  "within_300m_not_on_label": 99,
+  "beyond_300m_of_labels": 1,
+  "beyond_300m_components": 1,
+  "beyond_300m_components_ge8px": 0,
+  "label_pixels_beyond_300m_of_this_set": 2,
+  "iou_with_labels": 0.9959239130434783
+ },
+ "all_touched": {
+  "pixels": 82841,
+  "on_label_pixels": 58800,
+  "within_300m_not_on_label": 24040,
+  "beyond_300m_of_labels": 1,
+  "beyond_300m_components": 1,
+  "beyond_300m_components_ge8px": 0,
+  "label_pixels_beyond_300m_of_this_set": 2,
+  "iou_with_labels": 0.6915287725364287
+ }
+}
+ingenious_v1 {
+ "traces_in_bbox": 1148,
+ "attribute_counts": {
+  "AGE": {
+   "<1,600,000": 630,
+   "<15,000": 257,
+   "<130,000": 206,
+   "<150": 36,
+   "<750,000": 19
+  }
+ },
+ "center": {
+  "pixels": 60982,
+  "on_label_pixels": 60958,
+  "within_300m_not_on_label": 23,
+  "beyond_300m_of_labels": 1,
+  "beyond_300m_components": 1,
+  "beyond_300m_components_ge8px": 0,
+  "label_pixels_beyond_300m_of_this_set": 0,
+  "iou_with_labels": 0.9991149282108438
+ },
+ "all_touched": {
+  "pixels": 82871,
+  "on_label_pixels": 58876,
+  "within_300m_not_on_label": 23994,
+  "beyond_300m_of_labels": 1,
+  "beyond_300m_components": 1,
+  "beyond_300m_components_ge8px": 0,
+  "label_pixels_beyond_300m_of_this_set": 0,
+  "iou_with_labels": 0.692797383006013
+ }
+}
+ingenious_v2 {
+ "traces_in_bbox": 1148,
+ "center": {
+  "pixels": 60982,
+  "on_label_pixels": 60958,
+  "within_300m_not_on_label": 23,
+  "beyond_300m_of_labels": 1,
+  "beyond_300m_components": 1,
+  "beyond_300m_components_ge8px": 0,
+  "label_pixels_beyond_300m_of_this_set": 0,
+  "iou_with_labels": 0.9991149282108438
+ },
+ "all_touched": {
+  "pixels": 82871,
+  "on_label_pixels": 58876,
+  "within_300m_not_on_label": 23994,
+  "beyond_300m_of_labels": 1,
+  "beyond_300m_components": 1,
+  "beyond_300m_components_ge8px": 0,
+  "label_pixels_beyond_300m_of_this_set": 0,
+  "iou_with_labels": 0.692797383006013
+ }
+}
+{
+ "generated_utc": "2026-09-27T19:06:21Z",
+ "template_sha256": "2176d08e485aa2cd2860ce8df539db4faf4d76163b38a4dd8c30a40454d35cbc",
+ "labels_sha256": "7ba308ccdc4418b31a178f4f1ef21aaa6e152e4028f2f6f64b01f7eb25ae4093",
+ "template_epsg": 32611,
+ "gdal": "GDAL 3.8.4, released 2024/02/08",
+ "label_pixels": 60988,
+ "footprint_pixels": 5167373,
+ "fault_sets": {
+  "usgs_qffd": {
+   "layers": [
+    {
+     "path": "SHP/Qfaults_US_Database.shp",
+     "layer": null,
+     "rows_in_template_bbox": 14419,
+     "geom_types": [
+      "LineString",
+      "MultiLineString"
+     ],
+     "columns": [
+      "Location",
+      "Shape_Leng",
+      "age",
+      "certainty",
+      "class",
+      "cooperator",
+      "dip_direct",
+      "earthquake",
+      "fault_id",
+      "fault_leng",
+      "fault_name",
+      "fault_url",
+      "linetype",
+      "ref_id",
+      "review_dat",
+      "scale",
+      "section_id",
+      "section_na",
+      "slip_rate",
+      "slip_sense",
+      "strike",
+      "symbology"
+     ],
+     "line_features": 14419
+    },
+    {
+     "path": "SHP/ca_offshore.shp",
+     "layer": null,
+     "rows_in_template_bbox": 0,
+     "geom_types": [],
+     "line_features": 0
+    },
+    {
+     "path": "SHP/fault_areas.shp",
+     "layer": null,
+     "rows_in_template_bbox": 0,
+     "geom_types": [],
+     "line_features": 0
+    }
+   ],
+   "traces_in_bbox": 14419,
+   "attribute_counts": {
+    "age": {
+     "undifferentiated Quaternary": 6691,
+     "latest Quaternary": 4549,
+     "late Quaternary": 1884,
+     "historic": 1180,
+     "middle and late Quaternary": 115
+    },
+    "slip_rate": {
+     "Less than 0.2 mm/yr": 8199,
+     "Between 0.2 and 1.0 mm/yr": 2776,
+     "Between 1.0 and 5.0 mm/yr": 2082,
+     "Unspecified": 872,
+     "Greater than 5.0 mm/yr": 344,
+     "None": 146
+    }
+   },
+   "center": {
+    "pixels": 60939,
+    "on_label_pixels": 60839,
+    "within_300m_not_on_label": 99,
+    "beyond_300m_of_labels": 1,
+    "beyond_300m_components": 1,
+    "beyond_300m_components_ge8px": 0,
+    "label_pixels_beyond_300m_of_this_set": 2,
+    "iou_with_labels": 0.9959239130434783
+   },
+   "all_touched": {
+    "pixels": 82841,
+    "on_label_pixels": 58800,
+    "within_300m_not_on_label": 24040,
+    "beyond_300m_of_labels": 1,
+    "beyond_300m_components": 1,
+    "beyond_300m_components_ge8px": 0,
+    "label_pixels_beyond_300m_of_this_set": 2,
+    "iou_with_labels": 0.6915287725364287
+   }
+  },
+  "ingenious_v1": {
+   "layers": [
+    {
+     "path": "faults_quaternary_INGENIOUS_regional_data/faults_quaternary_regional.shp",
+     "layer": null,
+     "rows_in_template_bbox": 1148,
+     "geom_types": [
+      "LineString",
+      "MultiLineString"
+     ],
+     "columns": [
+      "ACODE",
+      "AGE",
+      "CFM_URL",
+      "CODE",
+      "Comments",
+      "DIPDIRECT",
+      "FCODE",
+      "FTYPE_",
+      "Geometry_C",
+      "MAPPEDSCAL",
+      "NAME",
+      "NUM",
+      "Notes",
+      "RECENCY_N",
+      "Recency_ci",
+      "SECONDARYS",
+      "SLIPCODE",
+      "SLIPDIRECT",
+      "SLIPRATE_N",
+      "SLIPRTmmyr",
+      "SLIPSENSE",
+      "SlipRate_c"
+     ],
+     "line_features": 1148
+    }
+   ],
+   "traces_in_bbox": 1148,
+   "attribute_counts": {
+    "AGE": {
+     "<1,600,000": 630,
+     "<15,000": 257,
+     "<130,000": 206,
+     "<150": 36,
+     "<750,000": 19
+    }
+   },
+   "center": {
+    "pixels": 60982,
+    "on_label_pixels": 60958,
+    "within_300m_not_on_label": 23,
+    "beyond_300m_of_labels": 1,
+    "beyond_300m_components": 1,
+    "beyond_300m_components_ge8px": 0,
+    "label_pixels_beyond_300m_of_this_set": 0,
+    "iou_with_labels": 0.9991149282108438
+   },
+   "all_touched": {
+    "pixels": 82871,
+    "on_label_pixels": 58876,
+    "within_300m_not_on_label": 23994,
+    "beyond_300m_of_labels": 1,
+    "beyond_300m_components": 1,
+    "beyond_300m_components_ge8px": 0,
+    "label_pixels_beyond_300m_of_this_set": 0,
+    "iou_with_labels": 0.692797383006013
+   }
+  },
+  "ingenious_v2": {
+   "layers": [
+    {
+     "path": "qfaults_ingenious_nad83conus117_2023-06-27.shp",
+     "layer": null,
+     "rows_in_template_bbox": 1148,
+     "geom_types": [
+      "LineString",
+      "MultiLineString"
+     ],
+     "columns": [
+      "CODE2023",
+      "COMMENTS",
+      "DIPDIRECT",
+      "FCODE2023",
+      "FTYPE_",
+      "GEOCOMM",
+      "MAPSCALE",
+      "NAME",
+      "NUM",
+      "RCODE2023",
+      "REC2023",
+      "RECINFO",
+      "RECNUM",
+      "SCODE2023",
+      "SECONDARY",
+      "SLIPDIRECT",
+      "SLIPINFO",
+      "SLIPRT2023",
+      "SLIPRTNUM",
+      "SLIPSENSE",
+      "Shape_Leng"
+     ],
+     "line_features": 1148
+    }
+   ],
+   "traces_in_bbox": 1148,
+   "center": {
+    "pixels": 60982,
+    "on_label_pixels": 60958,
+    "within_300m_not_on_label": 23,
+    "beyond_300m_of_labels": 1,
+    "beyond_300m_components": 1,
+    "beyond_300m_components_ge8px": 0,
+    "label_pixels_beyond_300m_of_this_set": 0,
+    "iou_with_labels": 0.9991149282108438
+   },
+   "all_touched": {
+    "pixels": 82871,
+    "on_label_pixels": 58876,
+    "within_300m_not_on_label": 23994,
+    "beyond_300m_of_labels": 1,
+    "beyond_300m_components": 1,
+    "beyond_300m_components_ge8px": 0,
+    "label_pixels_beyond_300m_of_this_set": 0,
+    "iou_with_labels": 0.692797383006013
+   }
+  }
+ },
+ "github_run_id": "36343078537",
+ "code_sha256": "66e541b0bd2275cbfeea5f1626c14dbce3e842e96ff261acbe167719579f1564",
+ "elapsed_seconds": 10.9,
+ "files": {
+  "ingenious_v1_all_touched.packbits.npy": {
+   "bytes": 1535023,
+   "sha256": "403f8a3ccdf356d054e418f56dcf5d4d45a5f6b3cad153f76167e1727b2afd6e"
+  },
+  "ingenious_v1_all_touched_beyond300m.packbits.npy": {
+   "bytes": 1535023,
+   "sha256": "90b72ea5efb5b2701709ec8ae3574bbeb91d6f40b959b6e8b3aefc53d64dfd07"
+  },
+  "ingenious_v1_center.packbits.npy": {
+   "bytes": 1535023,
+   "sha256": "ad0feb53e8c52822e6ff527ed8659a3268020fc673e2e4608f4c60e5a3fe83d1"
+  },
+  "ingenious_v1_center_beyond300m.packbits.npy": {
+   "bytes": 1535023,
+   "sha256": "90b72ea5efb5b2701709ec8ae3574bbeb91d6f40b959b6e8b3aefc53d64dfd07"
+  }
