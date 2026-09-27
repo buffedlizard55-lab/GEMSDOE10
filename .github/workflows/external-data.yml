@@ -1,0 +1,70 @@
+name: external-data
+# Fetches FREE, OFFICIAL external data that the research sandbox cannot reach
+# (its TLS egress is limited to github.com / api.github.com / pypi), derives
+# label-free 100 m channels, and publishes them as an ORPHAN commit under an
+# immutable tag `ext/<job>-<run_id>` (never a branch, never merged to main).
+# The sandbox restores them with `python scripts/fetch_external.py --tag ...`.
+# Nothing here trains a model, touches DrivenData, or spends a submission slot.
+on:
+  workflow_dispatch:
+    inputs:
+      jobs:
+        description: "comma list: dem10,catalogue"
+        default: "dem10,catalogue"
+      max_blocks:
+        description: "debug: limit DEM blocks (0 = all)"
+        default: "0"
+  push:
+    branches: ["**"]
+    paths: [".github/workflows/external-data.yml", "scripts/ext/**"]
+permissions:
+  contents: write
+concurrency:
+  group: external-data-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  dem10:
+    if: ${{ github.event_name == 'push' || contains(github.event.inputs.jobs, 'dem10') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install -q numpy scipy rasterio
+      - name: Verify committed template + labels (pins)
+        run: pip install -q -r requirements.txt && python scripts/fetch_data.py --no-features
+      - name: Build 3DEP 10 m scarp channels (H20)
+        run: |
+          df -h . | tail -1
+          python scripts/ext/dem10_scarp.py --max-blocks "${{ github.event.inputs.max_blocks || '0' }}"
+          rm -rf work
+          du -sh out/dem10
+      - name: Publish as orphan commit + immutable tag
+        env:
+          TAG: ext/dem10-${{ github.run_id }}
+        run: bash scripts/ext/publish_tag.sh out/dem10 "$TAG" "H20 3DEP 10 m scarp channels (label-free), run ${{ github.run_id }}"
+  catalogue:
+    if: ${{ github.event_name == 'push' || contains(github.event.inputs.jobs, 'catalogue') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install -q numpy scipy rasterio pyogrio shapely geopandas pandas
+      - name: Verify committed template + labels (pins)
+        run: pip install -q -r requirements.txt && python scripts/fetch_data.py --no-features
+      - name: Catalogue-version differencing (H21) + H15 point sets
+        run: |
+          python scripts/ext/catalogue_diff.py
+          rm -rf work
+          du -sh out/catalogue
+      - name: Publish as orphan commit + immutable tag
+        env:
+          TAG: ext/catalogue-${{ github.run_id }}
+        run: bash scripts/ext/publish_tag.sh out/catalogue "$TAG" "H21 catalogue differencing + H15 point sets, run ${{ github.run_id }}"
