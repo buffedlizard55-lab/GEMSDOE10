@@ -249,8 +249,8 @@ def check_submission(
             rep.checks.append(CheckResult(
                 "NAN-INSIDE-FOOTPRINT", nan_inside == 0,
                 f"{nan_inside} non-finite pixels inside the scored footprint "
-                f"(this is the exact condition that makes the submission form "
-                f"answer 'Predicted values must be in range [0, 1]')"))
+                f"(non-finite scored values violate the [0,1] contract; "
+                f"the original backend rejection cause is not known)"))
             missing = int((finite & ~ref).sum())
             rep.stats["finite_outside_footprint"] = missing
             if expect_footprint:

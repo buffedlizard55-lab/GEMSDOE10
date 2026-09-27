@@ -1,26 +1,69 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Executive summary — GEMSDOE10</title><link rel="stylesheet" href="assets/style.css"></head>
-<body><header class="top"><div class="wrap">
-<div class="brand"><div><h1>GEMSDOE10 <small>· executive summary</small></h1></div></div>
-<nav><a href="index.html">Home</a><a class="on" href="executive_summary.html">Executive summary</a>
-<a href="how_to_submit.html">How to submit</a><a href="results.html">Results</a>
-<a href="verification.html">Verification</a><a href="sources.html">Sources</a></nav>
-</div></header>
-<main><div class="wrap">
-<div class="card"><h2>What this is</h2>
-<p>GEMSDOE10 is a complete, tested pipeline that produces a <b>single format-gated GeoTIFF submission</b> for the
-<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/">DOE GEMS Prize Challenge</a>
-($300k, closes Dec 3 2026): find hidden faults from geophysical data. Download the file on the
-<a href="index.html">home page</a>, upload it on DrivenData, done — details in <a href="how_to_submit.html">how to submit</a>.</p></div>
-<div class="card"><h2>Why it should win</h2>
-<ol><li><b>Right objective.</b> Both rounds score <i>unmapped</i> faults with the catalogue masked. We select models by hidden-fault simulation (system-holdout CV), not catalogue fit — the trap that scored 0.0286 for a 0.17-CV model.</li>
-<li><b>Right features.</b> 107 physics-informed channels: potential-field edges (HGM/ASA/tilt), multi-scale curvature, structure-tensor lineaments, plus new Frangi vesselness + Gabor strike detectors and lidar scarp morphology.</li>
-<li><b>Right emission.</b> Budget-based top-k placement swept in the harness (binary/soft/envelope/halo2 × 1–5%); the winner is gated by 9 format rules before it can be published.</li>
-<li><b>Honest negatives.</b> Catalogue proximity (0.012), SGMC-gap traces (0.0000) and QF-gap (0.003) were measured and excluded — the file contains no known-dead mass.</li></ol></div>
-<div class="card"><h2>How to submit (30 seconds)</h2>
-<p>1. Download the <code>.tif</code> (or <code>.zip</code>) from the home page. 2. Open the competition → <b>Submit → Make new submission</b>. 3. Choose the file, paste the suggested note from the file's sidecar. Full walkthrough: <a href="how_to_submit.html">how to submit</a>.</p></div>
-<div class="card"><h2>Compliance</h2>
-<p class="mut">Eligibility (§1.3) and the 3-per-week cadence (§3.4) are the account holder's responsibility. AI assistance is disclosed in the repo (<code>AI_DISCLOSURE.md</code>). One submission is chosen blind for both rounds (§3.6).</p></div>
-</div></main>
-<footer><div class="wrap">GEMSDOE10</div></footer></body></html>
+<meta name="description" content="Evidence-first geological fault discovery: audited predictions, spatial validation and safe submission downloads.">
+<title>How to submit · GEMSDOE10</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><a class="skip" href="#main">Skip to content</a><header><div class="wrap masthead"><a class="brand" href="index.html"><span class="mark">G/10</span><span>GEMSDOE10<small>GEOTHERMAL FAULT RESEARCH</small></span></a><span class="edition">Evidence before emission<br>DOE GEMS Prize · 2026</span></div><nav class="wrap"><a href="index.html" >Submission hub</a><a href="executive_summary.html" aria-current=page>How to submit</a><a href="results.html" >Results & audit</a><a href="hypotheses.html" >Research</a><a href="sources.html" >Official sources</a><a href="verification.html" >Review</a></nav></header>
+<main id="main" class="wrap"><section class="release"><span class="eyebrow">SUBMISSION DESK / RELEASE GATE</span><h2>No approved submission</h2><p>Protect the weekly slot. No new candidate has all the evidence required for publication. A renamed TIFF or a catalogue-only change is not a new discovery.</p><a class="button" href="results.html">Review the holdout decision <span>↗</span></a><a class="text-link" href="executive_summary.html">How submission works →</a><p class="fine">Nothing is uploaded automatically. Download buttons appear here only after improvement, provenance, novelty and GeoTIFF checks pass.</p></section><article><h1>Executive submission guide</h1>
+<h2>1. Start with release status, not a file browser</h2>
+<p>Open the <a href="https://buffedlizard55-lab.github.io/GEMSDOE10/">submission hub</a>.
+If it says <strong>NO APPROVED SUBMISSION</strong>, stop: an experiment has not satisfied the evidence gates.
+A format-valid TIFF alone is not a reason to spend one of the three weekly slots.</p>
+<p>No new candidate is approved by default. The H12 decision is in <code>reports/h12_blocked.json</code>.
+The website is static: CPU scripts generate files; approved files are then one-click downloads.
+It does not secretly train a model in the browser or upload to DrivenData.</p>
+<h2>2. When a candidate is approved</h2>
+<ol>
+<li>Click <strong>Download .tif</strong> at the top of the hub (or its single-member ZIP). Do not upload this report, an HTML page, or a PDF.</li>
+<li>Confirm the filename, hash, hypothesis and validation report shown on its card. The filename contains a UTC timestamp and prediction hash prefix. The note includes strategy, policy and artifact hash.</li>
+<li>Open <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/submissions/">DrivenData submissions</a> using the team's registered account.</li>
+<li>Choose <strong>New submission → File to submit</strong>, select the downloaded <code>.tif</code>, and paste the card's suggested short note into <strong>Note (optional)</strong>.</li>
+<li>Check the account's remaining allowance, then submit. Record submission ID, time, exact file SHA, note and returned score in the shared ledger. A score without its file hash cannot establish provenance.</li>
+<li>Choose one final submission for both prize rounds before the deadline; do not make the choice using unknown private scores.</li>
+</ol>
+<p>Steps 3–6 require the authorized account holder and legal eligibility. This environment does not possess or request DrivenData credentials, certify eligibility, or bypass account limits. GitHub repository access is separate.</p>
+<h2>3. Format contract and the previous range error</h2>
+<p>Official <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/">format and metric</a>: single-band float32 GeoTIFF, confidence in [0,1], UTM 11N/EPSG:32611, 100 m pixels, template bounds.
+Measured template: <strong>3,730 rows × 3,292 columns</strong>, transform <code>(100,0,243350,0,-100,4508550)</code>, <strong>5,167,373</strong> scored cells.
+Use finite [0,1] inside the template footprint, NaN outside and NaN nodata metadata.</p>
+<p><strong>“Predicted values must be in range [0, 1]” does not uniquely diagnose the rejected file.</strong>
+Possible causes include out-of-range values, infinity, NaN inside the footprint, or an alignment/footprint mismatch.
+We cannot prove which caused the original rejection without that exact file.
+Do not silently clip or replace bad model outputs: investigate them. The publisher now rejects malformed raw probabilities before applying an emission policy.</p>
+<pre><code class="language-bash">python scripts/validate_submission.py path/to/approved.tif
+</code></pre>
+<p>The local gate follows the published specification and pinned template, not private backend source code.
+A local pass is not a guarantee of backend acceptance or a competitive score.</p>
+<h2>4. Build and release</h2>
+<p>See README.md for data → features → blocked comparison. <strong>Do not run old baseline final training and label it H12.</strong>
+The final-prediction manifest for a future passing candidate must tie the generated NPY hash to its training recipe and the compatible completed validation report.
+<code>build_submission.py --validation ...</code> refuses missing, non-improving, incomplete, mismatched-policy or unbound evidence.
+<code>--experiment</code> writes diagnostics only into <code>scratch/experiments/</code>, never the download hub.</p>
+<p>The canonical field hash detects renamed/recompressed copies; the noncatalogue hash catches catalogue-only changes.
+A unique file is not guaranteed a unique rounded DTI, and changing noise to force novelty is prohibited by our methodology.</p>
+<h2>5. Rules, disclosure and shared slot ledger</h2>
+<p><a href="https://docs.nlr.gov/docs/fy26osti/96647.pdf">Official rules §3.2, §3.4–3.6</a>: up to three submissions per week per participating entity, one final choice, AI-use narrative, reproducible solution assets.
+<a href="https://community.drivendata.org/t/weekly-submissions/11524/2">Staff cadence clarification</a>: rolling window.
+Multiple repositories do not by themselves establish multiple registrations or a rule violation. The group must use a shared entity-level ledger.</p>
+<table>
+<thead>
+<tr>
+<th>Submission ID</th>
+<th>UTC</th>
+<th>Filename / SHA-256</th>
+<th>Note</th>
+<th>Score</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No submission made by this session</td>
+<td>—</td>
+<td>—</td>
+<td>Offline validation only</td>
+<td>—</td>
+<td>Local scripts do not upload</td>
+</tr>
+</tbody>
+</table>
+<p>Historical group scores live in <code>reports/submission_audit.json</code> labelled user-reported; they do not reveal current remaining slots.</p></article></main><footer class="wrap"><b>Maximize P(Win). Own the Outcome.</b><p>Local evidence is not a private competition score. AI-assisted research; official links and limitations are explicit.</p><p>Site built 2026-09-27T05:28:16+00:00 · <a href="https://github.com/buffedlizard55-lab/GEMSDOE10">Repository</a> · <a href="data/site.json">Machine-readable manifest</a></p></footer></body></html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Evidence-first geological fault discovery: audited predictions, spatial validation and safe submission downloads.">
+<title>Geological hypotheses · GEMSDOE10</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><a class="skip" href="#main">Skip to content</a><header><div class="wrap masthead"><a class="brand" href="index.html"><span class="mark">G/10</span><span>GEMSDOE10<small>GEOTHERMAL FAULT RESEARCH</small></span></a><span class="edition">Evidence before emission<br>DOE GEMS Prize · 2026</span></div><nav class="wrap"><a href="index.html" >Submission hub</a><a href="executive_summary.html" >How to submit</a><a href="results.html" >Results & audit</a><a href="hypotheses.html" aria-current=page>Research</a><a href="sources.html" >Official sources</a><a href="verification.html" >Review</a></nav></header>
+<main id="main" class="wrap"><article><h1>Hypothesis register — frozen before implementation, 2026-09-27</h1>
+<p>Read README.md and PROJECT_BRIEF.md first. <strong>No weekly slot without a measured improvement over the current best on the same spatial holdout.</strong> Expected improvement rankings below are qualitative scientific judgments, not predicted DTI gains. None can promise 0.3049. The target is fault pixels, not geothermal vents, heat production, or resource reserves.</p>
+<h2>What has already been tried</h2>
+<p>Code audit at base commit <code>4805254</code>: 19 input bands; horizontal/vertical gradients, analytic signal, tilt, multiscale curvature and slope-of-slope; structure tensors; Frangi/Gabor ridges; strain/conductivity/seismicity products; HGB; whole-component holdouts; top-k/soft/halo policies; catalogue strike rays and relay corridors; self-training; lidar ridge and radiometric external stacks. See <code>scripts/build_features.py</code>, <code>src/gems10/{features,discovery,selftrain,external,placement}.py</code>. The persisted external data and trained models are absent in this checkout. Claims of their prior performance are historical reports, not fresh reproductions.</p>
+<p>Sibling websites show neural-network ensembles (1/2/5), gap-catalogue supervision and ridge/node placement (3/4), HGB structural transforms (6), and lidar/radiometric coherence (8). Novelty here means the explicit test below is not implemented in this checkout or described in the reviewed sibling landing pages; it is not a claim to worldwide novelty or an exhaustive audit of every sibling experiment.</p>
+<h2>Ranked candidates (four distinct physical mechanisms)</h2>
+<table>
+<thead>
+<tr>
+<th>Expected DTI opportunity rank / cost rank</th>
+<th>Hypothesis and specific layers</th>
+<th>Physical signature / proposed transform</th>
+<th>Why it could find a missing fault, not just redraw the catalogue</th>
+<th>Difference from implemented work / falsifier</th>
+<th>Data readiness</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1 / 1 (low)</strong> H12: displaced-surface step versus erosional valley</td>
+<td>competition <code>det_elev</code> (band 12); existing 107 channels as matched baseline</td>
+<td>Fit an odd step kernel orthogonal to eight candidate strikes, explicitly projecting out a local plane. Contrast with even valley/ridge curvature, and require same-polarity response along strike. Radii 2 and 4 pixels (200/400 m); no catalogue distance or endpoints.</td>
+<td>Small-offset secondary scarps and strands can interrupt an otherwise continuous surface even where existing trace mapping missed them. One-sided relief and continuity could reject channels that generic line detectors call faults. 100 m aggregation may erase the subtle signal: this is a coarse-resolution pilot, not a substitute for lidar.</td>
+<td>Existing Frangi/Gabor are sign-symmetric ridge/curvature detectors; no planar-detrended odd step template with an even-profile discriminator and along-strike polarity persistence. Fails if blocked DTI does not improve or roads/terraces dominate.</td>
+<td>In provided feature raster; no new external data. Restore pinned bytes before testing.</td>
+</tr>
+<tr>
+<td><strong>2 / 3 (high)</strong> H13: lateral displacement of geophysical texture</td>
+<td><code>rtp</code>, <code>tmi</code>, <code>mag_anom</code>; <code>det_elev</code> for surface context</td>
+<td>Along-strike lagged normalized cross-correlation between opposing strips of a putative trace; improvement of shifted alignment over zero-lag alignment, supported across independent strips/scales.</td>
+<td>A strike-slip discontinuity can offset a magnetic texture without producing a strong ridge at the actual slip plane; could expose missing Walker Lane splays. Not every magnetic contact is tectonic.</td>
+<td>Current code detects intensity/curvature, not restored matching of offset marker textures; not another weighted union or catalogue ray. Falsify with shuffled-strip and lithologic-contact controls and inconsistent displacement signs.</td>
+<td>Provided stack only; magnetic bands are correlated, not independent corroboration. No expected numeric gain asserted.</td>
+</tr>
+<tr>
+<td><strong>3 / 2 (medium)</strong> H14: concealed basin-margin source boundary</td>
+<td><code>iso_grav_anom</code> and <code>rtp</code>; surface relief as negative/stratification control</td>
+<td>Potential-field upward continuation in Fourier space using exp(-height × radial wavenumber), then track edge position and orientation with continuation height; seek stable gravity boundaries with weak surface expression.</td>
+<td>Basin-fill cover may hide a surface trace while retaining a basement density boundary; hidden intra-basin faults need not be near catalogue endpoints. A lithologic edge is an alternative explanation, not proof of faulting.</td>
+<td>Existing Gaussian multiscale derivatives do not model potential-field continuation or edge-position persistence with height. This is related to, but not identical to, existing edge detection; lower priority than H12/H13 because novelty and 100 m localization are uncertain.</td>
+<td>Provided stack only. Edge padding, regional trends and source-depth ambiguity must be tested.</td>
+</tr>
+<tr>
+<td><strong>4 / 4 (high; BLOCKED)</strong> H15: diffuse past discharge marking a permeable fault corridor</td>
+<td>INGENIOUS paleo-geothermal deposits, 2 m temperature probes, spring/well temperatures and chemistry; <code>det_elev</code>, <code>cond_surf</code></td>
+<td>Residual temperature after elevation/background adjustment, aligned chains of sinter/tufa occurrences and coincident conductivity contrasts; never distance-to-known-fault as a feature.</td>
+<td>Fossil/dispersed discharge can identify permeability not captured by mapped scarps. But hydrologic discharge may occur away from a fault and observation density is biased toward known resources.</td>
+<td>No thermal residual or paleo-discharge observation model in this repo; distinct from magnetic/DEM lineaments. Requires geographic coverage census and surveyed-background controls; not usable as negative labels.</td>
+<td>Specific official source: <a href="https://gdr.openei.org/submissions/1391">GDR 1391</a>, CC BY 4.0. Landing page and exact archive URLs verified, but binary downloads fail TLS in this runtime. <strong>Not currently viable / not eligible for implementation or submission</strong> until archives are obtained, licensed attribution retained, and in-footprint coverage measured.</td>
+</tr>
+</tbody>
+</table>
+<h2>Scientific support and boundaries of inference</h2>
+<ul>
+<li>H12: USGS documents geomorphic mapping of recent fault strands from lidar, including scarps crossing alluvial fans: <a href="https://www.usgs.gov/programs/earthquake-hazards/maps">USGS Earthquake Hazards maps</a>. This supports examining topographic offsets, <strong>not</strong> the effectiveness of our proposed kernel or its 100 m resolution. <a href="https://earthquake.usgs.gov/cfusion/external_grants/reports/G20AP00055.pdf">USGS-hosted Dog Valley award report</a> describes scarps, benches, linear valleys and alternating facing directions. It is a hosted grantee report, not a universal fault classifier. A fixed-polarity requirement will miss some strike-slip features.</li>
+<li>H13/H14: <a href="https://pubs.usgs.gov/publication/70259621">USGS Granite Springs Valley publication, 2022</a> describes gravity/magnetic derivatives to delineate buried faults <strong>and contacts</strong>, and a geothermal system without definitive surface manifestations. It motivates testing geophysical structure but does not validate our cross-correlation or continuation algorithm. <a href="https://pubs.usgs.gov/publication/ofr00420">USGS OFR 2000-420</a> describes gravity profiles locating possible faults concealed by basin fill.</li>
+<li>H15: <a href="https://gdr.openei.org/submissions/1391">official GDR resource list</a> describes shallow temperature, paleo deposits, and well/spring observations. Exact archives: <a href="https://gdr.openei.org/files/1391/paleo_geothermal_regional.zip">paleo</a>, <a href="https://gdr.openei.org/files/1391/2m_temperature_probe_INGENIOUS_regional_data.zip">2 m probes</a>, <a href="https://gdr.openei.org/files/1391/wellspringdata.gdb.zip">well/spring</a>. Page access is not equivalent to successful binary acquisition.</li>
+<li><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/">DrivenData problem</a> defines the prediction target and allowed external data. <a href="https://community.drivendata.org/t/where-do-you-draw-the-line/11536/2">Staff 11536/2</a> defines new as any fault pixel not already captured by USGS/INGENIOUS, including new geometry of existing systems. Thus distance &gt;1 km from known traces is a sensitivity check, <strong>not</strong> a verified property of hidden labels or an exclusive selection target.</li>
+</ul>
+<h2>Preregistered H12 validation (before code/results)</h2>
+<ol>
+<li>Existing <code>reports/cv_*.json</code> use interleaved fault components, <strong>not</strong> spatial blocks. The 0.0929 ALL / 0.0508 FAR10 numbers are not directly comparable with a blocked score. Rerun baseline107 and baseline107+H12 on identical existing <code>cv.make_folds(n_blocks=4,n_folds=4)</code> geography.</li>
+<li>Exclude 40 pixels (4 km, matching baseline feature halo) around held-out blocks from training. Sample positives/negatives only from the training mask; no test label informs sampling, fitting, thresholds, or feature design. This is stricter than the inherited 3-pixel buffer.</li>
+<li>HGB hyperparameters fixed to inherited baseline: 200 iterations, learning rate .05, depth 7, L2 1, seed 7; up to 200,000 sampled training negatives. Binary top 2% fixed <strong>before</strong> scoring, inherited ALL-best policy. Apply budget only within each score region. Also report uniform random control at equal budget. No policy sweep on the lockbox.</li>
+<li>Folds 0–2 are development; fold 3 is an untouched confirmation geography for this experiment (historical group activity may have examined the same region; not a newly collected blind test). Require positive paired mean development gain AND positive confirmation gain. Report each fold and worst-fold regression; no significance claim from four correlated folds.</li>
+<li>Score with the published distance-weighted Tversky formula, predictions and ground truth restricted to the score mask. This is catalogue-generalization, not private-new-fault validation. Known training pixels lie outside score blocks. Component-holdout comparisons remain supplemental and cannot be silently mixed with these values.</li>
+<li>No training-final/publishing if H12 fails. If it passes this matched baseline, first establish whether the historical campaign winner (including self-training) can be reproduced on the same geography before claiming it beat the current best. Format-valid diagnostic TIFs must be labelled <strong>EXPERIMENT — DO NOT SUBMIT</strong>. Public download promotion requires evidence and content-duplicate checks.</li>
+<li>Log actual input/code hashes, fold masks, feature definition, config, scores, runtime, decision and limitations. Never infer future leaderboard score from proxy DTI. No competition upload is authorized by a local test alone.</li>
+</ol></article></main><footer class="wrap"><b>Maximize P(Win). Own the Outcome.</b><p>Local evidence is not a private competition score. AI-assisted research; official links and limitations are explicit.</p><p>Site built 2026-09-27T05:28:16+00:00 · <a href="https://github.com/buffedlizard55-lab/GEMSDOE10">Repository</a> · <a href="data/site.json">Machine-readable manifest</a></p></footer></body></html>

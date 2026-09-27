@@ -24,7 +24,14 @@ Official source (login-gated): https://www.drivendata.org/competitions/306/compe
 from __future__ import annotations
 
 import argparse
+import subprocess
 import sys
+import tempfile
+
+# Public team mirror of supplied competition files, not an official publisher.
+# The inherited SHA pins check continuity/integrity, not independent authenticity.
+BRIDGE_COMMIT = "e2fe3f41c6f5dd2dcb2fc91958ee67698f114ada"
+BRIDGE_REPO = "buffedlizard55-lab/6GEMSDOE"
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -75,10 +82,38 @@ def assemble_bridge(bridge_dir: Path, out_path: Path) -> bool:
     return verify_file(out_path, pin["bytes"], pin["sha256"], "training_features.tif")
 
 
+def download_features(data_dir: Path) -> bool:
+    """Fetch an immutable public mirror through gh; verify before atomic rename.
+
+    gh's API transport works in runtimes where Dropbox/raw GitHub TLS is blocked.
+    No secrets are read or written by this script. Large files stay ignored.
+    """
+    data_dir.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=data_dir, prefix=".bridge-") as tmp:
+        bridge = Path(tmp)
+        for name, size, sha in spec.BRIDGE_PARTS:
+            filename = f"{PART_PREFIX}{name.removeprefix('part-')}"
+            path = bridge / filename
+            endpoint = (f"repos/{BRIDGE_REPO}/contents/data/bridge/{filename}"
+                        f"?ref={BRIDGE_COMMIT}")
+            with path.open("wb") as stream:
+                subprocess.run(["gh", "api", "-H", "Accept: application/vnd.github.raw+json",
+                                endpoint], stdout=stream, check=True, timeout=300)
+            if not verify_file(path, size, sha, name):
+                return False
+        staged = bridge / "training_features.tif"
+        if not assemble_bridge(bridge, staged):
+            return False
+        staged.replace(data_dir / "training_features.tif")
+    return True
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--data-dir", default=str(REPO_ROOT / "data"))
     ap.add_argument("--bridge-dir", default=None)
+    ap.add_argument("--download", action="store_true",
+                    help="restore pinned feature raster from immutable public team mirror using gh")
     ap.add_argument("--no-features", action="store_true",
                     help="skip training_features.tif (verify small files only)")
     args = ap.parse_args()
@@ -87,6 +122,9 @@ def main() -> int:
     pin = spec.PINS["training_features.tif"]
     feat = data_dir / "training_features.tif"
     if not args.no_features:
+        if args.download and not verify_file(feat, pin["bytes"], pin["sha256"], "features"):
+            if not download_features(data_dir):
+                return 1
         if args.bridge_dir and not (
             feat.exists() and feat.stat().st_size == pin["bytes"]
         ):

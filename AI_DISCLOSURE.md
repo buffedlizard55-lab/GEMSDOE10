@@ -1,15 +1,11 @@
-# Generative-AI disclosure (draft — account holder must review & approve)
+# Generative-AI disclosure — draft, not a signed assertion
 
-> Competition rules §3.2 require disclosure of AI assistance. This project was produced with an AI coding agent (Arena.ai Agent Mode). The statement below is a review-ready draft; the account holder must verify it and submit the final wording.
+[Rules §3.2](https://docs.nlr.gov/docs/fy26osti/96647.pdf) allow generative AI but require a narrative describing its extent and use. The participant remains responsible for accuracy and authorship representations.
 
-## Draft statement
+## Review-ready draft for this session
 
-"This submission was developed with the assistance of an AI coding agent (Arena.ai Agent Mode, September 2026). The agent wrote code, ran experiments, and drafted documentation under the direction of the competitor, who reviewed the approach, verified results against official sources, and made all final submission decisions. All data are the official competition rasters (hash-verified) plus public-domain USGS/GeoDAWN externals listed in data/README.md. The model is a histogram gradient-boosting classifier over physics-informed geophysical features; no AI-generated training labels were used. Test-set faults were never accessed — model selection used only system-holdout cross-validation on the public catalogue."
+“This project used Arena.ai Agent Mode to review code and published artifacts, retrieve official references, formulate geological hypotheses, implement feature transforms and validation/publishing tools, run CPU experiments, and draft documentation and the website. The agent tested an odd topographic-step feature hypothesis using buffered geographic holdouts of supplied catalogue labels. The initial confirmation result failed; no competition upload was made by the agent. Training used supplied raster labels, not generative-AI-invented fault labels. Feature bytes were restored from a pinned team mirror and checked against inherited hashes. Public competition scores attributed to the group were provided by the user; authenticated upload associations and private test labels were not available in this session.”
 
-## Evidence per sentence
+Update this statement to describe the *actual selected final model and data* before submitting. Do not claim an external data source was used simply because it was researched. Do not claim the competitor reviewed or approved results until the competitor has done so. Previous session code includes optional model-based pseudo-labeling; disclose it if the chosen model uses it.
 
-1. "developed with an AI coding agent" — this repo's full history is agent-authored commits on `arena/01a0e067-gemsdoe10`.
-2. "competitor directed and decided" — *(account holder: confirm — you chose the strategy and the submitted file)*.
-3. "official rasters hash-verified + public externals" — `scripts/fetch_data.py` pins; `data/README.md` sources.
-4. "HGB over physics-informed features; no AI labels" — `src/gems10/modeling.py`, `scripts/run_cv.py`; pseudo-labels (if used) come from the model's own CV predictions, flagged in `reports/`.
-5. "never accessed test faults" — true by construction: the private set is unreleased; all scores reported are system-holdout proxies documented in `reports/`.
+Evidence: `reports/h12_blocked.json`, `reports/submission_audit.json`, `reports/official_feed.json`, HYPOTHESES.md, REVIEW.md and the Git history. The account holder must approve the final statement and eligibility representations.

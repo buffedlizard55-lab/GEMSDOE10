@@ -1,34 +1,40 @@
 # Project brief — read every session
 
-> **Maximize P(Win)** — in every decision, weigh tradeoffs, assess risk, and choose the path that maximizes the probability of placing top of the leaderboard. Set aside sunk costs; follow measured evidence.
->
-> **Own the Outcome** — own results end to end. When problems arise and we have the means to act, act without waiting. Treat failure and success as signals.
+Read README.md first; the original user prompt is preserved there.
 
-## Mission
+**Maximize P(Win):** follow measured evidence, not a new filename or a new geological story.
+**Own the Outcome:** own input acquisition, scientific falsification, validation, format safety,
+publication and honest reporting. A rejected experiment can be a successful use of resources.
 
-Place top of the leaderboard in the [GEMS Prize Challenge](https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/) (currently #1 DARD **0.3049**; our group best 0.1563; gap +0.1486). Build a unique, well-tested, geologically-grounded submission system — not another copy of the same file.
+## Mission and status
 
-## Why 0.1563 keeps repeating
+Build reproducible predictors of missing fault pixels for the [GEMS Prize](https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/).
+The 2026-09-27 public leaderboard snapshot is DARD 0.3049. This is not a target we can promise to exceed.
+User-reported group best is 0.1563; actual account upload associations remain unverified.
 
-Root-cause audit (sibling GEMSDOE9, 2026-09-26): GEMSDOE1, GEMSDOE2-recall and 5GEMSDOE shipped **byte-identical** files (`submission.tif` sha256 `7f00890a…`, 172,974 px at 1.0) — copied across repos without changing the pixel field, so the leaderboard returned the same DTI. Separately, 6GEMSDOE's catalogue-memorising HGB scored 0.0286 and GEMSDOE4 0.0343.
+The byte and field audit confirms GEMSDOE1 and 5GEMSDOE publish the same adopted artifact.
+The current 8GEMSDOE hedge differs only on catalogue pixels. See [REVIEW.md](REVIEW.md)
+and [submission_audit.json](reports/submission_audit.json), not repeated second-hand claims.
 
-**GEMSDOE10 fixes:** every artifact is built from scratch with a unique UTC stamp + sha; `scripts/build_submission.py` **refuses** to publish a byte-duplicate of any known artifact; the submission note carries strategy + sha; and model selection uses hidden-fault simulation (system-holdout), never catalogue reproduction.
+## Decision contract
 
-## Operating rules
+1. Preregister 3–5 genuinely different hypotheses with layers, signature, missing-fault rationale,
+   novelty boundary, official scientific support and data accessibility.
+2. Test the top feasible candidate with buffered spatial folds and frozen settings. The existing
+   component-holdout campaign is supplemental, not equivalent to geographic validation.
+3. Beat matched incumbents on development and confirmation. No improvement → no slot, no release.
+4. Verify finite [0,1] values, exact template geometry, NaN exterior; then check canonical field identity.
+5. Bind final-model output to its evaluation and training provenance. Publish a unique filename,
+   exact SHA and short note only after all gates. Never infer a score from TIFF validity.
 
-- Work autonomously, line by line, from official verified sources; link every claim (see VERIFICATION.md). No hallucinations; flag irregularities.
-- No manual input required: data placement, training, validation and the site build are all scripted.
-- External data only from free, public, licensed sources (USGS public domain; GeoDAWN ScienceBase).
-- Every submission file must pass the hard gate (`scripts/validate_submission.py`) — the form rejects NaN-inside-footprint with "Predicted values must be in range [0, 1]".
+## Official first-hand references
 
-## Key links
+- [Problem, metric and format](https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/)
+- [Rules PDF](https://docs.nlr.gov/docs/fy26osti/96647.pdf)
+- [Known-pixel masking](https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2)
+- [New geometry qualifies](https://community.drivendata.org/t/where-do-you-draw-the-line/11536/2)
+- [Hidden source details undisclosed](https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527/7)
+- [Rolling submission window](https://community.drivendata.org/t/weekly-submissions/11524/2)
+- [Leaderboard](https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/)
 
-- Competition: https://www.drivendata.org/competitions/306/competition-doe-gems/
-- Problem/metric/format: https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/
-- About/task: https://www.drivendata.org/competitions/306/competition-doe-gems/page/968/
-- Data (login): https://www.drivendata.org/competitions/306/competition-doe-gems/data/
-- Rules PDF: https://docs.nlr.gov/docs/fy26osti/96647.pdf
-- Reference solution: https://github.com/drivendataorg/gems-prize-reference-solution
-- Leaderboard: https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/
-- Forum (masking 11516; new-fault ID 11527/11536; cadence 11524): https://community.drivendata.org/c/gems-prize-challenge/111
-- GeoDAWN: https://doi.org/10.5066/P93LGLVQ · INGENIOUS: https://doi.org/10.15121/1881483 · QFaults: https://earthquake.usgs.gov/hazards/qfaults/
+Access and scientific limitations are in LIMITATIONS.md. No credentials belong in this repo or chat.

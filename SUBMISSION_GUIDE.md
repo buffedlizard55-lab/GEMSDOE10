@@ -1,29 +1,62 @@
-# Submission guide — how to enter the file into the contest
+# Executive submission guide
 
-## 1. Download the file
+## 1. Start with release status, not a file browser
 
-Go to the site's **Executive summary** (or this repo's `docs/downloads/`) and download the latest `gems10-*-<stamp>.tif` **or** its `.zip` (the form accepts either). Every published file has passed the hard gate below and carries a unique UTC stamp + sha256.
+Open the [submission hub](https://buffedlizard55-lab.github.io/GEMSDOE10/).
+If it says **NO APPROVED SUBMISSION**, stop: an experiment has not satisfied the evidence gates.
+A format-valid TIFF alone is not a reason to spend one of the three weekly slots.
 
-Current candidate: *(filled when the CV campaign lands — see `reports/`)*.
+No new candidate is approved by default. The H12 decision is in `reports/h12_blocked.json`.
+The website is static: CPU scripts generate files; approved files are then one-click downloads.
+It does not secretly train a model in the browser or upload to DrivenData.
 
-Suggested submission note (shown in the file's `.json` sidecar, field `suggested_note`):
-`gems10-<name> | <policy> | sha <10 hex>` — e.g. `gems10-discovery-v1 | topk02_binary | sha 9f3ac41d2b`.
+## 2. When a candidate is approved
 
-## 2. Submit on DrivenData
+1. Click **Download .tif** at the top of the hub (or its single-member ZIP). Do not upload this report, an HTML page, or a PDF.
+2. Confirm the filename, hash, hypothesis and validation report shown on its card. The filename contains a UTC timestamp and prediction hash prefix. The note includes strategy, policy and artifact hash.
+3. Open [DrivenData submissions](https://www.drivendata.org/competitions/306/competition-doe-gems/submissions/) using the team's registered account.
+4. Choose **New submission → File to submit**, select the downloaded `.tif`, and paste the card's suggested short note into **Note (optional)**.
+5. Check the account's remaining allowance, then submit. Record submission ID, time, exact file SHA, note and returned score in the shared ledger. A score without its file hash cannot establish provenance.
+6. Choose one final submission for both prize rounds before the deadline; do not make the choice using unknown private scores.
 
-1. Sign in and open the competition: https://www.drivendata.org/competitions/306/competition-doe-gems/
-2. Click **Submit** in the sidebar → **Make new submission**.
-3. **File to submit:** choose the `.tif` (or the `.zip` containing the single GeoTIFF).
-4. **Note (optional):** paste the suggested note — it identifies the strategy later.
-5. Submit. The file must match CRS/shape/geotransform; ours is written from the official template so it does byte-exactly.
+Steps 3–6 require the authorized account holder and legal eligibility. This environment does not possess or request DrivenData credentials, certify eligibility, or bypass account limits. GitHub repository access is separate.
 
-## 3. Rules that constrain submissions (account holder owns compliance)
+## 3. Format contract and the previous range error
 
-- **3 scored submissions per rolling 7-day window.** Spend slot 1 on the current file, read the public score, then decide — do not burn all three on variants of one idea.
-- **One submission is chosen blind for both rounds** before the deadline, without knowledge of private performance. Record the choice here when made.
-- **Eligibility (§1.3):** US citizen/permanent resident (or US entity with such a captain); no federal employees. An ineligible winner is disqualified regardless of score.
-- The public leaderboard shows public-test performance only and "may not be the same as the final scores on the private leaderboard".
+Official [format and metric](https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/): single-band float32 GeoTIFF, confidence in [0,1], UTM 11N/EPSG:32611, 100 m pixels, template bounds.
+Measured template: **3,730 rows × 3,292 columns**, transform `(100,0,243350,0,-100,4508550)`, **5,167,373** scored cells.
+Use finite [0,1] inside the template footprint, NaN outside and NaN nodata metadata.
 
-## 4. What the gate guarantees (and what it cannot)
+**“Predicted values must be in range [0, 1]” does not uniquely diagnose the rejected file.**
+Possible causes include out-of-range values, infinity, NaN inside the footprint, or an alignment/footprint mismatch.
+We cannot prove which caused the original rejection without that exact file.
+Do not silently clip or replace bad model outputs: investigate them. The publisher now rejects malformed raw probabilities before applying an emission policy.
 
-`scripts/validate_submission.py` enforces 9 rules: single-band float32 GeoTIFF; EPSG:32611; 100 m; 3292×3730; exact geotransform; finite values in [0,1]; **no NaN/Inf inside the footprint** (the published cause of the *"Predicted values must be in range [0, 1]"* form rejection); footprint exactly equals the official mask; nodata = NaN. A file that passes is *form-acceptable*; only the leaderboard measures *score*.
+```bash
+python scripts/validate_submission.py path/to/approved.tif
+```
+
+The local gate follows the published specification and pinned template, not private backend source code.
+A local pass is not a guarantee of backend acceptance or a competitive score.
+
+## 4. Build and release
+
+See README.md for data → features → blocked comparison. **Do not run old baseline final training and label it H12.**
+The final-prediction manifest for a future passing candidate must tie the generated NPY hash to its training recipe and the compatible completed validation report.
+`build_submission.py --validation ...` refuses missing, non-improving, incomplete, mismatched-policy or unbound evidence.
+`--experiment` writes diagnostics only into `scratch/experiments/`, never the download hub.
+
+The canonical field hash detects renamed/recompressed copies; the noncatalogue hash catches catalogue-only changes.
+A unique file is not guaranteed a unique rounded DTI, and changing noise to force novelty is prohibited by our methodology.
+
+## 5. Rules, disclosure and shared slot ledger
+
+[Official rules §3.2, §3.4–3.6](https://docs.nlr.gov/docs/fy26osti/96647.pdf): up to three submissions per week per participating entity, one final choice, AI-use narrative, reproducible solution assets.
+[Staff cadence clarification](https://community.drivendata.org/t/weekly-submissions/11524/2): rolling window.
+Multiple repositories do not by themselves establish multiple registrations or a rule violation. The group must use a shared entity-level ledger.
+
+| Submission ID | UTC | Filename / SHA-256 | Note | Score | Source |
+|---|---|---|---|---|---|
+| No submission made by this session | — | — | Offline validation only | — | Local scripts do not upload |
+
+Historical group scores live in `reports/submission_audit.json` labelled user-reported; they do not reveal current remaining slots.

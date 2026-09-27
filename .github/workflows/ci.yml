@@ -37,3 +37,5 @@ jobs:
           except ValueError as e:
               print('invalid fixture correctly refused:', str(e)[:80])
           EOF
+      - name: Verify evidence site and internal links
+        run: python scripts/verify_project.py

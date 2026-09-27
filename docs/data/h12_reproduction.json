@@ -1,0 +1,36 @@
+{
+  "checked_utc": "2026-09-27T05:27:01.342456+00:00",
+  "same_fold_scores": true,
+  "same_decision": true,
+  "initial_decision": {
+    "eligible": false,
+    "comparisons": {
+      "baseline107": {
+        "delta_by_fold": [
+          0.00027481800963093106,
+          -0.002146972035532685,
+          0.005526051222935535,
+          -0.002170755127552021
+        ],
+        "development_mean_delta": 0.0012179657323445937,
+        "confirmation_delta": -0.002170755127552021,
+        "passes": false
+      },
+      "baseline107_discovery": {
+        "delta_by_fold": [
+          0.00027481800963093106,
+          -0.002146972035532685,
+          0.005526051222935535,
+          -0.002170755127552021
+        ],
+        "development_mean_delta": 0.0012179657323445937,
+        "confirmation_delta": -0.002170755127552021,
+        "passes": false
+      }
+    },
+    "reason": "no slot: development and confirmation must both improve"
+  },
+  "initial_runtime_seconds": 615.2,
+  "repeat_runtime_seconds": 538.27,
+  "note": "Same configuration retrained. Initial saved NPY first-row zero anomaly triggered a fail-closed rerun with buffered serialization, immediate readback and file SHA. In-memory scores and rejection decision reproduced exactly; underlying first-run storage anomaly cause not established."
+}
