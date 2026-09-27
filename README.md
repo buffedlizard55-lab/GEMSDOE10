@@ -12,6 +12,7 @@
 
 - **Duplicate cause measured:** GEMSDOE1 = 5GEMSDOE = GEMSDOE2 recall, byte-for-byte and pixel-for-pixel. Current 8GEMSDOE hedge changes only known catalogue pixels. [Immutable artifact audit](reports/submission_audit.json).
 - **Data placement resolved:** automatic pinned public-team-mirror restoration works here; no manual download or GPU needed for HGB. Integrity with inherited pins is verified, independent official-file authentication is not.
+- **Session 3 (2026-09-27, later): a new approved artifact.** **H20** — 13 label-free scarp channels from the official USGS 3DEP 1/3 arc-second (~10 m) DEM (built on a GitHub runner, sha256-provenanced, restored through immutable `ext/*` tags because the sandbox cannot reach USGS) on top of the H16 stack — beat the H16 incumbent under the frozen spatially blocked protocol on the development mean (**+0.0147**) *and* the confirmation fold (**+0.0141**), was fit on all data with a hash-bound manifest and released as `gems10-h20-dem10-scarp-thin-…-ffc91a1686.tif` (policy `thin10_binary`, 153,957 cells). **H19** (skeleton thinning on the H16 field) improved development folds but lost the confirmation fold (−0.021) → not released. **H21** measured that the current USGS QFFD and INGENIOUS v1/v2 catalogues contain **no** trace absent from the provided labels (1 pixel each beyond 300 m) — the labels *are* the public catalogue. The session-2 H16 report reproduced exactly (96/96 numbers). [Session-3 register + results](HYPOTHESES.md), [H20 report](reports/h20_blocked.json), [H19 report](reports/h19_blocked.json), [catalogue evidence](KNOWLEDGE.md), [open budget question](NEXT_STEPS.md).
 - **Validation repaired and extended (session 2):** historical reports use interleaved raster-component holdouts, not geographic blocks. The spatial protocol (four stripe folds, 4 km training exclusion, confirmation fold, paired baseline/discovery) now also sweeps a preregistered 8-policy set on saved OOF probabilities. Results: **H12 rejected**, **H13 not eligible** (confirmation regressed), **H16 eligible** (dev mean +0.00373, confirmation +0.00070 vs both baselines under topk06_binary). [Preregistration + calibration record](HYPOTHESES.md), [H16 report](reports/h16_blocked.json), [H13 report](reports/h13_blocked.json).
 - **Official evidence re-verified 2026-09-27:** public leader DARD **0.3049**; group scores remain user-reported. Staff confirms pixel-exact masking, that new geometry of existing systems qualifies, and that new ground truth may lie within 300 m of known traces; hidden data types/coverage are undisclosed. [Dated source ledger](reports/official_feed.json).
 - **Durable knowledge base:** [KNOWLEDGE.md](KNOWLEDGE.md) distills the verified mechanics, sources, implementation map and dead ends for future sessions.
@@ -30,8 +31,12 @@ python scripts/fetch_data.py --download       # immutable mirror through gh; all
 python scripts/audit_submissions.py           # ten published files, immutable source links
 OMP_NUM_THREADS=2 python scripts/build_features.py --tile-rows 128
 python scripts/build_offset.py                # H13 39-channel strip-NCC grid (tiled, low-mem)
-OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 python scripts/validate_candidate.py --hypothesis H16
-OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 python scripts/validate_candidate.py --hypothesis H13 --extra data/features_offset.npy
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 python scripts/validate_candidate.py --hypothesis H16 --policy-set v2
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 python scripts/validate_candidate.py --hypothesis H13 --extra data/features_offset.npy --policy-set v2
+# session 3: external 10 m DEM channels (built by .github/workflows/external-data.yml, restored by tag)
+python scripts/fetch_external.py --tag ext/dem10-36326816737 && python scripts/build_dem10_grid.py
+python scripts/validate_candidate.py --hypothesis H20 --policy-set v3 \
+  --extra data/external/dem10/dem10_channels.f32.npy --incumbent-report reports/h16_blocked.json --work scratch/h20
 python -m pytest -q
 python scripts/build_site.py
 ```
@@ -52,6 +57,8 @@ python scripts/build_submission.py --prob final_out/prob_final.npy \
   --note "H16 endpoint-continuation features (tmi/det_elev/rtp), 117-feature HGB, topk06_binary"
 # A diagnostic can instead use --experiment; output is forced into scratch, never Pages.
 ```
+
+For H20 the bound pipeline is `build_continuation.py` → `train_final.py --extra data/features_continuation.npy,data/external/dem10/dem10_channels.f32.npy --hypothesis H20 --bind-to reports/h20_blocked.json --work-dir final_out_h20` → `build_submission.py --prob final_out_h20/prob_final.npy --policy thin10_binary --name gems10-h20-dem10-scarp-thin --validation reports/h20_blocked.json --note "..."` (done this session).
 
 `train_final.py --bind-to` refuses to write the binding unless the validation report's decision is eligible, and `build_submission.py` re-verifies every hash, the format gate and the duplicate registry before anything reaches `docs/downloads`. A failed candidate must never trigger final training or publication. [Submission guide](SUBMISSION_GUIDE.md).
 
@@ -402,6 +409,8 @@ Go ahead and create a pull request and then merge the pull request onto the main
 
 ## Latest completed result
 
-H12 was retrained with the same frozen settings during the verification pass: every fold score and the rejection decision reproduced exactly ([reproduction evidence](reports/h12_reproduction.json)). Development delta **+0.001218**, confirmation delta **−0.002171**. **Rejected; no weekly slot.** A unique out-of-fold diagnostic TIFF/ZIP was generated and format-validated in ignored scratch, with [its checks recorded](reports/diagnostic_validation.json); it is deliberately not an approved site download. It is not a full-data final model.
+**Session 3:** H20 (3DEP 10 m scarp channels + H16 + baseline107, 130-feature HGB, `thin10_binary`) is the recommended download on the hub: development folds 0.16483 / 0.18130 / 0.22339 (mean 0.18984) and confirmation 0.18680 versus the H16 incumbent's 0.15197 / 0.17242 / 0.20094 and 0.17274 (`reports/h20_blocked.json`, `reports/final_manifest_h20.json`). These are catalogue-generalisation proxies on four correlated stripe folds with a development-selected policy and a re-used confirmation geography — not a leaderboard forecast. No slot was spent; uploading is the account holder's decision (SUBMISSION_GUIDE.md).
+
+**Session 1 (retained):** H12 was retrained with the same frozen settings during the verification pass: every fold score and the rejection decision reproduced exactly ([reproduction evidence](reports/h12_reproduction.json)). Development delta **+0.001218**, confirmation delta **−0.002171**. **Rejected; no weekly slot.** A unique out-of-fold diagnostic TIFF/ZIP was generated and format-validated in ignored scratch, with [its checks recorded](reports/diagnostic_validation.json); it is deliberately not an approved site download. It is not a full-data final model.
 
 Use `requirements-lock.txt` to recreate this session's Python package versions (Python version is recorded in the experiment report). Browser screenshot testing was attempted but the Chromium download failed TLS; static links and local HTTP routes were tested instead.

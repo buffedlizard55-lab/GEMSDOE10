@@ -43,8 +43,9 @@ def main() -> int:
                     help="comma list of u8 stacks to append as features "
                          "(lidar,rad) from <data-dir>/external/")
     ap.add_argument("--extra", default=None,
-                    help="static (H,W,C) feature npy to append, e.g. "
-                         "data/features_offset.npy (H13)")
+                    help="comma list of static (H,W,C) feature npy to append in order, e.g. "
+                         "data/features_offset.npy (H13); "
+                         "data/features_continuation.npy,data/external/dem10/dem10_channels.f32.npy (H20)")
     ap.add_argument("--hypothesis", default="baseline107",
                     help="candidate label for the training manifest")
     ap.add_argument("--bind-to", default=None,
@@ -77,8 +78,10 @@ def main() -> int:
         for name, g in zip(names, ext_grids):
             channels += [f"{name}_u8_{i}" for i in range(g.shape[2])]
             print(f"external {name}: {g.shape} (disk memmap)")
-    if args.extra:
-        extra_path = Path(args.extra)
+    # One or more static grids, appended IN THE GIVEN ORDER (must match the
+    # validated arm's column order: H16 = [feat | h16]; H20 = [feat | h16 | dem10]).
+    for extra_item in (args.extra.split(",") if args.extra else []):
+        extra_path = Path(extra_item)
         ext_grids.append(np.lib.format.open_memmap(str(extra_path), mode="r"))
         emeta = json.loads(extra_path.with_suffix(".meta.json").read_text()) \
             if extra_path.with_suffix(".meta.json").exists() else None

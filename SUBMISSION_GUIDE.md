@@ -6,14 +6,25 @@ Open the [submission hub](https://buffedlizard55-lab.github.io/GEMSDOE10/).
 If it says **NO APPROVED SUBMISSION**, stop: an experiment has not satisfied the evidence gates.
 A format-valid TIFF alone is not a reason to spend one of the three weekly slots.
 
-No candidate is approved by default. Session-2 decisions (protocol
-`spatial-4x4-strided-v1-buffer40-policy-sweep-v2`): **H16 ELIGIBLE**
-(`reports/h16_blocked.json`), **H13 NOT ELIGIBLE** (`reports/h13_blocked.json`),
-H12 rejected earlier (`reports/h12_blocked.json`). H16 still requires the
-full-data final fit with a hash-bound training manifest before any download
-appears on the hub. The website is static: CPU scripts generate files;
-approved files are then one-click downloads. It does not secretly train a
-model in the browser or upload to DrivenData.
+No candidate is approved by default. Decisions so far: **H16 ELIGIBLE and
+released** (session 2, `reports/h16_blocked.json`, protocol `…-policy-sweep-v2`);
+**H20 ELIGIBLE** (session 3, `reports/h20_blocked.json`, protocol
+`…-policy-sweep-v3`: 3DEP 10 m scarp channels on top of H16, selected policy
+`thin10_binary`, beat the H16 incumbent on the development mean **and** the
+confirmation fold); **H13 and H19 NOT ELIGIBLE** (confirmation regressed);
+H12 rejected. When more than one artifact is approved, the hub lists the
+**newest first and marks it RECOMMENDED** — each later release had to beat the
+earlier one under the same frozen protocol; older approved artifacts stay
+downloadable for provenance. The website is static: CPU scripts generate
+files; approved files are then one-click downloads. It does not secretly train
+a model in the browser or upload to DrivenData.
+
+**What the recommendation is and is not.** It is the artifact with the best
+measured catalogue-generalisation proxy on four spatially blocked folds. It is
+not a leaderboard forecast. Two known open questions are recorded in
+NEXT_STEPS.md: the emission budget was selected on folds whose truth density
+is the catalogue's (the hidden new-fault truth is sparser), and the confirmation
+fold geography is re-used across sessions.
 
 ## 2. When a candidate is approved
 
@@ -48,8 +59,9 @@ A local pass is not a guarantee of backend acceptance or a competitive score.
 
 See README.md for data → features → blocked comparison. **Do not run old baseline final training and label it a passing candidate.**
 For H16 the bound pipeline is: `build_continuation.py` (all-systems 10-channel grid) → `train_final.py --extra data/features_continuation.npy --hypothesis H16 --bind-to reports/h16_blocked.json` (refuses to bind unless the report's decision is eligible; writes the training manifest, sets `promotion_allowed`, and records `final_prediction` in the report) → `build_submission.py --prob ... --policy topk06_binary --validation reports/h16_blocked.json`.
+For H20 (session 3): `fetch_external.py --tag ext/dem10-36326816737` → `build_dem10_grid.py` → `build_continuation.py` → `train_final.py --extra data/features_continuation.npy,data/external/dem10/dem10_channels.f32.npy --hypothesis H20 --bind-to reports/h20_blocked.json --work-dir final_out_h20` → `build_submission.py --prob final_out_h20/prob_final.npy --policy thin10_binary --validation reports/h20_blocked.json`. Column order `[107 | H16 10 | dem10 13]` must match the validated arm.
 The final-prediction manifest must tie the generated NPY hash to its training recipe and the compatible completed validation report.
-`build_submission.py --validation ...` refuses missing, non-improving, incomplete, mismatched-policy or unbound evidence (fail-closed gates in `src/gems10/release.py`, protocol-aware for v1 and v2 reports).
+`build_submission.py --validation ...` refuses missing, non-improving, incomplete, mismatched-policy or unbound evidence (fail-closed gates in `src/gems10/release.py`, protocol-aware for v1, v2 and v3 reports; v3 additionally requires every recorded incumbent comparison to pass; validated code hashes may live in git history when the working tree has moved on).
 `--experiment` writes diagnostics only into `scratch/experiments/`, never the download hub.
 
 The canonical field hash detects renamed/recompressed copies; the noncatalogue hash catches catalogue-only changes.

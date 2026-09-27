@@ -1,0 +1,102 @@
+{
+  "field_sha256": "7233021b2bc009ab8b3fae49b5cdd7ab9810c5395938c73088f67af24a32bfd2",
+  "noncatalogue_sha256": "99c50130ab055cb9c484718d63c5354cd4c2a35b0980cb33d1a266e35b15d4c0",
+  "positive_pixels": 153957,
+  "noncatalogue_positive_pixels": 143657,
+  "name": "gems10-h20-dem10-scarp-thin",
+  "policy": "thin10_binary",
+  "generated_utc": "20260927T155223039488Z",
+  "status": "approved",
+  "probability_sha256": "ffc91a16863796c9883ec9717054792dbef1cfaf657ccf522332447901b2cb0c",
+  "file": "gems10-h20-dem10-scarp-thin-20260927T155223039488Z-ffc91a1686.tif",
+  "sha256": "a26e5e46acc00ddd867f0b2910e638b25e4e81108ebe05c0abcc7c9b04372247",
+  "bytes": 1717585,
+  "zip": "gems10-h20-dem10-scarp-thin-20260927T155223039488Z-ffc91a1686.zip",
+  "zip_sha256": "2be3944301a73d22979673dcaba0d9e4f08ac9b81afb301ad8be9b2042c2b9b3",
+  "validation_sha256": "528b82456087c60b2e4246f5d555458f09229c4b62aa3f74db575e1d9de6787e",
+  "validation_file": "h20_blocked.json",
+  "suggested_note": "H20: 3DEP 10 m DEM scarp channels (13, label-free) + H16 endpoint-continuation + 107 baseline, 130-feature HGB, thin10_binary (skeleton of top-10%); spatial holdout vs H16 incumbent dev +0.0147 / confirm +0.0141 (reports/h20_blocked.json)",
+  "footprint_px": 5167373,
+  "positive_px": 153957,
+  "mass": 153957.0,
+  "gate": [
+    {
+      "name": "file-exists",
+      "ok": true,
+      "detail": "1717585 bytes",
+      "hard": true
+    },
+    {
+      "name": "single-band",
+      "ok": true,
+      "detail": "band count = 1",
+      "hard": true
+    },
+    {
+      "name": "dtype-float32",
+      "ok": true,
+      "detail": "dtype = float32",
+      "hard": true
+    },
+    {
+      "name": "crs-epsg32611",
+      "ok": true,
+      "detail": "CRS = EPSG:32611 (epsg 32611)",
+      "hard": true
+    },
+    {
+      "name": "resolution-100m",
+      "ok": true,
+      "detail": "resolution = (100.0, 100.0)",
+      "hard": true
+    },
+    {
+      "name": "shape",
+      "ok": true,
+      "detail": "shape = (3730, 3292), expected (3730, 3292)",
+      "hard": true
+    },
+    {
+      "name": "geotransform",
+      "ok": true,
+      "detail": "transform = (100.0, 0.0, 243350.0, 0.0, -100.0, 4508550.0)",
+      "hard": true
+    },
+    {
+      "name": "nodata-nan",
+      "ok": true,
+      "detail": "declared nodata = nan",
+      "hard": true
+    },
+    {
+      "name": "values-in-0-1",
+      "ok": true,
+      "detail": "finite range = [0.0, 1.0]",
+      "hard": true
+    },
+    {
+      "name": "no-inf",
+      "ok": true,
+      "detail": "inf pixels = 0",
+      "hard": true
+    },
+    {
+      "name": "template-verified",
+      "ok": true,
+      "detail": "official sample submission sha256 ok, footprint = 5167373 px",
+      "hard": true
+    },
+    {
+      "name": "NAN-INSIDE-FOOTPRINT",
+      "ok": true,
+      "detail": "0 non-finite pixels inside the scored footprint (non-finite scored values violate the [0,1] contract; the original backend rejection cause is not known)",
+      "hard": true
+    },
+    {
+      "name": "footprint-matches-official",
+      "ok": true,
+      "detail": "0 finite pixels outside the official footprint (use --allow-footprint-subset for experiments only)",
+      "hard": true
+    }
+  ]
+}

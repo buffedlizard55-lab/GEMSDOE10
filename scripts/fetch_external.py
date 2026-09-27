@@ -52,13 +52,17 @@ def list_tags(prefix: str = "ext/") -> list[dict]:
 
 
 def restore(tag: str, repo: str = REPO, dest_root: Path | None = None) -> Path:
-    kind = tag.split("/", 1)[1].rsplit("-", 1)[0]  # dem10 | catalogue
-    dest = (dest_root or ROOT / "data/external") / kind
+    kind = tag.split("/", 1)[1].rsplit("-", 1)[0]  # dem10 | catalogue | failed-<job>
+    failed = kind.startswith("failed-")
+    # Failed builds are restored under their full tag name (logs only; no manifest check)
+    dest = (dest_root or ROOT / "data/external") / (tag.split("/", 1)[1] if failed else kind)
     tree = gh_json(f"repos/{repo}/git/trees/{tag}?recursive=1")
     files = [t for t in tree["tree"] if t["type"] == "blob"]
     if not files:
         raise SystemExit(f"no files under tag {tag}")
     manifest_name = "manifest.json" if kind == "dem10" else "catalogue_diff.json"
+    if failed:
+        manifest_name = "STATUS.txt"
     with tempfile.TemporaryDirectory(dir=dest.parent if dest.parent.exists() else None,
                                      prefix=".ext-") as tmp:
         tmpdir = Path(tmp)
@@ -69,9 +73,12 @@ def restore(tag: str, repo: str = REPO, dest_root: Path | None = None) -> Path:
             if out.stat().st_size != f["size"]:
                 raise SystemExit(f"size mismatch for {f['path']}: {out.stat().st_size} != {f['size']}")
             print(f"[fetched] {f['path']} {f['size']} B", flush=True)
-        manifest = json.loads((tmpdir / manifest_name).read_text())
+        manifest = ({} if failed or not (tmpdir / manifest_name).exists()
+                    else json.loads((tmpdir / manifest_name).read_text()))
         expected = {}
-        if kind == "dem10":
+        if failed:
+            expected = {}
+        elif kind == "dem10":
             expected = {f"{c}.f32.npy": s["sha256"] for c, s in manifest["channel_stats"].items()}
         else:
             expected = {n: v["sha256"] for n, v in manifest.get("files", {}).items()}
@@ -87,7 +94,9 @@ def restore(tag: str, repo: str = REPO, dest_root: Path | None = None) -> Path:
             import shutil
             shutil.rmtree(dest)
         Path(tmp).rename(dest)
-    record = {"tag": tag, "commit": tree["sha"], "manifest_sha256": sha256_file(dest / manifest_name),
+    record = {"tag": tag, "commit": tree["sha"],
+              "manifest_sha256": (sha256_file(dest / manifest_name)
+                                  if (dest / manifest_name).exists() else None),
               "files": {f["path"]: f["size"] for f in files}}
     (dest / "RESTORED_FROM.json").write_text(json.dumps(record, indent=2) + "\n")
     print(json.dumps(record, indent=1))

@@ -121,3 +121,69 @@ def test_publisher_rejects_nonfinite_probabilities(tmp_path, monkeypatch):
     monkeypatch.setattr(sys, 'argv', ['build_submission.py', '--prob', str(raw), '--experiment'])
     with pytest.raises(ValueError, match='no silent repair'):
         mod.main()
+
+
+def evidence_v3(candidate='H20'):
+    """Session-3 protocol: policy dicts per arm, explicit arms, incumbent comparisons."""
+    def scores(cand_dti, base_dti, inc_dti):
+        return {'baseline107': {'topk06_binary': {'dti': base_dti}},
+                'baseline107_discovery': {'topk06_binary': {'dti': base_dti + .001}},
+                'H16': {'topk06_binary': {'dti': inc_dti}},
+                candidate: {'thin08_binary': {'dti': cand_dti}}}
+    folds = [{'fold': k, 'role': 'development' if k < 3 else 'confirmation',
+              'scores': scores(.20, .15, .17)} for k in range(4)]
+    return {'status': 'completed', 'hypothesis': candidate,
+            'protocol': 'spatial-4x4-strided-v1-buffer40-policy-sweep-v3',
+            'arms': ['baseline107', 'H16', candidate],
+            'policy_selection': {'baseline107': 'topk06_binary',
+                                 'baseline107_discovery': 'topk06_binary',
+                                 'H16': 'topk06_binary', candidate: 'thin08_binary'},
+            'decision': {'eligible': True, 'candidate_policy': 'thin08_binary',
+                         'comparisons': {
+                             'baseline107': {'passes': True},
+                             'baseline107_discovery': {'passes': True},
+                             'H16': {'passes': True},
+                             'incumbent_report:H16': {'passes': True,
+                                                      'delta_by_fold': [.03, .03, .03, .02]}}},
+            'promotion_allowed': True,
+            'final_prediction': {'sha256': 'pred', 'training_manifest_sha256': 'manifest'},
+            'folds': folds}
+
+
+def test_release_v3_requires_every_incumbent_comparison():
+    d = evidence_v3()
+    release.check_release(d, 'pred', 'thin08_binary')
+    with pytest.raises(ValueError, match='policy'):
+        release.check_release(d, 'pred', 'topk06_binary')
+    # same-run H16 incumbent arm beats the candidate on the confirmation fold
+    bad = copy.deepcopy(d)
+    bad['folds'][3]['scores']['H16']['topk06_binary']['dti'] = .25
+    with pytest.raises(ValueError, match='H16'):
+        release.check_release(bad, 'pred', 'thin08_binary')
+    # external incumbent report comparison recorded as failing
+    bad = copy.deepcopy(d)
+    bad['decision']['comparisons']['incumbent_report:H16']['passes'] = False
+    with pytest.raises(ValueError, match='incumbent'):
+        release.check_release(bad, 'pred', 'thin08_binary')
+    # external incumbent deltas negative on confirmation even if flagged passing
+    bad = copy.deepcopy(d)
+    bad['decision']['comparisons']['incumbent_report:H16']['delta_by_fold'] = [.03, .03, .03, -.01]
+    with pytest.raises(ValueError, match='confirmation'):
+        release.check_release(bad, 'pred', 'thin08_binary')
+    bad = copy.deepcopy(d)
+    bad['decision']['eligible'] = False
+    with pytest.raises(ValueError):
+        release.check_release(bad, 'pred', 'thin08_binary')
+
+
+def test_release_v3_refuses_the_real_h19_report():
+    """The measured session-3 H19 report must never pass the gate."""
+    import json
+    path = Path(__file__).resolve().parents[1] / 'reports' / 'h19_blocked.json'
+    if not path.exists():
+        pytest.skip('report not present')
+    d = json.loads(path.read_text())
+    d = dict(d, promotion_allowed=True,
+             final_prediction={'sha256': 'pred', 'training_manifest_sha256': 'm'})
+    with pytest.raises(ValueError):
+        release.check_release(d, 'pred', d['policy_selection']['H16'])

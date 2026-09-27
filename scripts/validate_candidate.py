@@ -132,8 +132,10 @@ def main():
     args = ap.parse_args()
     h = args.hypothesis
     policies = POLICY_SETS[args.policy_set]
-    report_path = args.report or ROOT / f"reports/{h.lower()}_blocked.json"
-    work = args.work or ROOT / f"scratch/{h.lower()}"
+    report_path = (args.report or ROOT / f"reports/{h.lower()}_blocked.json").resolve()
+    work = (args.work or ROOT / f"scratch/{h.lower()}").resolve()
+    if not work.is_relative_to(ROOT):
+        raise SystemExit("--work must live inside the repository")
     work.mkdir(parents=True, exist_ok=True)
 
     started = time.time()
@@ -156,6 +158,8 @@ def main():
     incumbent = None
     if args.incumbent_report is not None:
         incumbent = json.loads(args.incumbent_report.read_text())
+        if not args.incumbent_report.resolve().is_relative_to(ROOT):
+            raise SystemExit("--incumbent-report must live inside the repository")
         if incumbent.get("status") != "completed" or "H16" not in incumbent.get(
                 "policy_selection", {}):
             raise SystemExit("--incumbent-report must be a completed report with an H16 arm")
@@ -210,7 +214,7 @@ def main():
         "versions": {"python": platform.python_version(), "numpy": np.__version__,
                      "scipy": scipy.__version__, "sklearn": sklearn.__version__},
         "inputs": inputs, "code": code_hashes, "folds": [],
-        "incumbent_report": (str(args.incumbent_report.relative_to(ROOT))
+        "incumbent_report": (str(args.incumbent_report.resolve().relative_to(ROOT))
                              if args.incumbent_report else None),
         "limitations": ["Not private new-fault truth; does not forecast leaderboard DTI",
                         "Four geographic stripe folds, not independent statistical replicates",

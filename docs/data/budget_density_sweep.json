@@ -1,0 +1,1541 @@
+{
+  "source_report": "reports/h20_blocked.json",
+  "arm": "H20",
+  "policies": [
+    "topk01_binary",
+    "topk02_binary",
+    "topk03_binary",
+    "topk04_binary",
+    "topk06_binary",
+    "topk08_binary",
+    "thin04_binary",
+    "thin06_binary",
+    "thin08_binary",
+    "thin12_binary"
+  ],
+  "fractions": [
+    1.0,
+    0.5,
+    0.25,
+    0.1
+  ],
+  "draws": 3,
+  "known_systems_masked": "pixel-exact fp_ignore_mask (staff-described masking)",
+  "folds": [
+    {
+      "fold": 0,
+      "role": "development",
+      "systems": 806,
+      "gt_pixels": 12426,
+      "by_fraction": {
+        "1.0": {
+          "draws": [
+            {
+              "truth_pixels": 12426,
+              "known_pixels": 0,
+              "dti": {
+                "topk01_binary": 0.08646034872514495,
+                "topk02_binary": 0.11475034659513166,
+                "topk03_binary": 0.13198719944696624,
+                "topk04_binary": 0.14218660581577516,
+                "topk06_binary": 0.15370161712749833,
+                "topk08_binary": 0.15534530917402298,
+                "thin04_binary": 0.13020980591528722,
+                "thin06_binary": 0.148095613329778,
+                "thin08_binary": 0.1564586912424388,
+                "thin12_binary": 0.16643915987344435
+              },
+              "n_pos_pred": {
+                "topk01_binary": 9292,
+                "topk02_binary": 18583,
+                "topk03_binary": 27875,
+                "topk04_binary": 37167,
+                "topk06_binary": 55750,
+                "topk08_binary": 74334,
+                "thin04_binary": 14392,
+                "thin06_binary": 20458,
+                "thin08_binary": 26644,
+                "thin12_binary": 37782
+              }
+            }
+          ],
+          "mean_dti": {
+            "topk01_binary": 0.08646034872514495,
+            "topk02_binary": 0.11475034659513166,
+            "topk03_binary": 0.13198719944696624,
+            "topk04_binary": 0.14218660581577516,
+            "topk06_binary": 0.15370161712749833,
+            "topk08_binary": 0.15534530917402298,
+            "thin04_binary": 0.13020980591528722,
+            "thin06_binary": 0.148095613329778,
+            "thin08_binary": 0.1564586912424388,
+            "thin12_binary": 0.16643915987344435
+          },
+          "best_policy": "thin12_binary",
+          "truth_density": 0.01337318238907071
+        },
+        "0.5": {
+          "draws": [
+            {
+              "truth_pixels": 5840,
+              "known_pixels": 6586,
+              "dti": {
+                "topk01_binary": 0.08234025042602519,
+                "topk02_binary": 0.09441238638720016,
+                "topk03_binary": 0.09546170333351532,
+                "topk04_binary": 0.09524190863001478,
+                "topk06_binary": 0.09559737337812665,
+                "topk08_binary": 0.09063901033409878,
+                "thin04_binary": 0.10080024645556818,
+                "thin06_binary": 0.11056515998759926,
+                "thin08_binary": 0.10924529084994043,
+                "thin12_binary": 0.10996952574056373
+              },
+              "n_pos_pred": {
+                "topk01_binary": 9036,
+                "topk02_binary": 18170,
+                "topk03_binary": 27285,
+                "topk04_binary": 36401,
+                "topk06_binary": 54680,
+                "topk08_binary": 73014,
+                "thin04_binary": 14091,
+                "thin06_binary": 20054,
+                "thin08_binary": 26180,
+                "thin12_binary": 37206
+              }
+            },
+            {
+              "truth_pixels": 6401,
+              "known_pixels": 6025,
+              "dti": {
+                "topk01_binary": 0.08612947902324258,
+                "topk02_binary": 0.09933243677045737,
+                "topk03_binary": 0.10972694143064672,
+                "topk04_binary": 0.11039135267944425,
+                "topk06_binary": 0.1117951729490616,
+                "topk08_binary": 0.1088123069902785,
+                "thin04_binary": 0.1147283573227509,
+                "thin06_binary": 0.12295398136627798,
+                "thin08_binary": 0.12553416275645135,
+                "thin12_binary": 0.12433633627649276
+              },
+              "n_pos_pred": {
+                "topk01_binary": 9075,
+                "topk02_binary": 18225,
+                "topk03_binary": 27399,
+                "topk04_binary": 36561,
+                "topk06_binary": 54906,
+                "topk08_binary": 73309,
+                "thin04_binary": 14156,
+                "thin06_binary": 20141,
+                "thin08_binary": 26272,
+                "thin12_binary": 37302
+              }
+            },
+            {
+              "truth_pixels": 6365,
+              "known_pixels": 6061,
+              "dti": {
+                "topk01_binary": 0.0709650572032364,
+                "topk02_binary": 0.08927388157926762,
+                "topk03_binary": 0.09631723973662018,
+                "topk04_binary": 0.10021328218506653,
+                "topk06_binary": 0.10248678470042367,
+                "topk08_binary": 0.09756995016072832,
+                "thin04_binary": 0.10905756962574828,
+                "thin06_binary": 0.1209643992660789,
+                "thin08_binary": 0.11807592586145013,
+                "thin12_binary": 0.11746052475911706
+              },
+              "n_pos_pred": {
+                "topk01_binary": 9021,
+                "topk02_binary": 18134,
+                "topk03_binary": 27290,
+                "topk04_binary": 36450,
+                "topk06_binary": 54782,
+                "topk08_binary": 73135,
+                "thin04_binary": 14140,
+                "thin06_binary": 20139,
+                "thin08_binary": 26278,
+                "thin12_binary": 37284
+              }
+            }
+          ],
+          "mean_dti": {
+            "topk01_binary": 0.07981159555083472,
+            "topk02_binary": 0.09433956824564171,
+            "topk03_binary": 0.10050196150026074,
+            "topk04_binary": 0.10194884783150852,
+            "topk06_binary": 0.10329311034253731,
+            "topk08_binary": 0.09900708916170187,
+            "thin04_binary": 0.10819539113468912,
+            "thin06_binary": 0.11816118020665205,
+            "thin08_binary": 0.11761845982261399,
+            "thin12_binary": 0.11725546225872452
+          },
+          "best_policy": "thin06_binary",
+          "truth_density": 0.006674752710205742
+        },
+        "0.25": {
+          "draws": [
+            {
+              "truth_pixels": 2992,
+              "known_pixels": 9434,
+              "dti": {
+                "topk01_binary": 0.07417929509094373,
+                "topk02_binary": 0.07275547201180209,
+                "topk03_binary": 0.06616651542842512,
+                "topk04_binary": 0.06147701842642258,
+                "topk06_binary": 0.057143661535167804,
+                "topk08_binary": 0.05180402262796974,
+                "thin04_binary": 0.07629342062180698,
+                "thin06_binary": 0.07701665426569625,
+                "thin08_binary": 0.07101106986235059,
+                "thin12_binary": 0.06852757337153378
+              },
+              "n_pos_pred": {
+                "topk01_binary": 8942,
+                "topk02_binary": 18003,
+                "topk03_binary": 27061,
+                "topk04_binary": 36119,
+                "topk06_binary": 54261,
+                "topk08_binary": 72491,
+                "thin04_binary": 13973,
+                "thin06_binary": 19904,
+                "thin08_binary": 26008,
+                "thin12_binary": 36979
+              }
+            },
+            {
+              "truth_pixels": 2886,
+              "known_pixels": 9540,
+              "dti": {
+                "topk01_binary": 0.05775059112046936,
+                "topk02_binary": 0.0642619265038619,
+                "topk03_binary": 0.06593016904366043,
+                "topk04_binary": 0.06378294438135101,
+                "topk06_binary": 0.059784593417384,
+                "topk08_binary": 0.05356561304187178,
+                "thin04_binary": 0.08013000267204186,
+                "thin06_binary": 0.08334718602712658,
+                "thin08_binary": 0.07443767644841993,
+                "thin12_binary": 0.06557777756390622
+              },
+              "n_pos_pred": {
+                "topk01_binary": 8872,
+                "topk02_binary": 17930,
+                "topk03_binary": 27011,
+                "topk04_binary": 36097,
+                "topk06_binary": 54273,
+                "topk08_binary": 72514,
+                "thin04_binary": 13991,
+                "thin06_binary": 19953,
+                "thin08_binary": 26033,
+                "thin12_binary": 36956
+              }
+            },
+            {
+              "truth_pixels": 3282,
+              "known_pixels": 9144,
+              "dti": {
+                "topk01_binary": 0.0550481873504844,
+                "topk02_binary": 0.06618184820191235,
+                "topk03_binary": 0.06864590698217034,
+                "topk04_binary": 0.06844843004645909,
+                "topk06_binary": 0.06481619654236644,
+                "topk08_binary": 0.05917656922351758,
+                "thin04_binary": 0.0879727998714041,
+                "thin06_binary": 0.09247634841113261,
+                "thin08_binary": 0.0834256394180723,
+                "thin12_binary": 0.07691199144866843
+              },
+              "n_pos_pred": {
+                "topk01_binary": 8889,
+                "topk02_binary": 17939,
+                "topk03_binary": 27035,
+                "topk04_binary": 36133,
+                "topk06_binary": 54323,
+                "topk08_binary": 72569,
+                "thin04_binary": 14016,
+                "thin06_binary": 19977,
+                "thin08_binary": 26074,
+                "thin12_binary": 37029
+              }
+            }
+          ],
+          "mean_dti": {
+            "topk01_binary": 0.062326024520632496,
+            "topk02_binary": 0.06773308223919211,
+            "topk03_binary": 0.06691419715141862,
+            "topk04_binary": 0.06456946428474424,
+            "topk06_binary": 0.060581483831639416,
+            "topk08_binary": 0.05484873496445303,
+            "thin04_binary": 0.08146540772175098,
+            "thin06_binary": 0.08428006290131847,
+            "thin08_binary": 0.07629146190961428,
+            "thin12_binary": 0.07033911412803616
+          },
+          "best_policy": "thin06_binary",
+          "truth_density": 0.0032860762563412123
+        },
+        "0.1": {
+          "draws": [
+            {
+              "truth_pixels": 1196,
+              "known_pixels": 11230,
+              "dti": {
+                "topk01_binary": 0.06767260652744118,
+                "topk02_binary": 0.05577734553499506,
+                "topk03_binary": 0.04438310568509551,
+                "topk04_binary": 0.038104410016654704,
+                "topk06_binary": 0.032576307076684165,
+                "topk08_binary": 0.02779876030417345,
+                "thin04_binary": 0.05481524168481825,
+                "thin06_binary": 0.0503079542602607,
+                "thin08_binary": 0.041643829151278754,
+                "thin12_binary": 0.034349608141350206
+              },
+              "n_pos_pred": {
+                "topk01_binary": 8864,
+                "topk02_binary": 17885,
+                "topk03_binary": 26914,
+                "topk04_binary": 35943,
+                "topk06_binary": 54026,
+                "topk08_binary": 72204,
+                "thin04_binary": 13915,
+                "thin06_binary": 19827,
+                "thin08_binary": 25923,
+                "thin12_binary": 36840
+              }
+            },
+            {
+              "truth_pixels": 1132,
+              "known_pixels": 11294,
+              "dti": {
+                "topk01_binary": 0.04376076605650054,
+                "topk02_binary": 0.03641399900000224,
+                "topk03_binary": 0.033608613965425166,
+                "topk04_binary": 0.03053565736570614,
+                "topk06_binary": 0.02638006427819185,
+                "topk08_binary": 0.02262185358424135,
+                "thin04_binary": 0.04855138819464724,
+                "thin06_binary": 0.04692864086835031,
+                "thin08_binary": 0.037098077168665866,
+                "thin12_binary": 0.03190843413063917
+              },
+              "n_pos_pred": {
+                "topk01_binary": 8828,
+                "topk02_binary": 17831,
+                "topk03_binary": 26863,
+                "topk04_binary": 35902,
+                "topk06_binary": 53987,
+                "topk08_binary": 72166,
+                "thin04_binary": 13914,
+                "thin06_binary": 19851,
+                "thin08_binary": 25929,
+                "thin12_binary": 36826
+              }
+            },
+            {
+              "truth_pixels": 1041,
+              "known_pixels": 11385,
+              "dti": {
+                "topk01_binary": 0.02865982975414363,
+                "topk02_binary": 0.033031133513733726,
+                "topk03_binary": 0.03126011519091299,
+                "topk04_binary": 0.03093298840673754,
+                "topk06_binary": 0.027919446502107773,
+                "topk08_binary": 0.024664901780716966,
+                "thin04_binary": 0.05175897057095848,
+                "thin06_binary": 0.047867531300128434,
+                "thin08_binary": 0.04118505786606682,
+                "thin12_binary": 0.03561857845485487
+              },
+              "n_pos_pred": {
+                "topk01_binary": 8791,
+                "topk02_binary": 17786,
+                "topk03_binary": 26825,
+                "topk04_binary": 35875,
+                "topk06_binary": 53973,
+                "topk08_binary": 72149,
+                "thin04_binary": 13909,
+                "thin06_binary": 19829,
+                "thin08_binary": 25934,
+                "thin12_binary": 36837
+              }
+            }
+          ],
+          "mean_dti": {
+            "topk01_binary": 0.04669773411269512,
+            "topk02_binary": 0.04174082601624368,
+            "topk03_binary": 0.03641727828047789,
+            "topk04_binary": 0.033191018596366126,
+            "topk06_binary": 0.028958605952327927,
+            "topk08_binary": 0.025028505223043923,
+            "thin04_binary": 0.05170853348347466,
+            "thin06_binary": 0.04836804214291315,
+            "thin08_binary": 0.039975654728670484,
+            "thin12_binary": 0.03395887357561475
+          },
+          "best_policy": "thin04_binary",
+          "truth_density": 0.0012086016274687275
+        }
+      }
+    },
+    {
+      "fold": 1,
+      "role": "development",
+      "systems": 1409,
+      "gt_pixels": 26366,
+      "by_fraction": {
+        "1.0": {
+          "draws": [
+            {
+              "truth_pixels": 26366,
+              "known_pixels": 0,
+              "dti": {
+                "topk01_binary": 0.11195551452101997,
+                "topk02_binary": 0.1422455503119752,
+                "topk03_binary": 0.15781760718928983,
+                "topk04_binary": 0.165506545555792,
+                "topk06_binary": 0.16992009671821132,
+                "topk08_binary": 0.16996518387120457,
+                "thin04_binary": 0.14964320604423953,
+                "thin06_binary": 0.1633334158144165,
+                "thin08_binary": 0.1754350825789029,
+                "thin12_binary": 0.18147448325642918
+              },
+              "n_pos_pred": {
+                "topk01_binary": 20840,
+                "topk02_binary": 41680,
+                "topk03_binary": 62520,
+                "topk04_binary": 83360,
+                "topk06_binary": 125040,
+                "topk08_binary": 166719,
+                "thin04_binary": 31080,
+                "thin06_binary": 44198,
+                "thin08_binary": 56660,
+                "thin12_binary": 80009
+              }
+            }
+          ],
+          "mean_dti": {
+            "topk01_binary": 0.11195551452101997,
+            "topk02_binary": 0.1422455503119752,
+            "topk03_binary": 0.15781760718928983,
+            "topk04_binary": 0.165506545555792,
+            "topk06_binary": 0.16992009671821132,
+            "topk08_binary": 0.16996518387120457,
+            "thin04_binary": 0.14964320604423953,
+            "thin06_binary": 0.1633334158144165,
+            "thin08_binary": 0.1754350825789029,
+            "thin12_binary": 0.18147448325642918
+          },
+          "best_policy": "thin12_binary",
+          "truth_density": 0.012651680044837025
+        },
+        "0.5": {
+          "draws": [
+            {
+              "truth_pixels": 12348,
+              "known_pixels": 14018,
+              "dti": {
+                "topk01_binary": 0.12037245696227716,
+                "topk02_binary": 0.1281720229643963,
+                "topk03_binary": 0.12652935670690235,
+                "topk04_binary": 0.12129993760047139,
+                "topk06_binary": 0.11152363217511906,
+                "topk08_binary": 0.10261714405693961,
+                "thin04_binary": 0.12971829651010733,
+                "thin06_binary": 0.13021007147279656,
+                "thin08_binary": 0.12888367574676596,
+                "thin12_binary": 0.12454418958930562
+              },
+              "n_pos_pred": {
+                "topk01_binary": 20193,
+                "topk02_binary": 40611,
+                "topk03_binary": 61051,
+                "topk04_binary": 81473,
+                "topk06_binary": 122466,
+                "topk08_binary": 163461,
+                "thin04_binary": 30362,
+                "thin06_binary": 43344,
+                "thin08_binary": 55590,
+                "thin12_binary": 78659
+              }
+            },
+            {
+              "truth_pixels": 14306,
+              "known_pixels": 12060,
+              "dti": {
+                "topk01_binary": 0.10524887570189544,
+                "topk02_binary": 0.12198737759217822,
+                "topk03_binary": 0.12697341431752712,
+                "topk04_binary": 0.1266496102027542,
+                "topk06_binary": 0.12023564338910735,
+                "topk08_binary": 0.11403162185240125,
+                "thin04_binary": 0.1298251716469829,
+                "thin06_binary": 0.13384394365963045,
+                "thin08_binary": 0.13605176132366226,
+                "thin12_binary": 0.13469576433171376
+              },
+              "n_pos_pred": {
+                "topk01_binary": 20130,
+                "topk02_binary": 40572,
+                "topk03_binary": 61075,
+                "topk04_binary": 81595,
+                "topk06_binary": 122705,
+                "topk08_binary": 163861,
+                "thin04_binary": 30400,
+                "thin06_binary": 43364,
+                "thin08_binary": 55667,
+                "thin12_binary": 78817
+              }
+            },
+            {
+              "truth_pixels": 13410,
+              "known_pixels": 12956,
+              "dti": {
+                "topk01_binary": 0.08816077703285308,
+                "topk02_binary": 0.10456471714840364,
+                "topk03_binary": 0.10941999792560203,
+                "topk04_binary": 0.11043194700680235,
+                "topk06_binary": 0.10824446631559695,
+                "topk08_binary": 0.10460500593405309,
+                "thin04_binary": 0.11425613058646578,
+                "thin06_binary": 0.12104235951127021,
+                "thin08_binary": 0.1268110135722911,
+                "thin12_binary": 0.1270788360197234
+              },
+              "n_pos_pred": {
+                "topk01_binary": 19861,
+                "topk02_binary": 40253,
+                "topk03_binary": 60708,
+                "topk04_binary": 81179,
+                "topk06_binary": 122242,
+                "topk08_binary": 163384,
+                "thin04_binary": 30260,
+                "thin06_binary": 43241,
+                "thin08_binary": 55532,
+                "thin12_binary": 78713
+              }
+            }
+          ],
+          "mean_dti": {
+            "topk01_binary": 0.10459403656567523,
+            "topk02_binary": 0.11824137256832606,
+            "topk03_binary": 0.12097425631667717,
+            "topk04_binary": 0.11946049827000932,
+            "topk06_binary": 0.11333458062660778,
+            "topk08_binary": 0.10708459061446464,
+            "thin04_binary": 0.124599866247852,
+            "thin06_binary": 0.12836545821456571,
+            "thin08_binary": 0.13058215021423977,
+            "thin12_binary": 0.12877292998024759
+          },
+          "best_policy": "thin08_binary",
+          "truth_density": 0.006408213979068378
+        },
+        "0.25": {
+          "draws": [
+            {
+              "truth_pixels": 6177,
+              "known_pixels": 20189,
+              "dti": {
+                "topk01_binary": 0.10297347173888119,
+                "topk02_binary": 0.09455362426392602,
+                "topk03_binary": 0.08659847932248915,
+                "topk04_binary": 0.07869753945312016,
+                "topk06_binary": 0.06801082301001327,
+                "topk08_binary": 0.06058061040625276,
+                "thin04_binary": 0.10004249994588522,
+                "thin06_binary": 0.09254212669293194,
+                "thin08_binary": 0.08676268509376545,
+                "thin12_binary": 0.08040182245322589
+              },
+              "n_pos_pred": {
+                "topk01_binary": 19723,
+                "topk02_binary": 39901,
+                "topk03_binary": 60157,
+                "topk04_binary": 80430,
+                "topk06_binary": 121150,
+                "topk08_binary": 161925,
+                "thin04_binary": 29998,
+                "thin06_binary": 42887,
+                "thin08_binary": 55044,
+                "thin12_binary": 78054
+              }
+            },
+            {
+              "truth_pixels": 6983,
+              "known_pixels": 19383,
+              "dti": {
+                "topk01_binary": 0.061929007023891106,
+                "topk02_binary": 0.06715079830459691,
+                "topk03_binary": 0.0654996549364614,
+                "topk04_binary": 0.06259868052964077,
+                "topk06_binary": 0.05679070502527988,
+                "topk08_binary": 0.05307276658930244,
+                "thin04_binary": 0.07617830380738373,
+                "thin06_binary": 0.07530449500701453,
+                "thin08_binary": 0.07480988821583354,
+                "thin12_binary": 0.07415598174038378
+              },
+              "n_pos_pred": {
+                "topk01_binary": 19444,
+                "topk02_binary": 39609,
+                "topk03_binary": 59832,
+                "topk04_binary": 80119,
+                "topk06_binary": 120838,
+                "topk08_binary": 161640,
+                "thin04_binary": 29870,
+                "thin06_binary": 42775,
+                "thin08_binary": 54966,
+                "thin12_binary": 78009
+              }
+            },
+            {
+              "truth_pixels": 6435,
+              "known_pixels": 19931,
+              "dti": {
+                "topk01_binary": 0.0741860820971804,
+                "topk02_binary": 0.07762614399473304,
+                "topk03_binary": 0.07365211656671096,
+                "topk04_binary": 0.07076491821137892,
+                "topk06_binary": 0.06440237794898393,
+                "topk08_binary": 0.05920088827561755,
+                "thin04_binary": 0.08837753728593138,
+                "thin06_binary": 0.08809029867691215,
+                "thin08_binary": 0.08585899598943923,
+                "thin12_binary": 0.07914862005539826
+              },
+              "n_pos_pred": {
+                "topk01_binary": 19470,
+                "topk02_binary": 39680,
+                "topk03_binary": 59942,
+                "topk04_binary": 80224,
+                "topk06_binary": 121001,
+                "topk08_binary": 161826,
+                "thin04_binary": 29924,
+                "thin06_binary": 42863,
+                "thin08_binary": 55044,
+                "thin12_binary": 78077
+              }
+            }
+          ],
+          "mean_dti": {
+            "topk01_binary": 0.07969618695331758,
+            "topk02_binary": 0.07977685552108532,
+            "topk03_binary": 0.07525008360855384,
+            "topk04_binary": 0.07068704606471328,
+            "topk06_binary": 0.0630679686614257,
+            "topk08_binary": 0.057618088423724255,
+            "thin04_binary": 0.08819944701306677,
+            "thin06_binary": 0.0853123067922862,
+            "thin08_binary": 0.08247718976634606,
+            "thin12_binary": 0.07790214141633596
+          },
+          "best_policy": "thin04_binary",
+          "truth_density": 0.0031342090884545946
+        },
+        "0.1": {
+          "draws": [
+            {
+              "truth_pixels": 2567,
+              "known_pixels": 23799,
+              "dti": {
+                "topk01_binary": 0.08427701998271944,
+                "topk02_binary": 0.06208846465355048,
+                "topk03_binary": 0.05183800970939498,
+                "topk04_binary": 0.04365313593274932,
+                "topk06_binary": 0.03506618815372266,
+                "topk08_binary": 0.029921853800601705,
+                "thin04_binary": 0.0659205308683471,
+                "thin06_binary": 0.054587326322824134,
+                "thin08_binary": 0.048692083980883635,
+                "thin12_binary": 0.039298956400589106
+              },
+              "n_pos_pred": {
+                "topk01_binary": 19460,
+                "topk02_binary": 39509,
+                "topk03_binary": 59644,
+                "topk04_binary": 79814,
+                "topk06_binary": 120384,
+                "topk08_binary": 161025,
+                "thin04_binary": 29785,
+                "thin06_binary": 42631,
+                "thin08_binary": 54769,
+                "thin12_binary": 77686
+              }
+            },
+            {
+              "truth_pixels": 3056,
+              "known_pixels": 23310,
+              "dti": {
+                "topk01_binary": 0.03762793626063628,
+                "topk02_binary": 0.03711759845319568,
+                "topk03_binary": 0.033048169043647234,
+                "topk04_binary": 0.030495991436956086,
+                "topk06_binary": 0.02670559134378767,
+                "topk08_binary": 0.02402633613238199,
+                "thin04_binary": 0.040924090161314625,
+                "thin06_binary": 0.03862288308929312,
+                "thin08_binary": 0.03680567010215469,
+                "thin12_binary": 0.0353175774858153
+              },
+              "n_pos_pred": {
+                "topk01_binary": 19210,
+                "topk02_binary": 39277,
+                "topk03_binary": 59401,
+                "topk04_binary": 79584,
+                "topk06_binary": 120154,
+                "topk08_binary": 160806,
+                "thin04_binary": 29690,
+                "thin06_binary": 42561,
+                "thin08_binary": 54697,
+                "thin12_binary": 77640
+              }
+            },
+            {
+              "truth_pixels": 2360,
+              "known_pixels": 24006,
+              "dti": {
+                "topk01_binary": 0.05227953556864823,
+                "topk02_binary": 0.046826273391887434,
+                "topk03_binary": 0.04024518930336374,
+                "topk04_binary": 0.037352024317729965,
+                "topk06_binary": 0.032743341744449705,
+                "topk08_binary": 0.029174166729904295,
+                "thin04_binary": 0.057051625334805435,
+                "thin06_binary": 0.05394015057993808,
+                "thin08_binary": 0.04969669866077178,
+                "thin12_binary": 0.04171456127165603
+              },
+              "n_pos_pred": {
+                "topk01_binary": 19242,
+                "topk02_binary": 39325,
+                "topk03_binary": 59469,
+                "topk04_binary": 79650,
+                "topk06_binary": 120271,
+                "topk08_binary": 160952,
+                "thin04_binary": 29737,
+                "thin06_binary": 42614,
+                "thin08_binary": 54759,
+                "thin12_binary": 77710
+              }
+            }
+          ],
+          "mean_dti": {
+            "topk01_binary": 0.058061497270667985,
+            "topk02_binary": 0.04867744549954453,
+            "topk03_binary": 0.04171045601880199,
+            "topk04_binary": 0.03716705056247845,
+            "topk06_binary": 0.031505040413986676,
+            "topk08_binary": 0.027707452220962662,
+            "thin04_binary": 0.054632082121489046,
+            "thin06_binary": 0.04905011999735178,
+            "thin08_binary": 0.04506481758127004,
+            "thin12_binary": 0.038777031719353476
+          },
+          "best_policy": "topk01_binary",
+          "truth_density": 0.0012768763027881105
+        }
+      }
+    },
+    {
+      "fold": 2,
+      "role": "development",
+      "systems": 744,
+      "gt_pixels": 16847,
+      "by_fraction": {
+        "1.0": {
+          "draws": [
+            {
+              "truth_pixels": 16847,
+              "known_pixels": 0,
+              "dti": {
+                "topk01_binary": 0.1479254675695116,
+                "topk02_binary": 0.1867877272362853,
+                "topk03_binary": 0.2027512663504249,
+                "topk04_binary": 0.21198758946515964,
+                "topk06_binary": 0.21324137464541348,
+                "topk08_binary": 0.20635163180983826,
+                "thin04_binary": 0.19673865961858178,
+                "thin06_binary": 0.21131281516906078,
+                "thin08_binary": 0.2180107087285971,
+                "thin12_binary": 0.21986599512086027
+              },
+              "n_pos_pred": {
+                "topk01_binary": 15192,
+                "topk02_binary": 30384,
+                "topk03_binary": 45575,
+                "topk04_binary": 60767,
+                "topk06_binary": 91151,
+                "topk08_binary": 121534,
+                "thin04_binary": 21877,
+                "thin06_binary": 31893,
+                "thin08_binary": 40771,
+                "thin12_binary": 56492
+              }
+            }
+          ],
+          "mean_dti": {
+            "topk01_binary": 0.1479254675695116,
+            "topk02_binary": 0.1867877272362853,
+            "topk03_binary": 0.2027512663504249,
+            "topk04_binary": 0.21198758946515964,
+            "topk06_binary": 0.21324137464541348,
+            "topk08_binary": 0.20635163180983826,
+            "thin04_binary": 0.19673865961858178,
+            "thin06_binary": 0.21131281516906078,
+            "thin08_binary": 0.2180107087285971,
+            "thin12_binary": 0.21986599512086027
+          },
+          "best_policy": "thin12_binary",
+          "truth_density": 0.011089527844279252
+        },
+        "0.5": {
+          "draws": [
+            {
+              "truth_pixels": 8929,
+              "known_pixels": 7918,
+              "dti": {
+                "topk01_binary": 0.1432016653608427,
+                "topk02_binary": 0.16052593828893763,
+                "topk03_binary": 0.1614308985165722,
+                "topk04_binary": 0.15929691499422105,
+                "topk06_binary": 0.14751396530789954,
+                "topk08_binary": 0.13631370292735825,
+                "thin04_binary": 0.17637207062711102,
+                "thin06_binary": 0.17383934652676367,
+                "thin08_binary": 0.1701758243744248,
+                "thin12_binary": 0.16511991037016363
+              },
+              "n_pos_pred": {
+                "topk01_binary": 14624,
+                "topk02_binary": 29424,
+                "topk03_binary": 44324,
+                "topk04_binary": 59226,
+                "topk06_binary": 89137,
+                "topk08_binary": 119136,
+                "thin04_binary": 21331,
+                "thin06_binary": 31210,
+                "thin08_binary": 39972,
+                "thin12_binary": 55559
+              }
+            },
+            {
+              "truth_pixels": 9024,
+              "known_pixels": 7823,
+              "dti": {
+                "topk01_binary": 0.1190635549837023,
+                "topk02_binary": 0.13625673872058194,
+                "topk03_binary": 0.13779811114826923,
+                "topk04_binary": 0.13883483585603898,
+                "topk06_binary": 0.13264157362892512,
+                "topk08_binary": 0.12447902368703447,
+                "thin04_binary": 0.1521397916219837,
+                "thin06_binary": 0.15641081959356978,
+                "thin08_binary": 0.15853745438431543,
+                "thin12_binary": 0.1549817285767445
+              },
+              "n_pos_pred": {
+                "topk01_binary": 14420,
+                "topk02_binary": 29144,
+                "topk03_binary": 44002,
+                "topk04_binary": 58887,
+                "topk06_binary": 88761,
+                "topk08_binary": 118760,
+                "thin04_binary": 21212,
+                "thin06_binary": 31071,
+                "thin08_binary": 39896,
+                "thin12_binary": 55461
+              }
+            },
+            {
+              "truth_pixels": 8207,
+              "known_pixels": 8640,
+              "dti": {
+                "topk01_binary": 0.12390831306229999,
+                "topk02_binary": 0.14081913172275498,
+                "topk03_binary": 0.14126723028293559,
+                "topk04_binary": 0.1398827224230874,
+                "topk06_binary": 0.13119256721857475,
+                "topk08_binary": 0.12013799670690217,
+                "thin04_binary": 0.1566291620309345,
+                "thin06_binary": 0.16171970880004297,
+                "thin08_binary": 0.15943502387405403,
+                "thin12_binary": 0.14783368369285918
+              },
+              "n_pos_pred": {
+                "topk01_binary": 14368,
+                "topk02_binary": 29124,
+                "topk03_binary": 43994,
+                "topk04_binary": 58876,
+                "topk06_binary": 88713,
+                "topk08_binary": 118651,
+                "thin04_binary": 21225,
+                "thin06_binary": 31107,
+                "thin08_binary": 39929,
+                "thin12_binary": 55445
+              }
+            }
+          ],
+          "mean_dti": {
+            "topk01_binary": 0.128724511135615,
+            "topk02_binary": 0.14586726957742482,
+            "topk03_binary": 0.14683207998259235,
+            "topk04_binary": 0.14600482442444915,
+            "topk06_binary": 0.13711603538513314,
+            "topk08_binary": 0.12697690777376497,
+            "thin04_binary": 0.16171367476000975,
+            "thin06_binary": 0.1639899583067921,
+            "thin08_binary": 0.1627161008775981,
+            "thin12_binary": 0.15597844087992244
+          },
+          "best_policy": "thin06_binary",
+          "truth_density": 0.005739934872803175
+        },
+        "0.25": {
+          "draws": [
+            {
+              "truth_pixels": 3806,
+              "known_pixels": 13041,
+              "dti": {
+                "topk01_binary": 0.08896736755183139,
+                "topk02_binary": 0.08970933458751729,
+                "topk03_binary": 0.08638551614177852,
+                "topk04_binary": 0.08207738186208746,
+                "topk06_binary": 0.0727823079226595,
+                "topk08_binary": 0.0644779933797498,
+                "thin04_binary": 0.11956340704049652,
+                "thin06_binary": 0.11251836887869204,
+                "thin08_binary": 0.10322339104724082,
+                "thin12_binary": 0.09264040761563518
+              },
+              "n_pos_pred": {
+                "topk01_binary": 14008,
+                "topk02_binary": 28522,
+                "topk03_binary": 43227,
+                "topk04_binary": 57971,
+                "topk06_binary": 87572,
+                "topk08_binary": 117325,
+                "thin04_binary": 20910,
+                "thin06_binary": 30709,
+                "thin08_binary": 39443,
+                "thin12_binary": 54919
+              }
+            },
+            {
+              "truth_pixels": 4236,
+              "known_pixels": 12611,
+              "dti": {
+                "topk01_binary": 0.08946601243542088,
+                "topk02_binary": 0.08859673839025457,
+                "topk03_binary": 0.08268423434825574,
+                "topk04_binary": 0.0794114143671524,
+                "topk06_binary": 0.07097973805253086,
+                "topk08_binary": 0.06424928825204546,
+                "thin04_binary": 0.10376033492462505,
+                "thin06_binary": 0.09499446145313216,
+                "thin08_binary": 0.09327673170300534,
+                "thin12_binary": 0.08722875213344562
+              },
+              "n_pos_pred": {
+                "topk01_binary": 14043,
+                "topk02_binary": 28565,
+                "topk03_binary": 43251,
+                "topk04_binary": 57959,
+                "topk06_binary": 87556,
+                "topk08_binary": 117311,
+                "thin04_binary": 20868,
+                "thin06_binary": 30634,
+                "thin08_binary": 39419,
+                "thin12_binary": 54892
+              }
+            },
+            {
+              "truth_pixels": 3945,
+              "known_pixels": 12902,
+              "dti": {
+                "topk01_binary": 0.10482097392308129,
+                "topk02_binary": 0.10711535597614653,
+                "topk03_binary": 0.09679457402799317,
+                "topk04_binary": 0.09006396390072809,
+                "topk06_binary": 0.07797900826607805,
+                "topk08_binary": 0.06781996919942618,
+                "thin04_binary": 0.11982023661576827,
+                "thin06_binary": 0.11333183759851913,
+                "thin08_binary": 0.10483924207745245,
+                "thin12_binary": 0.09023035531069704
+              },
+              "n_pos_pred": {
+                "topk01_binary": 14040,
+                "topk02_binary": 28617,
+                "topk03_binary": 43342,
+                "topk04_binary": 58082,
+                "topk06_binary": 87675,
+                "topk08_binary": 117410,
+                "thin04_binary": 20944,
+                "thin06_binary": 30736,
+                "thin08_binary": 39484,
+                "thin12_binary": 54925
+              }
+            }
+          ],
+          "mean_dti": {
+            "topk01_binary": 0.0944181179701112,
+            "topk02_binary": 0.09514047631797279,
+            "topk03_binary": 0.08862144150600915,
+            "topk04_binary": 0.08385092004332266,
+            "topk06_binary": 0.07391368474708947,
+            "topk08_binary": 0.0655157502770738,
+            "thin04_binary": 0.11438132619362995,
+            "thin06_binary": 0.10694822264344778,
+            "thin08_binary": 0.1004464549425662,
+            "thin12_binary": 0.0900331716865926
+          },
+          "best_policy": "thin04_binary",
+          "truth_density": 0.002630145233956103
+        },
+        "0.1": {
+          "draws": [
+            {
+              "truth_pixels": 1966,
+              "known_pixels": 14881,
+              "dti": {
+                "topk01_binary": 0.06397680589343713,
+                "topk02_binary": 0.05751076739654184,
+                "topk03_binary": 0.05326851271169404,
+                "topk04_binary": 0.04958370448724508,
+                "topk06_binary": 0.04157231640008718,
+                "topk08_binary": 0.03571207794598643,
+                "thin04_binary": 0.08019189390408593,
+                "thin06_binary": 0.07177406447137191,
+                "thin08_binary": 0.0616087025573177,
+                "thin12_binary": 0.05448516181033195
+              },
+              "n_pos_pred": {
+                "topk01_binary": 13867,
+                "topk02_binary": 28294,
+                "topk03_binary": 42938,
+                "topk04_binary": 57620,
+                "topk06_binary": 87076,
+                "topk08_binary": 116734,
+                "thin04_binary": 20767,
+                "thin06_binary": 30520,
+                "thin08_binary": 39245,
+                "thin12_binary": 54683
+              }
+            },
+            {
+              "truth_pixels": 1560,
+              "known_pixels": 15287,
+              "dti": {
+                "topk01_binary": 0.03743951129563781,
+                "topk02_binary": 0.03277260074066065,
+                "topk03_binary": 0.029183413428994245,
+                "topk04_binary": 0.027829558699537616,
+                "topk06_binary": 0.0236644860837196,
+                "topk08_binary": 0.02077808706417848,
+                "thin04_binary": 0.04636753260715507,
+                "thin06_binary": 0.039224580675457046,
+                "thin08_binary": 0.036143488651671815,
+                "thin12_binary": 0.029986766581110127
+              },
+              "n_pos_pred": {
+                "topk01_binary": 13788,
+                "topk02_binary": 28180,
+                "topk03_binary": 42777,
+                "topk04_binary": 57416,
+                "topk06_binary": 86824,
+                "topk08_binary": 116439,
+                "thin04_binary": 20694,
+                "thin06_binary": 30422,
+                "thin08_binary": 39162,
+                "thin12_binary": 54569
+              }
+            },
+            {
+              "truth_pixels": 1810,
+              "known_pixels": 15037,
+              "dti": {
+                "topk01_binary": 0.0649675783549333,
+                "topk02_binary": 0.06288696097353762,
+                "topk03_binary": 0.054705763555039616,
+                "topk04_binary": 0.049591974354428886,
+                "topk06_binary": 0.04175082855002491,
+                "topk08_binary": 0.034926089213428976,
+                "thin04_binary": 0.07345146093598831,
+                "thin06_binary": 0.06542667311084316,
+                "thin08_binary": 0.05847446887448827,
+                "thin12_binary": 0.046194992900580656
+              },
+              "n_pos_pred": {
+                "topk01_binary": 13840,
+                "topk02_binary": 28300,
+                "topk03_binary": 42938,
+                "topk04_binary": 57610,
+                "topk06_binary": 87092,
+                "topk08_binary": 116729,
+                "thin04_binary": 20754,
+                "thin06_binary": 30515,
+                "thin08_binary": 39245,
+                "thin12_binary": 54647
+              }
+            }
+          ],
+          "mean_dti": {
+            "topk01_binary": 0.05546129851466941,
+            "topk02_binary": 0.0510567763702467,
+            "topk03_binary": 0.045719229898575964,
+            "topk04_binary": 0.042335079180403856,
+            "topk06_binary": 0.03566254367794389,
+            "topk08_binary": 0.03047208474119796,
+            "thin04_binary": 0.0666702958157431,
+            "thin06_binary": 0.058808439419224035,
+            "thin08_binary": 0.05207555336115926,
+            "thin12_binary": 0.043555640430674246
+          },
+          "best_policy": "thin04_binary",
+          "truth_density": 0.001170806287510617
+        }
+      }
+    },
+    {
+      "fold": 3,
+      "role": "confirmation",
+      "systems": 281,
+      "gt_pixels": 5349,
+      "by_fraction": {
+        "1.0": {
+          "draws": [
+            {
+              "truth_pixels": 5349,
+              "known_pixels": 0,
+              "dti": {
+                "topk01_binary": 0.16417895686207556,
+                "topk02_binary": 0.19853129283036808,
+                "topk03_binary": 0.1970889118764924,
+                "topk04_binary": 0.19228946684836434,
+                "topk06_binary": 0.1802056063683778,
+                "topk08_binary": 0.16783374417202823,
+                "thin04_binary": 0.18088575364732615,
+                "thin06_binary": 0.18569867590230307,
+                "thin08_binary": 0.18886603690664405,
+                "thin12_binary": 0.18015605314776362
+              },
+              "n_pos_pred": {
+                "topk01_binary": 6350,
+                "topk02_binary": 12701,
+                "topk03_binary": 19051,
+                "topk04_binary": 25401,
+                "topk06_binary": 38102,
+                "topk08_binary": 50802,
+                "thin04_binary": 8620,
+                "thin06_binary": 12372,
+                "thin08_binary": 15778,
+                "thin12_binary": 21830
+              }
+            }
+          ],
+          "mean_dti": {
+            "topk01_binary": 0.16417895686207556,
+            "topk02_binary": 0.19853129283036808,
+            "topk03_binary": 0.1970889118764924,
+            "topk04_binary": 0.19228946684836434,
+            "topk06_binary": 0.1802056063683778,
+            "topk08_binary": 0.16783374417202823,
+            "thin04_binary": 0.18088575364732615,
+            "thin06_binary": 0.18569867590230307,
+            "thin08_binary": 0.18886603690664405,
+            "thin12_binary": 0.18015605314776362
+          },
+          "best_policy": "topk02_binary",
+          "truth_density": 0.008423263892716373
+        },
+        "0.5": {
+          "draws": [
+            {
+              "truth_pixels": 2644,
+              "known_pixels": 2705,
+              "dti": {
+                "topk01_binary": 0.10433893674307732,
+                "topk02_binary": 0.12722089676792833,
+                "topk03_binary": 0.11852546874627369,
+                "topk04_binary": 0.1074158511260032,
+                "topk06_binary": 0.09330811880134189,
+                "topk08_binary": 0.08414496277308206,
+                "thin04_binary": 0.12390133969372087,
+                "thin06_binary": 0.11998113013162272,
+                "thin08_binary": 0.1186820480015139,
+                "thin12_binary": 0.10496541539285016
+              },
+              "n_pos_pred": {
+                "topk01_binary": 6011,
+                "topk02_binary": 12183,
+                "topk03_binary": 18427,
+                "topk04_binary": 24676,
+                "topk06_binary": 37225,
+                "topk08_binary": 49768,
+                "thin04_binary": 8387,
+                "thin06_binary": 12124,
+                "thin08_binary": 15477,
+                "thin12_binary": 21473
+              }
+            },
+            {
+              "truth_pixels": 2794,
+              "known_pixels": 2555,
+              "dti": {
+                "topk01_binary": 0.16837679848339582,
+                "topk02_binary": 0.1649231257944442,
+                "topk03_binary": 0.14951863107447622,
+                "topk04_binary": 0.13662571907888502,
+                "topk06_binary": 0.11542808183111011,
+                "topk08_binary": 0.1011875114846216,
+                "thin04_binary": 0.14457546279169425,
+                "thin06_binary": 0.13547054654422036,
+                "thin08_binary": 0.12714149193271526,
+                "thin12_binary": 0.11679015948607421
+              },
+              "n_pos_pred": {
+                "topk01_binary": 6176,
+                "topk02_binary": 12349,
+                "topk03_binary": 18598,
+                "topk04_binary": 24867,
+                "topk06_binary": 37424,
+                "topk08_binary": 49960,
+                "thin04_binary": 8414,
+                "thin06_binary": 12126,
+                "thin08_binary": 15485,
+                "thin12_binary": 21514
+              }
+            },
+            {
+              "truth_pixels": 3081,
+              "known_pixels": 2268,
+              "dti": {
+                "topk01_binary": 0.16689617167940393,
+                "topk02_binary": 0.18236349180646969,
+                "topk03_binary": 0.1680829814557222,
+                "topk04_binary": 0.15488245531045217,
+                "topk06_binary": 0.13370028146229054,
+                "topk08_binary": 0.11773718019560277,
+                "thin04_binary": 0.17091664224115619,
+                "thin06_binary": 0.15918205909232058,
+                "thin08_binary": 0.15326639197496394,
+                "thin12_binary": 0.14284049062216936
+              },
+              "n_pos_pred": {
+                "topk01_binary": 6173,
+                "topk02_binary": 12418,
+                "topk03_binary": 18695,
+                "topk04_binary": 24978,
+                "topk06_binary": 37562,
+                "topk08_binary": 50135,
+                "thin04_binary": 8508,
+                "thin06_binary": 12230,
+                "thin08_binary": 15601,
+                "thin12_binary": 21635
+              }
+            }
+          ],
+          "mean_dti": {
+            "topk01_binary": 0.14653730230195902,
+            "topk02_binary": 0.15816917145628073,
+            "topk03_binary": 0.14537569375882403,
+            "topk04_binary": 0.1329746751717801,
+            "topk06_binary": 0.11414549403158085,
+            "topk08_binary": 0.10102321815110214,
+            "thin04_binary": 0.14646448157552375,
+            "thin06_binary": 0.13821124525605455,
+            "thin08_binary": 0.13302997730306437,
+            "thin12_binary": 0.12153202183369792
+          },
+          "best_policy": "topk02_binary",
+          "truth_density": 0.004471725874122937
+        },
+        "0.25": {
+          "draws": [
+            {
+              "truth_pixels": 1194,
+              "known_pixels": 4155,
+              "dti": {
+                "topk01_binary": 0.07962623013697637,
+                "topk02_binary": 0.0677242474456659,
+                "topk03_binary": 0.05757532471424382,
+                "topk04_binary": 0.049516410292890674,
+                "topk06_binary": 0.04003696202778906,
+                "topk08_binary": 0.03409736087007002,
+                "thin04_binary": 0.06306876292997739,
+                "thin06_binary": 0.055299003865693794,
+                "thin08_binary": 0.04985292462440907,
+                "thin12_binary": 0.04570082716630046
+              },
+              "n_pos_pred": {
+                "topk01_binary": 5940,
+                "topk02_binary": 11978,
+                "topk03_binary": 18141,
+                "topk04_binary": 24341,
+                "topk06_binary": 36814,
+                "topk08_binary": 49269,
+                "thin04_binary": 8263,
+                "thin06_binary": 11993,
+                "thin08_binary": 15314,
+                "thin12_binary": 21307
+              }
+            },
+            {
+              "truth_pixels": 1703,
+              "known_pixels": 3646,
+              "dti": {
+                "topk01_binary": 0.18865403458922197,
+                "topk02_binary": 0.15653619211014272,
+                "topk03_binary": 0.1340554169638528,
+                "topk04_binary": 0.11814182401084945,
+                "topk06_binary": 0.09541030188787869,
+                "topk08_binary": 0.08108947083381725,
+                "thin04_binary": 0.13316993262682753,
+                "thin06_binary": 0.11937340376589023,
+                "thin08_binary": 0.1064289059215155,
+                "thin12_binary": 0.0948297671337126
+              },
+              "n_pos_pred": {
+                "topk01_binary": 6137,
+                "topk02_binary": 12235,
+                "topk03_binary": 18437,
+                "topk04_binary": 24682,
+                "topk06_binary": 37213,
+                "topk08_binary": 49713,
+                "thin04_binary": 8336,
+                "thin06_binary": 12061,
+                "thin08_binary": 15406,
+                "thin12_binary": 21427
+              }
+            },
+            {
+              "truth_pixels": 2005,
+              "known_pixels": 3344,
+              "dti": {
+                "topk01_binary": 0.19582816638845804,
+                "topk02_binary": 0.18342833011660847,
+                "topk03_binary": 0.15865158669560375,
+                "topk04_binary": 0.1378896001623199,
+                "topk06_binary": 0.11172560112956906,
+                "topk08_binary": 0.0938870541217304,
+                "thin04_binary": 0.16536588990180812,
+                "thin06_binary": 0.14595845171792926,
+                "thin08_binary": 0.1295888303846753,
+                "thin12_binary": 0.11282086621500152
+              },
+              "n_pos_pred": {
+                "topk01_binary": 6148,
+                "topk02_binary": 12340,
+                "topk03_binary": 18588,
+                "topk04_binary": 24838,
+                "topk06_binary": 37360,
+                "topk08_binary": 49864,
+                "thin04_binary": 8445,
+                "thin06_binary": 12163,
+                "thin08_binary": 15500,
+                "thin12_binary": 21511
+              }
+            }
+          ],
+          "mean_dti": {
+            "topk01_binary": 0.15470281037155212,
+            "topk02_binary": 0.13589625655747237,
+            "topk03_binary": 0.1167607761245668,
+            "topk04_binary": 0.10184927815535334,
+            "topk06_binary": 0.08239095501507894,
+            "topk08_binary": 0.06969129527520589,
+            "thin04_binary": 0.12053486181953767,
+            "thin06_binary": 0.10687695311650443,
+            "thin08_binary": 0.09529022031019996,
+            "thin12_binary": 0.08445048683833821
+          },
+          "best_policy": "topk01_binary",
+          "truth_density": 0.00257311893824987
+        },
+        "0.1": {
+          "draws": [
+            {
+              "truth_pixels": 586,
+              "known_pixels": 4763,
+              "dti": {
+                "topk01_binary": 0.017975472998953648,
+                "topk02_binary": 0.022845355169185594,
+                "topk03_binary": 0.021917432852657005,
+                "topk04_binary": 0.01878068023954931,
+                "topk06_binary": 0.016632824806647375,
+                "topk08_binary": 0.014327220205521057,
+                "thin04_binary": 0.033362071930127336,
+                "thin06_binary": 0.03122419485371171,
+                "thin08_binary": 0.025952085633894482,
+                "thin12_binary": 0.023850914637149185
+              },
+              "n_pos_pred": {
+                "topk01_binary": 5828,
+                "topk02_binary": 11847,
+                "topk03_binary": 18001,
+                "topk04_binary": 24193,
+                "topk06_binary": 36651,
+                "topk08_binary": 49088,
+                "thin04_binary": 8242,
+                "thin06_binary": 11966,
+                "thin08_binary": 15283,
+                "thin12_binary": 21269
+              }
+            },
+            {
+              "truth_pixels": 815,
+              "known_pixels": 4534,
+              "dti": {
+                "topk01_binary": 0.1703013044809981,
+                "topk02_binary": 0.12543053740261056,
+                "topk03_binary": 0.09870010538450037,
+                "topk04_binary": 0.08169528786547349,
+                "topk06_binary": 0.06119692566501327,
+                "topk08_binary": 0.04975312742130823,
+                "thin04_binary": 0.1035842607630699,
+                "thin06_binary": 0.08102319269349555,
+                "thin08_binary": 0.06679806444123056,
+                "thin12_binary": 0.05828433476603908
+              },
+              "n_pos_pred": {
+                "topk01_binary": 6046,
+                "topk02_binary": 12099,
+                "topk03_binary": 18260,
+                "topk04_binary": 24471,
+                "topk06_binary": 36960,
+                "topk08_binary": 49421,
+                "thin04_binary": 8285,
+                "thin06_binary": 11997,
+                "thin08_binary": 15325,
+                "thin12_binary": 21338
+              }
+            },
+            {
+              "truth_pixels": 668,
+              "known_pixels": 4681,
+              "dti": {
+                "topk01_binary": 0.07470244183794653,
+                "topk02_binary": 0.057251063133229675,
+                "topk03_binary": 0.04623189647532156,
+                "topk04_binary": 0.039420157254228164,
+                "topk06_binary": 0.032698719152186854,
+                "topk08_binary": 0.02706295536793913,
+                "thin04_binary": 0.06973451094510648,
+                "thin06_binary": 0.0651620381474997,
+                "thin08_binary": 0.05326587254121947,
+                "thin12_binary": 0.04276995323109875
+              },
+              "n_pos_pred": {
+                "topk01_binary": 5903,
+                "topk02_binary": 11945,
+                "topk03_binary": 18098,
+                "topk04_binary": 24293,
+                "topk06_binary": 36758,
+                "topk08_binary": 49204,
+                "thin04_binary": 8285,
+                "thin06_binary": 12011,
+                "thin08_binary": 15331,
+                "thin12_binary": 21318
+              }
+            }
+          ],
+          "mean_dti": {
+            "topk01_binary": 0.08765973977263275,
+            "topk02_binary": 0.0685089852350086,
+            "topk03_binary": 0.055616478237492974,
+            "topk04_binary": 0.04663204178641698,
+            "topk06_binary": 0.03684282320794916,
+            "topk08_binary": 0.03038110099825614,
+            "thin04_binary": 0.06889361454610123,
+            "thin06_binary": 0.05913647523156899,
+            "thin08_binary": 0.0486720075387815,
+            "thin12_binary": 0.04163506754476234
+          },
+          "best_policy": "topk01_binary",
+          "truth_density": 0.001086043060636267
+        }
+      }
+    }
+  ],
+  "summary": {
+    "1.0": {
+      "development_mean_dti": {
+        "topk01_binary": 0.11544711027189218,
+        "topk02_binary": 0.14792787471446403,
+        "topk03_binary": 0.164185357662227,
+        "topk04_binary": 0.17322691361224227,
+        "topk06_binary": 0.17895436283037439,
+        "topk08_binary": 0.17722070828502193,
+        "thin04_binary": 0.15886389052603617,
+        "thin06_binary": 0.17424728143775173,
+        "thin08_binary": 0.1833014941833129,
+        "thin12_binary": 0.18925987941691125
+      },
+      "development_best_policy": "thin12_binary",
+      "confirmation_dti_at_development_best": 0.18015605314776362,
+      "confirmation_best_policy": "topk02_binary",
+      "mean_truth_density": 0.01138441354272584
+    },
+    "0.5": {
+      "development_mean_dti": {
+        "topk01_binary": 0.10437671441737499,
+        "topk02_binary": 0.11948273679713088,
+        "topk03_binary": 0.12276943259984341,
+        "topk04_binary": 0.12247139017532234,
+        "topk06_binary": 0.11791457545142607,
+        "topk08_binary": 0.11102286251664382,
+        "thin04_binary": 0.1315029773808503,
+        "thin06_binary": 0.1368388655760033,
+        "thin08_binary": 0.13697223697148395,
+        "thin12_binary": 0.13400227770629816
+      },
+      "development_best_policy": "thin08_binary",
+      "confirmation_dti_at_development_best": 0.13302997730306437,
+      "confirmation_best_policy": "topk02_binary",
+      "mean_truth_density": 0.005823656859050058
+    },
+    "0.25": {
+      "development_mean_dti": {
+        "topk01_binary": 0.07881344314802043,
+        "topk02_binary": 0.08088347135941674,
+        "topk03_binary": 0.07692857408866054,
+        "topk04_binary": 0.07303581013092673,
+        "topk06_binary": 0.06585437908005153,
+        "topk08_binary": 0.0593275245550837,
+        "thin04_binary": 0.09468206030948256,
+        "thin06_binary": 0.09218019744568413,
+        "thin08_binary": 0.08640503553950885,
+        "thin12_binary": 0.07942480907698823
+      },
+      "development_best_policy": "thin04_binary",
+      "confirmation_dti_at_development_best": 0.12053486181953767,
+      "confirmation_best_policy": "topk01_binary",
+      "mean_truth_density": 0.0029058873792504446
+    },
+    "0.1": {
+      "development_mean_dti": {
+        "topk01_binary": 0.05340684329934417,
+        "topk02_binary": 0.047158349295344966,
+        "topk03_binary": 0.04128232139928528,
+        "topk04_binary": 0.037564382779749474,
+        "topk06_binary": 0.03204206334808616,
+        "topk08_binary": 0.027736014061734846,
+        "thin04_binary": 0.057670303806902266,
+        "thin06_binary": 0.05207553385316299,
+        "thin08_binary": 0.045705341890366596,
+        "thin12_binary": 0.038763848575214165
+      },
+      "development_best_policy": "thin04_binary",
+      "confirmation_dti_at_development_best": 0.06889361454610123,
+      "confirmation_best_policy": "topk01_binary",
+      "mean_truth_density": 0.0011855818196009305
+    }
+  },
+  "elapsed_seconds": 1110.3
+}

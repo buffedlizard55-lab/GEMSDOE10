@@ -50,6 +50,91 @@ Sibling websites show neural-network ensembles (1/2/5), gap-catalogue supervisio
 5. **Release.** Only a combination actually scored under items 2–3 may be released: (field, policy) pairs are never mixed post hoc. The passing candidate then needs the full-data fit with a hash-bound manifest (`train_final.py --bind-to`) and all `build_submission.py` gates. A failure at any step = no slot, negative result recorded.
 6. **What this cannot show.** Catalogue-generalisation proxy on four correlated stripe folds; the confirmation geography is re-used; nothing here forecasts the private score.
 
+## Session-3 results (2026-09-27, later session) — measured, no slot spent
+
+- **Reproduction check passed.** Re-running the frozen H16 protocol on the rebuilt
+  feature stack (`data/features107.f32.npy`, sha256 `fb0cfb40…4fe80`, identical to
+  the session-2 report) reproduced **every** session-2 number exactly: 8 shared
+  policies × 3 arms × 4 folds, max |ΔDTI| = 0.0 (`reports/h19_blocked.json →
+  reproduction.exact = true`). The protocol is deterministic end to end.
+- **H19 (thin-line emission): NOT ELIGIBLE** under the preregistered rule
+  (`reports/h19_blocked.json`, protocol `…-policy-sweep-v3`, incumbent
+  `reports/h16_blocked.json` H16/topk06_binary). Selected policy for the H16 arm =
+  `thin15_binary`: development folds 0.16624 / 0.17822 / 0.20321 (mean **0.18256**,
+  Δ **+0.00744** vs the incumbent 0.17511) but confirmation fold **0.15163**
+  (Δ **−0.02111** vs 0.17274). Anatomy: on folds 0–2 thinning trades width for
+  more distinct lineaments (fold 0: thin20 emits 60,279 px for TP_w 3,660 vs
+  topk06's 55,750 px for TP_w 3,106); on fold 3 — the sparsest truth (0.84% of the
+  score region vs 1.1–1.3%) — the skeleton of wide blobs drifts >300 m from the
+  trace and TP_w falls (thin20 35,273 px → TP_w 1,571 vs topk06 38,102 px → 1,957).
+  Development-selected policy also lost to the *baseline107* arm's own selected
+  policy on the confirmation fold (Δ −0.00925). Decision: no release, negative
+  recorded; the thin family is retained in the policy union (v3) for future arms.
+  Side observation (not a selection): fold 3's optimum for the H16 field is
+  `topk03_binary` (0.18792) — the budget optimum moves with truth density, which
+  is analysed separately in `reports/budget_density_sweep.json`.
+- **H21 (catalogue-version differencing): DECISIVE NEGATIVE.** Built on the GitHub
+  runner (`ext/catalogue-36326816737`, `data/external/catalogue/catalogue_diff.json`,
+  archives sha256-recorded, GDAL 3.8.4 reprojection to EPSG:32611, centre and
+  all-touched rasterisation on the official template):
+  | catalogue (current, official) | traces in bbox | centre-rasterised px in footprint | on label px | within 300 m, off-label | **>300 m from any label** | IoU with labels |
+  |---|---|---|---|---|---|---|
+  | USGS QFFD 2020 (`Qfaults_GIS.zip`, 32.4 MB) | 14,419 | 60,939 | 60,839 | 99 | **1** | 0.996 |
+  | INGENIOUS Quaternary faults v1 | 1,148 | 60,982 | 60,958 | 23 | **1** | 0.999 |
+  | INGENIOUS Quaternary faults v2 (2023-06-27) | 1,148 | 60,982 | 60,958 | 23 | **1** | 0.999 |
+  The provided label raster (60,988 px) *is* the current public catalogue: only
+  2 label pixels lie >300 m from the QFFD lines and 0 from INGENIOUS; the public
+  catalogues contain **no** trace absent from the labels. Consequences: (i) there
+  is no "catalogue-lag" population to validate on or to predict; (ii) the hidden
+  new-fault truth is genuinely outside every public catalogue, exactly as the
+  problem page states; (iii) H21 is closed. The H15 point archives were fetched
+  and hashed in the same run (paleo-geothermal 709 points, 281 in footprint; 2 m
+  probes 3,800 points, 2,782 in footprint; CSVs in `data/external/catalogue/`),
+  so H15 is no longer access-blocked — it remains unmodelled.
+- **H20 (3DEP 10 m scarp channels): ELIGIBLE under the preregistered rule, and
+  RELEASED** (`reports/h20_blocked.json`, protocol `…-policy-sweep-v3`, arms
+  baseline107 / H16 / H16+H20 = 130 features; incumbent `reports/h16_blocked.json`
+  H16/topk06_binary). Selected policy for the H16+H20 arm = `thin10_binary`.
+  | comparison (candidate H20/thin10 vs …) | fold 0 | fold 1 | fold 2 | dev mean Δ | confirmation Δ |
+  |---|---|---|---|---|---|
+  | incumbent report H16/topk06 (0.15197 / 0.17242 / 0.20094 · 0.17274) | +0.01286 | +0.00888 | +0.02245 | **+0.01473** | **+0.01406** |
+  | same-run H16 arm under *its* selected policy (thin15) | −0.00141 | +0.00308 | +0.02018 | +0.00729 | +0.03517 |
+  | baseline107 under its selected policy (thin12) | +0.00398 | +0.00888 | +0.01993 | +0.01093 | +0.02593 |
+  Absolute H20 scores: 0.16483 / 0.18130 / 0.22339 (dev mean 0.18984), confirmation
+  **0.18680**. Robustness reading (not a selection): H16+H20 also beats H16 under the
+  incumbent's own `topk06_binary` (dev 0.17895 vs 0.17511; confirmation 0.18021 vs
+  0.17274) and under `thin10_binary` on all four folds; the DEM channels are what
+  keeps the thin policy from collapsing on the sparse confirmation fold (H20 thin10
+  0.18680 vs H16 thin10 0.16803) — the 10 m relief localises the emitted line.
+  Fold 1 is the weakest geography (−0.0025 at topk06, +0.0005 at thin10). Random
+  budget control 0.1206–0.1492, below every arm. Data readiness: tag
+  `ext/dem10-36326816737` (12 tiles, per-tile sha256/ETag/size recorded, 49
+  footprint blocks, 440 s on the runner), all 13 channels finite on all 5,167,373
+  footprint pixels; georeferencing check corr(`dem10_slope_mean`, slope of the
+  provided `det_elev`) = 0.936, falling to 0.810 under a 3-px shift control;
+  univariate label-vs-footprint AUCs only 0.49–0.58 (provided 100 m slope 0.564) —
+  the gain is interaction-driven, as the register anticipated.
+  **Release chain completed:** `build_continuation.py` (all systems) →
+  `train_final.py --extra features_continuation.npy,dem10_channels.f32.npy
+  --hypothesis H20 --bind-to reports/h20_blocked.json` (260,988 training rows ×
+  130 features, 240 s; `reports/final_manifest_h20.json`) → `build_submission.py
+  --policy thin10_binary` → **`gems10-h20-dem10-scarp-thin-20260927T155223039488Z-ffc91a1686.tif`**
+  (sha256 `a26e5e46…2247`; 153,957 positive cells = 2.98% of the footprint, 143,657
+  off-catalogue; format gate + novelty gate passed). It supersedes the H16 artifact
+  on the hub; the H16 file stays downloadable for provenance.
+  **Caveats that travel with it:** the policy was selected from 16 options on three
+  development folds; the confirmation geography is re-used across sessions; the
+  budget question (below) is open; nothing here forecasts the private score.
+- **Budget-vs-density sensitivity** (`reports/budget_density_sweep.json`, H20 OOF
+  grids, catalogue systems randomly thinned to f ∈ {1, ½, ¼, ⅒} with the remaining
+  systems masked pixel-exactly as "known"): development-mean best policy thin12 →
+  thin08 → thin04 → thin04 as f goes 1 → ½ → ¼ → ⅒ (DTI 0.189 → 0.137 → 0.095 →
+  0.058; confirmation fold prefers topk02/topk02/topk01/topk01). Direction only —
+  the model was trained on the full catalogue, so wide-budget penalties are
+  overstated — but it says a sparser hidden truth wants *thinner* emission than
+  the locally selected budget. Recorded so the next session can reason about the
+  hidden density instead of assuming the catalogue's.
+
 ## Session-2 register (2026-09-27) — ranked untried candidates
 
 **New verified staff fact (re-verified 2026-09-27, [11516/4](https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/4))**: the known-fault mask is **pixel-exact** (identical to the provided training labels); a predicted pixel near a known trace but far from new-fault ground truth is **fully penalized**; and new-fault ground truth **can lie within 300 m of a known trace** as "corrections or modifications to existing fault traces". Predicting on the known line itself is free (masked). This directly ranks strategies that target continuations, splays and corrections of existing systems above generic region-wide line detectors.
