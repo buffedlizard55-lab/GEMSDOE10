@@ -67,6 +67,7 @@ jobs:
       - name: Publish as orphan commit + immutable tag
         if: always()
         env:
+          GITHUB_TOKEN: ${{ github.token }}
           TAG: ${{ steps.build.outcome == 'success' && format('ext/dem10-{0}', github.run_id) || format('ext/failed-dem10-{0}', github.run_id) }}
         run: |
           mkdir -p out/dem10
@@ -100,6 +101,7 @@ jobs:
       - name: Publish as orphan commit + immutable tag
         if: always()
         env:
+          GITHUB_TOKEN: ${{ github.token }}
           TAG: ${{ steps.build.outcome == 'success' && format('ext/catalogue-{0}', github.run_id) || format('ext/failed-catalogue-{0}', github.run_id) }}
         run: |
           mkdir -p out/catalogue
