@@ -81,3 +81,16 @@ def test_leaderboard_div_layout_and_script_values():
     assert mod.parse_leaderboard(html) == {'rank1': 'DARD', 'score': .3049}
     with pytest.raises(ValueError, match='unavailable'):
         mod.parse_leaderboard('<html><body>Please enable JavaScript to verify you are human</body></html>')
+
+
+def test_js_loading_shell_uses_renderer_not_a_fake_score():
+    mod = load_script('refresh_sources')
+    feed = {'sources': [], 'leaderboard': {'url': 'https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/',
+                                          'rank1': 'Old', 'score': .1}}
+    shell = lambda url: ('<h1>Leaderboard</h1><p>Loading...</p>', 'initial-sha')
+    render = lambda url: ('<div>#1<a href="/users/DARD/">DARD</a>0.3049</div><div>#2</div>', 'rendered-sha')
+    out = mod.refresh(feed, getter=shell, renderer=render)
+    assert out['leaderboard']['score'] == .3049
+    assert out['leaderboard']['response_sha256'] == 'rendered-sha'
+    assert out['leaderboard']['last_check_method'] == 'headless_chrome_public_page'
+    assert out['leaderboard']['status'] == 'verified_http'
