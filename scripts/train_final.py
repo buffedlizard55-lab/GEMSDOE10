@@ -97,14 +97,12 @@ def main() -> int:
             [np.concatenate(ext_grids, axis=2), prox[:, :, None]], axis=2)
     else:
         ext_full = prox[:, :, None]
-    prob = modeling.predict_grid(clf, np.asarray(feat), footprint, extra=ext_full)
+    prob = modeling.predict_grid(clf, feat, footprint, extra=ext_full)
 
     if args.with_selftrain:
         elig = footprint & ~pos
-        agree_full = np.zeros(footprint.shape, dtype=np.int8)
-        ys, xs = np.nonzero(footprint)
-        Xs = feat[ys, xs].astype(np.float32)
-        agree_full[ys, xs] = selftrain.family_agreement(Xs, meta["channels"])
+        agree_full = selftrain.agreement_grid(feat, footprint,
+                                              meta["channels"])
         pseudo = selftrain.select_pseudo(prob, elig, agree_full, top_frac=0.005,
                                          min_agree=2)
         pr, pc = np.nonzero(pseudo)
@@ -121,7 +119,7 @@ def main() -> int:
                                    iterations=args.iterations, lr=args.lr,
                                    depth=args.depth, l2=args.l2,
                                    seed=args.seed + 1)
-            prob = modeling.predict_grid(clf, np.asarray(feat), footprint,
+            prob = modeling.predict_grid(clf, feat, footprint,
                                          extra=ext_full)
     if args.with_discovery:
         sys_id, n, _ = systems.label_systems(labels)

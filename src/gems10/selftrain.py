@@ -53,18 +53,19 @@ def channel_families(channels: list[str]) -> dict[str, list[int]]:
     return fams
 
 
-def family_agreement(X: np.ndarray, channels: list[str],
-                     z_thresh: float = 1.0) -> np.ndarray:
-    """Count of families (0..6) with max channel z-score above z_thresh.
-
-    X is (n, C) finite-imputed; z-scores use column nanmean/nanstd computed on
-    the passed sample (callers pass the full-grid sample so statistics are
-    stable and leak-free — no labels involved).
-    """
+def fit_stats(X: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """Column nanmean/nanstd with degenerate guards (leak-free: no labels)."""
     mu = np.nanmean(X, axis=0)
     sd = np.nanstd(X, axis=0)
     sd = np.where((sd == 0) | ~np.isfinite(sd), 1.0, sd)
     mu = np.where(np.isfinite(mu), mu, 0.0)
+    return mu, sd
+
+
+def family_agreement_with_stats(X: np.ndarray, channels: list[str],
+                                mu: np.ndarray, sd: np.ndarray,
+                                z_thresh: float = 1.0) -> np.ndarray:
+    """Count of families (0..6) with max channel |z| above z_thresh."""
     Z = (np.where(np.isfinite(X), X, mu) - mu) / sd
     fams = channel_families(channels)
     agree = np.zeros(X.shape[0], dtype=np.int8)
@@ -74,6 +75,46 @@ def family_agreement(X: np.ndarray, channels: list[str],
         m = np.abs(Z[:, idxs]).max(axis=1)
         agree += (m > z_thresh).astype(np.int8)
     return agree
+
+
+def family_agreement(X: np.ndarray, channels: list[str],
+                     z_thresh: float = 1.0) -> np.ndarray:
+    """Count of families (0..6) with max channel z-score above z_thresh.
+
+    X is (n, C) finite-imputed; z-scores use column nanmean/nanstd computed on
+    the passed sample (callers pass the full-grid sample so statistics are
+    stable and leak-free — no labels involved).
+    """
+    mu, sd = fit_stats(X)
+    return family_agreement_with_stats(X, channels, mu, sd, z_thresh)
+
+
+def agreement_grid(feat: np.ndarray, footprint: np.ndarray, channels: list[str],
+                   z_thresh: float = 1.0, batch_rows: int = 256,
+                   stats_n: int = 500_000, seed: int = 0) -> np.ndarray:
+    """Full-grid family-agreement map, row-batched (low peak RAM).
+
+    z-statistics come from a `stats_n` random footprint subset (stable and
+    leak-free); the grid is then scored in `batch_rows` row blocks so peak
+    memory stays near (batch_rows × W × C) instead of (5.2M × C). The
+    unbatched version OOM-killed a 3.8 GB host (2026-09-27) — always use this.
+    """
+    fp = np.asarray(footprint, dtype=bool)
+    h, w = fp.shape
+    ys, xs = np.nonzero(fp)
+    rng = np.random.default_rng(seed)
+    sel = rng.choice(ys.size, size=min(stats_n, ys.size), replace=False)
+    mu, sd = fit_stats(feat[ys[sel], xs[sel]].astype(np.float32))
+    out = np.zeros((h, w), dtype=np.int8)
+    for r0 in range(0, h, batch_rows):
+        r1 = min(r0 + batch_rows, h)
+        blk = fp[r0:r1]
+        if not blk.any():
+            continue
+        X = feat[r0:r1].reshape(-1, feat.shape[2]).astype(np.float32)
+        a = family_agreement_with_stats(X, channels, mu, sd, z_thresh)
+        out[r0:r1][blk] = a[blk.ravel()]
+    return out
 
 
 def select_pseudo(prob: np.ndarray, eligible: np.ndarray,

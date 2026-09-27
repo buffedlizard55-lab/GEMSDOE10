@@ -118,11 +118,8 @@ def run_fold(feat: np.ndarray, channels: list[str], labels: np.ndarray,
         prob = modeling.predict_grid(clf, feat, footprint, extra=extra)
     if args.with_selftrain:
         elig = trainable & footprint & ~train_sys
-        # agreement on a stable full-grid sample (no labels involved)
-        agree_full = np.zeros(footprint.shape, dtype=np.int8)
-        ys, xs = np.nonzero(footprint)
-        Xs = feat[ys, xs].astype(np.float32)
-        agree_full[ys, xs] = selftrain.family_agreement(Xs, channels)
+        # agreement grid, row-batched (the unbatched 5.2M×107 sample OOMs)
+        agree_full = selftrain.agreement_grid(feat, footprint, channels)
         pseudo = selftrain.select_pseudo(prob, elig, agree_full, top_frac=0.005,
                                          min_agree=2)
         pr, pc = np.nonzero(pseudo)
