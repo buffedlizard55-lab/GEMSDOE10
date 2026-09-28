@@ -6,33 +6,30 @@ Open the [submission hub](https://buffedlizard55-lab.github.io/GEMSDOE10/).
 If it says **NO APPROVED SUBMISSION**, stop: an experiment has not satisfied the evidence gates.
 A format-valid TIFF alone is not a reason to spend one of the three weekly slots.
 
-No candidate is approved by default. Decisions so far: **H16 ELIGIBLE and
-released** (session 2, `reports/h16_blocked.json`, protocol `…-policy-sweep-v2`);
-**H20 ELIGIBLE** (session 3, `reports/h20_blocked.json`, protocol
-`…-policy-sweep-v3`: 3DEP 10 m scarp channels on top of H16, selected policy
-`thin10_binary`, beat the H16 incumbent on the development mean **and** the
-confirmation fold); **H24 ELIGIBLE but not released** (session 4,
-`reports/h24_blocked.json`, protocol `…-policy-sweep-v4`: the preregistered
-`ridge15_binary` emission on the H20 field, dev 0.23553 / conf 0.22525 — beaten
-the same session by H25); **H25 ELIGIBLE and released** (session 4,
-`reports/h25_blocked.json`, protocol `…-policy-sweep-v4`: +36 DEM-context
-channels, 166 features, selected policy `ridge15_binary`, dev mean **0.23663**,
-confirmation **0.25179**, beating the same-run H20 arm and the H20/thin10
-incumbent on both); **H13 and H19 NOT ELIGIBLE** (confirmation regressed);
-H12 rejected. Both session-4 runs reproduced the session-3 report exactly
-(max |ΔDTI| = 0) before any decision was read. When more than one artifact is approved, the hub lists the
-**newest first and marks it RECOMMENDED** — each later release had to beat the
-earlier one under the same frozen protocol; older approved artifacts stay
-downloadable for provenance. The website is static: CPU scripts generate
-files; approved files are then one-click downloads. It does not secretly train
-a model in the browser or upload to DrivenData.
+The hub's **top card is the recommended file** (newest approved artifact); older
+approved artifacts stay below it for provenance. Every approval needed a
+preregistered spatial-holdout win over the then-current best on the development
+folds **and** the confirmation fold, plus a hash-bound final fit. The site is
+static: it never trains in the browser and never uploads to DrivenData.
+
+| Session | Candidate (policy) | Protocol | Decision |
+|---|---|---|---|
+| 5 | **H28** = the H25 model + along-strike dotting (`ridge20_d3`) | v5 density-matched | **eligible · released · RECOMMENDED** (density-matched dev 0.16909 / conf 0.18697 vs 0.13718 / 0.14986 for H25/ridge15; full density 0.23687 / 0.26330) |
+| 5 | H29 = H25 + km-scale oriented line support | v5 density-matched | not eligible (confirmation −0.0060 vs H25) |
+| 4 | H25 = H20 + 36 DEM-context channels (`ridge15_binary`) | v4 | eligible · released (dev 0.23663 / conf 0.25179), superseded by H28 (same model, new emission) |
+| 4 | H24 = H20 field + ridge NMS (`ridge15_binary`) | v4 | eligible · superseded by H25 |
+| 3 | H20 = H16 + 3DEP 10 m scarp channels (`thin10_binary`) | v3 | eligible · released, superseded |
+| 3 | H19 skeleton thinning | v3 | not eligible (confirmation −0.021) |
+| 2 | H16 catalogue-continuation rays (`topk06_binary`) | v2 | eligible · released, superseded |
+| 2 | H13 lateral texture offset | v2 | not eligible |
+| 1 | H12 scarp polarity step | v1 | rejected |
 
 **What the recommendation is and is not.** It is the artifact with the best
-measured catalogue-generalisation proxy on four spatially blocked folds. It is
-not a leaderboard forecast. Two known open questions are recorded in
-NEXT_STEPS.md: the emission budget was selected on folds whose truth density
-is the catalogue's (the hidden new-fault truth is sparser), and the confirmation
-fold geography is re-used across sessions.
+measured spatial-holdout proxy. Since session 5 that proxy is **density-matched**:
+the held-out catalogue is thinned to 1/2 and 1/4 of its fault systems (the rest
+masked exactly like known faults) because the leaderboard's new-fault truth is
+2–8× sparser than the catalogue (`reports/lb_probe.json`). It is not a
+leaderboard forecast, and no local number is a private-score promise.
 
 ## 2. When a candidate is approved
 
@@ -71,8 +68,11 @@ For H20 (session 3): `fetch_external.py --tag ext/dem10-36326816737` → `build_
 
 For H25 (session 4, current): same restore/build steps plus
 `build_dem10_context.py`, then `train_final.py --extra data/features_continuation.npy,data/external/dem10/dem10_channels.f32.npy,data/external/dem10/dem10_context.f32.npy --hypothesis H25 --bind-to reports/h25_blocked.json --work-dir final_out_h25` → `build_submission.py --prob final_out_h25/prob_final.npy --policy ridge15_binary --validation reports/h25_blocked.json`. Column order `[107 | H16 10 | dem10 13 | context 36]` must match the validated arm. Manifests are keyed by the validation report (`final_manifest_h25.json`), so a later release never overwrites an earlier release's binding.
+
+For H28 (session 5, current): the H25 inputs and recipe, bound to the v5 report —
+`train_final.py --extra data/features_continuation.npy,data/external/dem10/dem10_channels.f32.npy,data/external/dem10/dem10_context.f32.npy --hypothesis H28 --bind-to reports/h28_blocked.json --work-dir final_out_h28` → `build_submission.py --prob final_out_h28/prob_final.npy --policy ridge20_d3 --validation reports/h28_blocked.json`. The emission is the probability ridge of the top-20 % core, thinned along strike by probability-ordered radius-3 suppression (`placement.dot_nms`): every third ridge pixel, highest-probability first. The v5 decision comes from `scripts/evaluate_density_matched.py` over OOF grids generated with `validate_candidate.py --policy-set anchor` (that OOF report alone is never releasable).
 The final-prediction manifest must tie the generated NPY hash to its training recipe and the compatible completed validation report.
-`build_submission.py --validation ...` refuses missing, non-improving, incomplete, mismatched-policy or unbound evidence (fail-closed gates in `src/gems10/release.py`, protocol-aware for v1, v2 and v3 reports; v3 additionally requires every recorded incumbent comparison to pass; validated code hashes may live in git history when the working tree has moved on).
+`build_submission.py --validation ...` refuses missing, non-improving, incomplete, mismatched-policy or unbound evidence (fail-closed gates in `src/gems10/release.py`, protocol-aware for v1–v5 reports; v3+ additionally requires every recorded incumbent comparison to pass, and v5 recomputes the fixed-incumbent win and the full-density non-inferiority from the fold rows; validated code hashes may live in git history when the working tree has moved on).
 `--experiment` writes diagnostics only into `scratch/experiments/`, never the download hub.
 
 The canonical field hash detects renamed/recompressed copies; the noncatalogue hash catches catalogue-only changes.

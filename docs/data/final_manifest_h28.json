@@ -1,0 +1,41 @@
+{
+  "hypothesis": "H28",
+  "validation_report": "h28_blocked.json",
+  "probability_sha256": "6452ae1d00ba094b69c048344efd41235ede2c7e65de73ad57b313069c06ce0f",
+  "validation_protocol": "spatial-4x4-strided-v1-buffer40-policy-sweep-v5-density-matched",
+  "validated_inputs": {
+    "features107.f32.npy": "fb0cfb4060474b374bbfabd431cd8ab9c4ef1c55c322244295e326c259a4fe80",
+    "labels.tif": "7ba308ccdc4418b31a178f4f1ef21aaa6e152e4028f2f6f64b01f7eb25ae4093",
+    "sample_submission.tif": "2176d08e485aa2cd2860ce8df539db4faf4d76163b38a4dd8c30a40454d35cbc",
+    "training_features.tif": "4371c82e3b8339b807bdffcf4ef59a225520fe2988d521be208ae33743123bc5",
+    "dem10_channels.f32.npy": "2504068b6e367d1270761d150325341d26a1cea3ab1439ce35a762c8f7fae0ff",
+    "dem10_context.f32.npy": "3b70c447cb9f83a2385fb6c31e6315209e904dc86f148d9a1a1184ea8fb04261",
+    "linesupport.f32.npy": "c38297615f3f876f4b0fd8b9a754f49f87f8507098c44be4cef67cc1cb89c943"
+  },
+  "config": {
+    "iterations": 200,
+    "lr": 0.05,
+    "depth": 7,
+    "l2": 1,
+    "seed": 7,
+    "negatives": 200000,
+    "buffer_px": 40
+  },
+  "model_sha256": "7c03393bd158e3887fad1914297d8366d853944e48097bae1c0154293766f0df",
+  "final_prob_file": "prob_final.npy",
+  "code": {
+    "scripts/validate_candidate.py": "571a2a54ea40a0b41c27852a4c50a0a72eb82d4a2eea093d1cb57b78795d55de",
+    "src/gems10/alignment.py": "5050c67ab17acfd57b7a64238ad63adc94844ca1f6ea5daa6c19f8722a6e5b08",
+    "src/gems10/cv.py": "3b9eccab9cd463dee220a5e1dd80280c684e217e8505a52edafd43f2404a1a4f",
+    "src/gems10/modeling.py": "e96eb6b2c874e7111b59f56a4391d15b942fcd52b17479f6a52c1bf63fa9056d",
+    "src/gems10/placement.py": "29861f3c89e44940241729623d2bdd649e82891063fa079f8f173b2e80252c75",
+    "src/gems10/metric.py": "44d94976bddd148b24df7e8ecac4d1448753033cf981ec6a270295210a93f4f6",
+    "src/gems10/discovery.py": "56c802cb250be03837bf12d6a210eee899c43c9c6e95a0290c6cd53600c9f153",
+    "src/gems10/systems.py": "802bec30affea03cf3bc88e428bc39aa05a2eb1dcda4ec27c21e606dd62b0086",
+    "src/gems10/features.py": "ff6b81240dbaaa7bc73ca5ba89574b4aef5e8f7e54a6752947094f4c77d80331",
+    "scripts/build_features.py": "a46d7c97c93a425b71f5f77b03f2e3f03a55031ddd6725cc0736ad56dd7a4d93",
+    "HYPOTHESES.md": "a98ef27bcadb4c819f263c9c835b7d6d0d42d038aa2e286ea76ff768cbc9688a",
+    "scripts/evaluate_density_matched.py": "3462e0611d51f1b4c72022d220c4c9df3fdd081a936ba956bf297f816bf8b0e0",
+    "src/gems10/release.py": "1d3e04baf7e2e27963ed8e540385a6fd034633c370c01107553ef3e155ac0628"
+  }
+}

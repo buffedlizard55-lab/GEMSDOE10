@@ -93,6 +93,58 @@ fixed here before any v5 number exists; it is motivated by independent evidence
 (the leaderboard probe); the full-density score still gates (non-inferiority);
 and the incumbent is re-scored under the identical rule in the same run.
 
+## Session-5 results (2026-09-28, session 5) — measured, no slot spent
+
+Run: `validate_candidate.py --hypothesis H29 --policy-set anchor` (OOF generation,
+`reports/h29_oof.json`, HYPOTHESES.md pinned at `a98ef27b…` = commit 46e649e), then
+`evaluate_density_matched.py` (protocol v5; `reports/h28_blocked.json`,
+`reports/h29_blocked.json`, summary `reports/density_matched_v5.json`).
+
+**Reproduction.** baseline107 and H25 OOF grids are **byte-identical** (sha256) to
+`reports/h25_blocked.json` on all four folds; ridge15 DTIs match to 0.0
+(baseline107, discovery, H25). The fast binary metric equals `metric.components`
+on every arm-fold (asserted in-run).
+
+**H28 — ELIGIBLE (selected `ridge20_d3` on the H25 field).**
+
+| fold (role) | density-matched: H28 `ridge20_d3` | incumbent H25 `ridge15_binary` | full density: H28 | incumbent | emitted px H28 / incumbent |
+|---|---|---|---|---|---|
+| 0 (dev) | 0.14596 | 0.11533 | 0.20472 | 0.20097 | 14,113 / 34,984 |
+| 1 (dev) | 0.16151 | 0.13237 | 0.22268 | 0.22476 | 28,788 / 71,473 |
+| 2 (dev) | 0.19981 | 0.16382 | 0.28321 | 0.28415 | 19,896 / 50,152 |
+| 3 (conf) | **0.18697** | 0.14986 | **0.26330** | 0.25179 | 8,220 / 20,763 |
+| dev mean | **0.16909** (+0.03192, +23 %) | 0.13718 | 0.23687 (+0.00024) | 0.23663 | ~40 % of the pixels |
+
+- Beats baseline107 / baseline107_discovery under their own v5 selection
+  (`ridge30_d3`): dev +0.00699, conf +0.04103.
+- Beats the incumbent in **24 of 24** simulated truths (4 folds × f ∈ {½, ¼} × 3
+  draws); the margin grows as truth gets sparser (f = ½: dev +0.026 / conf
+  +0.033; f = ¼: dev +0.038 / conf +0.041) — the direction the metric
+  arithmetic predicted.
+- Masking semantics does not matter: with credit for masked predictions
+  (`dti_credit`) the deltas are +0.03198 / +0.03720.
+- Full density: non-inferior and in fact not worse (dev +0.00024, conf +0.01151).
+- Honest caveats: the confirmation fold is re-used geography (fifth decision);
+  the density simulation keeps the catalogue's own clustering; the ridge core
+  grew from 15 % to 20 % together with the dotting (the selection chose the
+  pair) — at full density the best dotted policy would have been `ridge30_d2`
+  (dev 0.26761), so the v5 choice is the sparser, density-robust one.
+
+**H29 — NOT ELIGIBLE (km-scale oriented line support).** Selected `ridge30_d3`.
+Beats both baselines and the fixed incumbent, but versus the same-run H25 arm
+under its own v5 selection: dev **+0.00127**, confirmation **−0.00599** → fails.
+At full density with the incumbent policy it is also neutral (dev +0.00019, conf
+−0.00070). The 16 line-support channels carry no robust information beyond the
+H25 stack; recorded as a negative (the km-scale continuity that experts see is
+apparently already captured by H25's context + ridge emission, or requires the
+1 m lidar).
+
+**Across all arms, dotting is the dominant effect.** Density-matched dev means,
+incumbent policy → best dotted policy: baseline107 0.12717 → 0.16210, H25
+0.13718 → 0.16909, H29 0.13669 → 0.17036 (+23–28 % each), while ridge-budget
+reduction alone (`ridge04/06/10_binary`) moves them by at most +0.006 and larger
+undotted budgets (`ridge20/30_binary`) lower them.
+
 ## Session-4 register (2026-09-27, session 4) — frozen BEFORE any new holdout contact
 
 **Verified context this session (before any scoring):** feature stack rebuilt from the

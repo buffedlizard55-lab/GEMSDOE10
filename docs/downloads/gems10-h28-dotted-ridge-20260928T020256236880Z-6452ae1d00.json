@@ -1,0 +1,102 @@
+{
+  "field_sha256": "cd35cddf05f5a684082d6c05adc979de74420aea9c688400f05f713c51218e2e",
+  "noncatalogue_sha256": "4fec4c310029adc8ffb0e5fcdc54337a34f9a26d7ad22a6caa428f9849eb3a5d",
+  "positive_pixels": 69281,
+  "noncatalogue_positive_pixels": 65236,
+  "name": "gems10-h28-dotted-ridge",
+  "policy": "ridge20_d3",
+  "generated_utc": "20260928T020256236880Z",
+  "status": "approved",
+  "probability_sha256": "6452ae1d00ba094b69c048344efd41235ede2c7e65de73ad57b313069c06ce0f",
+  "file": "gems10-h28-dotted-ridge-20260928T020256236880Z-6452ae1d00.tif",
+  "sha256": "7637b72d4c6c3e10226bf46bd72a20272d62ccbe29743062632d10b158b49c58",
+  "bytes": 1620739,
+  "zip": "gems10-h28-dotted-ridge-20260928T020256236880Z-6452ae1d00.zip",
+  "zip_sha256": "141dbfc0ba1a28d8c78cc5bda60a36c0424edc5cd95f39d0b780f9024230e0d0",
+  "validation_sha256": "5fa6afc5dff629bf4203571aed2a17dcc94d8fbcad397f52708b233278020129",
+  "validation_file": "h28_blocked.json",
+  "suggested_note": "gems10-h28-dotted-ridge | ridge20_d3 | sha 7637b72d4c",
+  "footprint_px": 5167373,
+  "positive_px": 69281,
+  "mass": 69281.0,
+  "gate": [
+    {
+      "name": "file-exists",
+      "ok": true,
+      "detail": "1620739 bytes",
+      "hard": true
+    },
+    {
+      "name": "single-band",
+      "ok": true,
+      "detail": "band count = 1",
+      "hard": true
+    },
+    {
+      "name": "dtype-float32",
+      "ok": true,
+      "detail": "dtype = float32",
+      "hard": true
+    },
+    {
+      "name": "crs-epsg32611",
+      "ok": true,
+      "detail": "CRS = EPSG:32611 (epsg 32611)",
+      "hard": true
+    },
+    {
+      "name": "resolution-100m",
+      "ok": true,
+      "detail": "resolution = (100.0, 100.0)",
+      "hard": true
+    },
+    {
+      "name": "shape",
+      "ok": true,
+      "detail": "shape = (3730, 3292), expected (3730, 3292)",
+      "hard": true
+    },
+    {
+      "name": "geotransform",
+      "ok": true,
+      "detail": "transform = (100.0, 0.0, 243350.0, 0.0, -100.0, 4508550.0)",
+      "hard": true
+    },
+    {
+      "name": "nodata-nan",
+      "ok": true,
+      "detail": "declared nodata = nan",
+      "hard": true
+    },
+    {
+      "name": "values-in-0-1",
+      "ok": true,
+      "detail": "finite range = [0.0, 1.0]",
+      "hard": true
+    },
+    {
+      "name": "no-inf",
+      "ok": true,
+      "detail": "inf pixels = 0",
+      "hard": true
+    },
+    {
+      "name": "template-verified",
+      "ok": true,
+      "detail": "official sample submission sha256 ok, footprint = 5167373 px",
+      "hard": true
+    },
+    {
+      "name": "NAN-INSIDE-FOOTPRINT",
+      "ok": true,
+      "detail": "0 non-finite pixels inside the scored footprint (non-finite scored values violate the [0,1] contract; the original backend rejection cause is not known)",
+      "hard": true
+    },
+    {
+      "name": "footprint-matches-official",
+      "ok": true,
+      "detail": "0 finite pixels outside the official footprint (use --allow-footprint-subset for experiments only)",
+      "hard": true
+    }
+  ]
+}

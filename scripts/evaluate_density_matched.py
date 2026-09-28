@@ -136,6 +136,15 @@ def decide(folds, cand_arm, cand_scores_arm, selection, others):
     return cpol, comps
 
 
+def _reason(eligible: bool, comps: dict) -> str:
+    if eligible:
+        return ("all preregistered v5 comparisons passed; final-training binding still required")
+    return "not eligible — failed: " + "; ".join(
+        f"{k} (dev {v.get('development_mean_delta') or 0:+.4f}, "
+        f"conf {v.get('confirmation_delta') or 0:+.4f})" for k, v in comps.items()
+        if not v.get("passes"))
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--source", type=Path, default=ROOT / "reports/h29_oof.json")
@@ -234,6 +243,7 @@ def main() -> int:
                       "reproduction": reproduction,
                       "decision": {"eligible": elig28, "candidate_arm": "H28",
                                    "candidate_policy": cpol, "comparisons": comps,
+                                   "reason": _reason(elig28, comps),
                                    "final_training_recipe": "identical to H25 (same "
                                    "extras, config, seeds): the H28 change is emission only"}}
     # ---- H29 -------------------------------------------------------------------
@@ -249,7 +259,8 @@ def main() -> int:
                       "reproduction": reproduction,
                       "new_channels": src.get("new_channels"),
                       "decision": {"eligible": elig29, "candidate_arm": "H29",
-                                   "candidate_policy": cpol29, "comparisons": comps29}}
+                                   "candidate_policy": cpol29, "comparisons": comps29,
+                                   "reason": _reason(elig29, comps29)}}
     for h, rep in outputs.items():
         rep["elapsed_seconds"] = round(time.time() - t0, 1)
         path = args.out_dir / f"{h.lower()}_blocked.json"
