@@ -228,3 +228,84 @@ def analytic_everywhere_score(coverage: float, alpha: float = ALPHA) -> float:
     "coverage decides your floor" argument auditable without loading the data.
     """
     return coverage / (coverage + alpha * (1.0 - coverage))
+
+
+def _positive_kernel(radius_px: float = RADIUS_PX):
+    dy, dx, k = kernel_offsets(radius_px)
+    sel = k > 0.0
+    return dy[sel], dx[sel], k[sel]
+
+
+def _max_kernel_hit(ys: np.ndarray, xs: np.ndarray, grid: np.ndarray,
+                    radius_px: float) -> np.ndarray:
+    """For each (ys, xs) point: max over kernel offsets o of k(|o|) * grid[pt+o]
+    (grid boolean, out-of-image = False)."""
+    H, W = grid.shape
+    best = np.zeros(ys.size, dtype=np.float64)
+    if ys.size == 0:
+        return best
+    for d_y, d_x, kk in zip(*_positive_kernel(radius_px)):
+        yy = ys + int(d_y)
+        xx = xs + int(d_x)
+        ok = (yy >= 0) & (yy < H) & (xx >= 0) & (xx < W)
+        hit = np.zeros(ys.size, dtype=bool)
+        hit[ok] = grid[yy[ok], xx[ok]]
+        np.maximum(best, np.where(hit, kk, 0.0), out=best)
+    return best
+
+
+def binary_components(
+    pred: np.ndarray,
+    target: np.ndarray,
+    ignore: np.ndarray | None = None,
+    zero_ignored: bool = True,
+    alpha: float = ALPHA,
+    beta: float = BETA,
+    radius_px: float = RADIUS_PX,
+) -> Components:
+    """EXACT DTI components for a BINARY prediction via sparse kernel gathers.
+
+    Session 5 (density-matched evaluation, protocol v5): every emission policy
+    of that protocol is binary, so M(g) = max_x p(x) k(d) reduces to the best
+    kernel weight among predicted pixels within R of g, and FP_w only needs the
+    best kernel weight among GT pixels within R of each predicted pixel. Both
+    are gathers over the 28 positive-weight offsets at sparse point sets —
+    milliseconds instead of full-grid dilations/EDTs — and equal
+    `components(...)` exactly (tests/test_session5.py).
+
+    `ignore` — known-catalogue pixels (staff-described masking). Their
+    predictions never count toward FP_w. `zero_ignored=True` (the v5 default)
+    ALSO removes them from the TP/FN kernel: "excluded from evaluation" read
+    literally, and consistent with the user-reported null effect of 8GEMSDOE's
+    all-catalogue hedge (identical 0.1563). `zero_ignored=False` reproduces
+    `components(pred, target, fp_ignore_mask=ignore)`, where masked predictions
+    may still credit nearby GT.
+    """
+    P = np.asarray(pred) > 0
+    G = np.asarray(target).astype(bool)
+    if P.shape != G.shape:
+        raise ValueError(f"shape mismatch: pred {P.shape} vs target {G.shape}")
+    vals = np.asarray(pred, dtype=np.float64)[P]
+    if vals.size and not np.all(vals == 1.0):
+        raise ValueError("binary_components requires predictions in {0, 1}")
+    if ignore is not None:
+        ign = np.asarray(ignore).astype(bool)
+        if ign.shape != G.shape:
+            raise ValueError("shape mismatch: ignore vs target")
+        if bool((ign & G).any()):
+            raise ValueError("ignore mask overlaps the ground truth")
+        P_fp = P & ~ign
+        P_tp = P_fp if zero_ignored else P
+    else:
+        P_fp = P_tp = P
+    gy, gx = np.nonzero(G)
+    n_gt = int(gy.size)
+    best = _max_kernel_hit(gy, gx, P_tp, radius_px)
+    tp_w = float(best.sum())
+    fn_w = float((1.0 - best).sum())
+    py, px = np.nonzero(P_fp)
+    near = _max_kernel_hit(py, px, G, radius_px)
+    fp_w = float((1.0 - near).sum())
+    denom = tp_w + alpha * fp_w + beta * fn_w
+    dti = float(tp_w / denom) if denom > 0.0 else 0.0
+    return Components(tp_w, fp_w, fn_w, dti, int(py.size), n_gt)

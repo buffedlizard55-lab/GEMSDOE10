@@ -56,18 +56,27 @@ POLICY_SETS["v3"] = POLICY_SETS["v2"] + [f"thin{b:02d}_binary"
                                          for b in (2, 4, 6, 8, 10, 12, 15, 20)]
 POLICY_SETS["v4"] = POLICY_SETS["v3"] + [f"ridge{b:02d}_binary"
                                          for b in (4, 6, 8, 10, 12, 15)]
+# anchor (session 5): OOF-GENERATION ONLY. Scores just the incumbent policy
+# (exact-reproduction anchor vs reports/h25_blocked.json); the decision is made
+# by scripts/evaluate_density_matched.py (protocol v5) from the saved grids.
+# Its protocol string is deliberately NOT in release.PROTOCOLS.
+POLICY_SETS["anchor"] = ["ridge15_binary"]
 PROTOCOL = {"v2": "spatial-4x4-strided-v1-buffer40-policy-sweep-v2",
             "v3": "spatial-4x4-strided-v1-buffer40-policy-sweep-v3",
-            "v4": "spatial-4x4-strided-v1-buffer40-policy-sweep-v4"}
+            "v4": "spatial-4x4-strided-v1-buffer40-policy-sweep-v4",
+            "anchor": "spatial-4x4-strided-v1-buffer40-oof-generation-anchor"}
 PRIMARY = "topk02_binary"
 CONFIG = {"iterations": 200, "lr": 0.05, "depth": 7, "l2": 1,
           "seed": 7, "negatives": 200000, "buffer_px": 40}
-STATIC_EXTRA = {"H13", "H20", "H25", "H27"}  # hypotheses that take --extra
-NEEDS_H16 = {"H16", "H20", "H25", "H27"}  # hypotheses whose stack includes H16 channels
+STATIC_EXTRA = {"H13", "H20", "H25", "H27", "H29"}  # hypotheses that take --extra
+NEEDS_H16 = {"H16", "H20", "H25", "H27", "H29"}  # stacks that include H16 channels
 # Extra-grid slice per arm: arm name -> how many leading --extra grids it takes
 # (None = all). The H20 arm inside an H25 run takes ONLY the dem10 grid so its
 # column layout matches the released incumbent exactly.
-ARM_EXTRAS = {"H13": None, "H20": 1, "H25": None, "H27": None}
+ARM_EXTRAS = {"H13": None, "H20": 1, "H25": None, "H27": None, "H29": None}
+# Inside an H29 run the H25 arm takes only the first TWO extras (dem10 +
+# context), i.e. exactly the released H25 layout; H29 appends line support.
+H29_H25_EXTRAS = 2
 DEV_FOLDS, CONF_FOLD = (0, 1, 2), 3
 
 
@@ -130,7 +139,7 @@ def main():
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument("--hypothesis", required=True,
-                    choices=["H13", "H16", "H20", "H25", "H27"])
+                    choices=["H13", "H16", "H20", "H25", "H27", "H29"])
     ap.add_argument("--extra", type=str, default=None,
                     help="static extra grid(s) .npy, comma-separated in column "
                          "order (H13 offset grid; H20 dem10 grid; H25 "
@@ -233,7 +242,11 @@ def main():
         arms.append("H16")
     if h in ("H25", "H27"):
         arms.append("H20")          # same-run reproduction anchor vs the incumbent
+    if h == "H29":
+        arms.append("H25")          # released incumbent layout, reproduced exactly
     arms.append(h)
+    if h == "H29" and len(extra_static) != H29_H25_EXTRAS + 1:
+        raise SystemExit("H29 needs --extra dem10_channels,dem10_context,linesupport")
     report = {
         "hypothesis": h, "status": "running", "promotion_allowed": False,
         "protocol": PROTOCOL[args.policy_set],
@@ -268,7 +281,7 @@ def main():
             else:
                 channels += [f"extra_{j}" for j in range(extra_static[i].shape[2])]
         report["new_channels"] = channels
-        if h in ("H20", "H25"):
+        if h in ("H20", "H25", "H29"):
             report["external_data"] = (sources[0] if len(sources) == 1
                                        else sources) if sources else None
     else:
@@ -325,9 +338,11 @@ def main():
             #   H16:         [feat | h16]
             #   H20:         [feat | h16 | static0]        (dem10 only — the
             #                released layout, even inside an H25 run)
-            #   H25:         [feat | h16 | statics...]     (dem10 + context)
+            #   H25:         [feat | h16 | statics...]     (dem10 + context;
+            #                in an H29 run only the first two statics)
+            #   H29:         [feat | h16 | dem10 | context | linesupport]
             grids = []
-            if name in ("H16", "H20", "H25", "H27"):
+            if name in ("H16", "H20", "H25", "H27", "H29"):
                 grids.append(extra_fold if name != "H27"
                              else extra_fold_aligned)
             if name == "H13":
@@ -335,6 +350,9 @@ def main():
             elif name == "H20":
                 grids.extend(extra_static[:1])
             elif name == "H25":
+                grids.extend(extra_static[:H29_H25_EXTRAS] if h == "H29"
+                             else extra_static)
+            elif name == "H29":
                 grids.extend(extra_static)
             X = feat[rows, cols].astype(np.float32)
             for g in grids:
@@ -377,11 +395,23 @@ def main():
                 corridors = discovery.relay_corridors(fp.shape, strikes)
                 fused = discovery.noisy_or_fuse(np.nan_to_num(p, nan=0),
                                                 (rays, .5), (corridors, .4))
+                disc = np.where(score, fused, np.nan).astype(np.float32)
                 result["scores"]["baseline107_discovery"] = score_policies(
-                    np.where(score, fused, np.nan).astype(np.float32), score, gt, policies)
-                del systems_grid, rays, corridors, fused
-            print(f"{h} fold {k} {name} {PRIMARY}: "
-                  f"{result['scores'][name][PRIMARY]['dti']:.6f}", flush=True)
+                    disc, score, gt, policies)
+                # Persist the derived discovery grid too (session 5): the v5
+                # evaluator re-scores every arm from saved grids.
+                disc_path = work / f"baseline107_discovery_fold{k}.npy"
+                buffer = io.BytesIO()
+                np.save(buffer, disc, allow_pickle=False)
+                disc_path.write_bytes(buffer.getvalue())
+                del buffer
+                result["prediction_files"]["baseline107_discovery"] = {
+                    "file": str(disc_path.relative_to(ROOT)),
+                    "sha256": sha256_file(disc_path)}
+                del systems_grid, rays, corridors, fused, disc
+            show = PRIMARY if PRIMARY in policies else policies[0]
+            print(f"{h} fold {k} {name} {show}: "
+                  f"{result['scores'][name][show]['dti']:.6f}", flush=True)
             del X, batch, model, p
             gc.collect()
         random_p = np.zeros(fp.shape, dtype=np.float32)
