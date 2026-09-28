@@ -154,3 +154,29 @@ def test_anchor_protocol_is_never_releasable():
     assert E.PROTOCOL_V5 == release.PROTOCOLS[4]
     assert E.INCUMBENT_POLICY in E.V5_POLICIES and len(E.V5_POLICIES) == 16
     assert release.V5_INCUMBENT == (E.INCUMBENT_ARM, E.INCUMBENT_POLICY)
+
+
+def test_committed_h28_report_passes_gate_and_wrong_inputs_fail():
+    import json
+    rep = json.loads((ROOT / "reports/h28_blocked.json").read_text())
+    sha = rep["final_prediction"]["sha256"]
+    release.check_release(rep, sha, "ridge20_d3")          # the released policy
+    release.verify_training_binding(rep, ROOT)
+    with pytest.raises(ValueError):
+        release.check_release(rep, sha, "ridge15_d2")      # not the selected policy
+    with pytest.raises(ValueError):
+        release.check_release(rep, "0" * 64, "ridge20_d3")  # unbound probability grid
+    r29 = json.loads((ROOT / "reports/h29_blocked.json").read_text())
+    assert r29["decision"]["eligible"] is False
+    with pytest.raises(ValueError):
+        release.check_release(r29, "0" * 64, r29["decision"]["candidate_policy"])
+
+
+def test_evaluator_reason_text():
+    import evaluate_density_matched as E
+    ok = E._reason(True, {"a": {"passes": True}})
+    bad = E._reason(False, {"H25": {"passes": False, "development_mean_delta": 0.0013,
+                                    "confirmation_delta": -0.006},
+                            "x": {"passes": True}})
+    assert ok.startswith("all preregistered v5") and "H25 (dev +0.0013, conf -0.0060)" in bad
+    assert "x (" not in bad

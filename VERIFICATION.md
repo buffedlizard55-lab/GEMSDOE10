@@ -44,3 +44,17 @@ This replaces inherited blanket claims that every statement was freshly measured
 The official feed keeps original fact text and dated last-good results when new availability checks fail.
 It does not mark old facts newly verified merely because a website build succeeded.
 The scientific references motivate experiments; they do not verify individual predicted faults.
+
+## Session 5 additions (2026-09-28)
+
+| Claim | Evidence and link | Status / boundary |
+|---|---|---|
+| Leader DARD 0.3168; #5 0.2806; top-50 floor 0.1119 | [Public leaderboard](https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/) | Public snapshot read 2026-09-28 ~01:00 UTC |
+| Staff decline to disclose test-fault sources/types/coverage; Phase 2 truth expanded by expert review | [Staff 11527/7](https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527/7) | Re-read to the last post (10); no newer staff post |
+| Ten sibling artifacts unchanged since the session-4 audit | `scripts/audit_submissions.py` → [submission_audit.json](reports/submission_audit.json) | Local measurement (byte + field + commit identical) |
+| Hidden density bounded to ~0.13–0.6 % | `scripts/lb_probe.py` → [lb_probe.json](reports/lb_probe.json) | Derived from user-reported scores (unauthenticated) + metric identity; a bound |
+| GeoDAWN 1 m lidar covers 98.3 % of the footprint | [S3 listing](https://prd-tnm.s3.amazonaws.com/?list-type=2&prefix=StagedProducts/Elevation/1m/Projects/NV_&delimiter=/); runner tag `ext/lidar1m-inventory-36365777149` → [lidar1m_inventory.json](reports/lidar1m_inventory.json); [data.gov GeoDAWN West Central](https://catalog.data.gov/dataset/geodawn-west-central-nevada-earthmri-data) | Measured on a GitHub runner (listing sizes + COG header checks); no pixels downloaded |
+| Inputs re-derived equal to report pins (features107 `fb0cfb40…`, dem10 `2504068b…`, context `3b70c447…`) | `sha256sum` after the pipeline | Local measurement |
+| Session-4 OOF grids reproduced byte-for-byte; H25 final grid + model byte-identical on retrain | [h29_oof.json](reports/h29_oof.json), [h28_blocked.json](reports/h28_blocked.json), [final_manifest_h28.json](reports/final_manifest_h28.json) | Local measurement (sha256) |
+| `metric.binary_components` equals `metric.components` | `tests/test_session5.py` + in-run assertion on every arm-fold | Bit-identical on tests; in-run tolerance 1e-12 |
+| H28 artifact submittable | `scripts/validate_submission.py` (13 checks) + hub gate | Local format gate only; backend acceptance not guaranteed |

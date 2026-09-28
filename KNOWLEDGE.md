@@ -321,6 +321,12 @@ tests/ — 15 files, 107 tests green (2026-09-27)
 - Analytic on the H25 ridge15 fold components: at full catalogue density dotting
   is ≈ neutral (−0.013…+0.006); with truth 4× sparser (f ≈ 10) the same change is
   worth ≈ +25–30 % relative — the regime the leaderboard probe points to.
+- MEASURED (H25 OOF grids, `reports/density_matched_v5.json`): `ridge15_d2` vs
+  `ridge15_binary` — full density dev 0.24524 vs 0.23663 (+0.009, better than the
+  analytic range), density-matched 0.16590 vs 0.13718 (+0.029). The selected
+  `ridge20_d3`: density-matched 0.16909 / conf 0.18697, full 0.23687 / 0.26330.
+  Dotting lets a LARGER ridge core be afforded; undotted larger cores
+  (`ridge20/30_binary`) lose at matched density.
 
 ### Exact binary metric
 - `metric.binary_components` = `metric.components` bit-for-bit for binary

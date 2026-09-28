@@ -43,7 +43,7 @@ plausible data behind the experts' "new" faults (1–5 m piedmont scarps are
 invisible at 10–100 m). H20's 10 m aggregates already gave the largest
 single feature gain in this repo.
 
-Design (runner job `lidar1m_scarp`, sharded; the inventory job is done):
+Design (runner job **`scarp1m`**, sharded; the inventory job `lidar1m` is done). Name it so it does not CONTAIN another job's name: the workflow selects jobs with `contains(JOBS, '<name>')`, a substring test, so `lidar1m_scarp` would also re-run the inventory job:
 1. Matrix of ~24 shards over `inventory.json` tiles (deterministic split by key;
    ~6.5 GB per shard). Each shard streams its tiles (never keeps more than one
    10 k × 10 k tile), computes metre-scale statistics in the tile's native

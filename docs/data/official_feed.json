@@ -100,7 +100,7 @@
   {
    "id": "test_fault_sources_thread",
    "url": "https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527/7",
-   "required_excerpt": "We're not sharing details about the data sources, fault types, or coverage",
+   "required_excerpt": "not sharing details about the data sources, fault types, or coverage",
    "status": "verified",
    "last_success_date": "2026-09-28",
    "claim": "Staff (chrisk-dd, post 7) decline to disclose the data sources, fault types or coverage behind the test faults; the Phase 2 test set is updated by expert review of all Phase 1 submissions, so predictions matter for final evaluation even if not the most performant in Phase 1.",
@@ -134,48 +134,52 @@
    "0.1563 listed for three different accounts (ranks 26-28) \u2014 the same artifact bytes were uploaded under several accounts (reports/submission_audit.json, re-verified 2026-09-28)",
    "doegemsDrivendata (0.1847) is plausibly an organiser/benchmark account; not confirmed by any official text"
   ],
-  "top10": [
-   [
-    "DARD",
-    0.3168
+  "top10_snapshot": {
+   "date_utc": "2026-09-28T01:00Z",
+   "source": "fetch_page (session 5)",
+   "rows": [
+    [
+     "DARD",
+     0.3168
+    ],
+    [
+     "alexoktaba",
+     0.2993
+    ],
+    [
+     "HardcoreTechGod",
+     0.2854
+    ],
+    [
+     "mzoorob",
+     0.2843
+    ],
+    [
+     "joeyfezster",
+     0.2806
+    ],
+    [
+     "GrigorSargsyan",
+     0.2742
+    ],
+    [
+     "exposed",
+     0.2439
+    ],
+    [
+     "xiaofanhu",
+     0.2367
+    ],
+    [
+     "hiii12345",
+     0.2262
+    ],
+    [
+     "ad3002",
+     0.2235
+    ]
    ],
-   [
-    "alexoktaba",
-    0.2993
-   ],
-   [
-    "HardcoreTechGod",
-    0.2854
-   ],
-   [
-    "mzoorob",
-    0.2843
-   ],
-   [
-    "joeyfezster",
-    0.2806
-   ],
-   [
-    "GrigorSargsyan",
-    0.2742
-   ],
-   [
-    "exposed",
-    0.2439
-   ],
-   [
-    "xiaofanhu",
-    0.2367
-   ],
-   [
-    "hiii12345",
-    0.2262
-   ],
-   [
-    "ad3002",
-    0.2235
-   ]
-  ],
-  "top50_floor": 0.1119
+   "top50_floor": 0.1119
+  }
  }
 }
