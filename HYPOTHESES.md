@@ -127,6 +127,108 @@ ridge08, ridge10, ridge12, ridge15}_binary):**
    folds with a re-used confirmation geography and development-selected policy; nothing
    here forecasts the private score; no slot is spent by this repository.
 
+## Session-4 results (2026-09-27, session 4) — measured, no slot spent
+
+**H24 (`reports/h24_blocked.json`, protocol `spatial-4x4-strided-v1-buffer40-policy-sweep-v4`,
+22 policies, elapsed 1905 s) — ELIGIBLE under protocol item 2.**
+
+- **Reproduction gate passed exactly first:** the 16 shared v3 policies on arms
+  baseline107 / baseline107_discovery / H16 / H20 reproduce `reports/h20_blocked.json`
+  with `max_abs_dti_diff: 0.0, exact: true` (all four arms), before any new-policy
+  score was used. Score-mask hashes and prediction-file hashes in the report were
+  re-checked independently against the saved OOF grids.
+- **Selection (preregistered argmax over development folds 0–2):** all four arms
+  selected `ridge15_binary`. The candidate is therefore **H20 arm + ridge15_binary**.
+- **Per-fold DTIs at the selected policies:**
+
+  | fold | role | baseline107 | H16 | H20 (candidate) |
+  |---|---|---|---|---|
+  | 0 | development | 0.19443 | 0.19967 | **0.20406** |
+  | 1 | development | 0.21744 | 0.22100 | **0.22408** |
+  | 2 | development | 0.26341 | 0.26986 | **0.27846** |
+  | 3 | confirmation | 0.21046 | 0.20728 | **0.22525** |
+
+- **Eligibility (all `passes: true` in `decision.comparisons`):**
+  - vs external incumbent **H20/thin10** (`reports/h20_blocked.json`): development-mean
+    delta **+0.04569** (0.23553 vs 0.18984), confirmation delta **+0.03845**
+    (0.22525 vs 0.18680);
+  - vs same-run baseline107 (ridge15): dev **+0.01044**, conf **+0.01479**;
+  - vs same-run H16 (ridge15): dev **+0.00536**, conf **+0.01797**;
+  - vs same-run baseline107_discovery (ridge15): dev **+0.01044**, conf **+0.01479**
+    — identical to the baseline107 deltas because the discovery fusion (10 px strike
+    rays, 0.4/0.5 weights) is provably inside the 40 px score buffer, so the fused and
+    raw fields coincide exactly on every score region (observed DTIs equal to all
+    printed digits on all four folds).
+- **H20-arm policy ladder (fold 0 / 1 / 2 / 3):** `topk02_binary` 0.11475 / 0.14225 /
+  0.18679 / 0.19853; `topk06_binary` 0.15370 / 0.16992 / 0.21324 / 0.18021;
+  `thin10_binary` 0.16483 / 0.18130 / 0.22339 / 0.18680; `ridge06_binary`
+  0.16791 / 0.19147 / 0.25317 / 0.22707; `ridge10_binary` 0.19130 / 0.21569 /
+  0.27183 / 0.22928; `ridge15_binary` 0.20406 / 0.22408 / 0.27846 / 0.22525.
+  `ridge06` already beats `thin10` on every fold; the ladder is monotone on the
+  development folds (ridge15 > ridge10 > ridge06 > thin10) and only ridge10 edges
+  ridge15 on the confirmation fold — selection correctly used development folds only.
+- **Independent verification performed before recording this result** (same session,
+  separate script): (i) `dti = tp/(tp + 0.2·fp + 0.8·fn)` recomputed from stored
+  components matches every printed DTI to 6 dp; (ii) ridge15 and thin10 emissions
+  re-derived from the saved OOF grid `scratch/h24/H20_fold0.npy` match the stored
+  `dti` and `n_pos_pred` exactly (0.204056/39099 and 0.164834/32517); (iii) the
+  emission is a strict subset of its top-15% core (39,099 of 139,376 px kept);
+  (iv) the fold-0 score-mask hash in the report matches a fresh computation.
+  On fold 0 the candidate has TP_w 3,628 / FP_w 35,570 / FN_w 8,798 versus thin10's
+  2,700 / 29,491 / 9,727 — TP +34 % against FP +21 %, the mechanism the register
+  predicted (the 15 % pre-NMS budget reaches further down the probability ranking
+  than thin10's 10 % support, and the strike-normal NMS keeps only the ridge of each
+  reached structure).
+- **What this cannot show (unchanged):** catalogue-generalisation proxy on four
+  correlated stripe folds with a development-selected policy; the confirmation fold's
+  geography has been used before in sessions 2–3; nothing here forecasts the private
+  score; **no slot was spent**. The run's first attempt was OOM-killed mid-fold-1
+  (float64 structure-tensor transients, `| tee` masked the kill); the retry used the
+  float32 tensor fix + `MALLOC_ARENA_MAX=2` and reproduced everything exactly —
+  recorded in `REVIEW.md`, `KNOWLEDGE.md` §5c.
+- **Status:** new holdout best at the time of this writing = **H20/ridge15_binary**
+  (development mean 0.23553, confirmation 0.22525) — superseded the same session by
+  the H25 result below. Releasing a candidate as a downloadable artifact still
+  requires the full-data fit with a hash-bound manifest (protocol item 6); nothing
+  is submitted autonomously.
+
+**H25 (`reports/h25_blocked.json`, protocol `spatial-4x4-strided-v1-buffer40-policy-sweep-v4`,
+22 policies, elapsed 2507 s) — ELIGIBLE under protocol item 3.**
+
+- **Reproduction gate passed exactly:** the shared v3 policies on arms baseline107 /
+  baseline107_discovery / H16 / H20 again reproduce `reports/h20_blocked.json`
+  (`max_abs_dti_diff: 0.0, exact: true`) — the H20 anchor arm inside this run is
+  bit-for-bit the released incumbent field despite the H25 arm co-running.
+- **Selection:** every arm selected `ridge15_binary`. Candidate = **H25 arm
+  (166 features = 107 + H16 10 + dem10 13 + context 36) + ridge15_binary**.
+- **Per-fold DTIs at the selected policies:**
+
+  | fold | role | baseline107 | H16 | H20 | H25 (candidate) |
+  |---|---|---|---|---|---|
+  | 0 | development | 0.19443 | 0.19967 | 0.20406 | 0.20097 |
+  | 1 | development | 0.21744 | 0.22100 | 0.22408 | **0.22476** |
+  | 2 | development | 0.26341 | 0.26986 | 0.27846 | **0.28415** |
+  | 3 | confirmation | 0.21046 | 0.20728 | 0.22525 | **0.25179** |
+
+- **Eligibility (all `passes: true`):**
+  - vs external incumbent **H20/thin10**: dev **+0.04679**, confirmation **+0.06498**;
+  - vs same-run **H20** (each under its selected ridge15): dev **+0.00109**,
+    confirmation **+0.02654** — the preregistered falsifier passes, but note the
+    shape honestly: fold 0 is *negative* (0.20097 vs 0.20406) and the development
+    margin is within fold noise; the confirmation margin is decisive;
+  - vs baseline107 / baseline107_discovery: dev +0.01153, conf +0.04133; vs H16:
+    dev +0.00645, conf +0.04450.
+- **Where the context channels actually help (policy ladder):** under the *incumbent*
+  policy `thin10_binary` the H25 arm's development mean is 0.18995 — i.e. **zero**
+  versus the incumbent's 0.18984 — while its confirmation jumps to 0.21751
+  (+0.0307 over 0.18680). The context gain is concentrated on the sparse
+  confirmation geography; on the development folds it only interacts with the ridge
+  policy (ridge15: H25 0.23663 vs H20 0.23553 dev mean, +0.00109).
+- **Status:** new holdout best = **H25/ridge15_binary** (development mean 0.23663,
+  confirmation 0.25179), ahead of H20/ridge15 (0.23553 / 0.22525) and of the released
+  H20/thin10 (0.18984 / 0.18680). Same limits as H24: proxy folds, re-used
+  confirmation geography, no forecast of the private score, no slot spent.
+
 ## Session-3 register (2026-09-27, later session) — frozen BEFORE any new holdout result
 
 **Verified context this session (first-hand reads, links in `reports/official_feed.json`):**

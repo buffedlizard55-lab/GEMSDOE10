@@ -9,7 +9,8 @@ publication and honest reporting. A rejected experiment can be a successful use 
 ## Mission and status
 
 Build reproducible predictors of missing fault pixels for the [GEMS Prize](https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/).
-The 2026-09-27 public leaderboard snapshot is DARD 0.3049. This is not a target we can promise to exceed.
+The 2026-09-27 (session 4 re-read) public leaderboard snapshot is DARD **0.3168**
+(0.3049 earlier the same day). This is not a target we can promise to exceed.
 User-reported group best is 0.1563; actual account upload associations remain unverified.
 
 The byte and field audit confirms GEMSDOE1 and 5GEMSDOE publish the same adopted artifact.

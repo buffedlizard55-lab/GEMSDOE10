@@ -8,6 +8,8 @@ parsed from strings so sweeps are declarative: "<budget>_<mode>", e.g.
 
 from __future__ import annotations
 
+import weakref
+
 import numpy as np
 from scipy import ndimage
 
@@ -17,6 +19,28 @@ except Exception:  # pragma: no cover
     HistGradientBoostingClassifier = None
 
 from . import metric, placement
+
+# Single-entry cache for the H24 ridge-NMS normal offsets: the structure
+# tensor of a 12.3 Mpx probability field costs seconds, and the policy sweep
+# scores six `ridge*` budgets on the same field. Keyed by object identity of
+# (prob, footprint) via weakrefs — a dead or replaced array is a miss, never
+# a stale hit.
+_RIDGE_NRM: dict = {"ref": None, "fp_ref": None, "offsets": None}
+
+
+def _ridge_offsets_cached(prob: np.ndarray, fp: np.ndarray, p: np.ndarray):
+    ent = _RIDGE_NRM
+    if (ent["ref"] is not None and ent["ref"]() is prob
+            and ent["fp_ref"]() is fp):
+        return ent["offsets"]
+    offsets = placement.ridge_offsets(np.where(fp, p, np.nan))
+    try:
+        ent["ref"] = weakref.ref(prob)
+        ent["fp_ref"] = weakref.ref(fp)
+    except TypeError:  # not weakref-able input: just skip caching
+        return offsets
+    ent["offsets"] = offsets
+    return offsets
 
 
 def fit_hgb(X: np.ndarray, y: np.ndarray,
@@ -72,17 +96,23 @@ def predict_grid(model, feat: np.ndarray, footprint: np.ndarray,
 
 
 def parse_policy(policy: str) -> tuple[float, str]:
-    """'topk03_binary' -> (0.03, 'binary'); 'thin06_binary' -> (0.06, 'thin').
+    """'topk03_binary' -> (0.03, 'binary'); 'thin06_binary' -> (0.06, 'thin');
+    'ridge10_binary' -> (0.10, 'ridge').
 
     Budgets are whole percents of the footprint. `thinNN_binary` (session 3,
     H19) is the top-NN% mask reduced to its Zhang-Suen skeleton and emitted at
-    1.0 — NN is the PRE-thinning budget; the emitted pixel count is smaller and
-    is reported by the scorer (`n_pos_pred`).
+    1.0. `ridgeNN_binary` (session 4, H24) is the top-NN% mask reduced to its
+    across-strike probability-ridge NMS (`placement.ridge_nms`) and emitted at
+    1.0 — NN is the PRE-NMS budget; in both families the emitted pixel count is
+    smaller and is reported by the scorer (`n_pos_pred`).
     """
     budget_s, mode = policy.split("_", 1)
     if budget_s.startswith("thin"):
         assert mode == "binary", policy
         return int(budget_s[4:]) / 100.0, "thin"
+    if budget_s.startswith("ridge"):
+        assert mode == "binary", policy
+        return int(budget_s[5:]) / 100.0, "ridge"
     assert budget_s.startswith("topk"), policy
     frac = int(budget_s[4:]) / 100.0
     assert mode in ("binary", "soft", "envelope", "halo2"), policy
@@ -99,6 +129,9 @@ def apply_policy(prob: np.ndarray, footprint: np.ndarray, policy: str) -> np.nda
       halo2    — binary core + ring1 at 2/3 + ring2 at 1/3 (metric-shaped)
       thin     — skeleton of the top-k mask at 1.0 (H19: across-strike width
                  is pure FP under the published metric; the truth is a 1-px line)
+      ridge    — across-strike NMS of p inside the top-k mask at 1.0 (H24:
+                 follows the probability ridge instead of the mask geometry,
+                 so it cannot leave the top-k support)
     """
     frac, mode = parse_policy(policy)
     fp = np.asarray(footprint, dtype=bool)
@@ -107,6 +140,10 @@ def apply_policy(prob: np.ndarray, footprint: np.ndarray, policy: str) -> np.nda
     core = placement.topk_mask(p, fp, frac)
     if mode == "thin":
         out = np.where(placement._skeleton(core) & fp, 1.0, 0.0)
+    elif mode == "ridge":
+        offsets = _ridge_offsets_cached(prob, fp, p)
+        out = np.where(placement.ridge_nms(core, p, offsets=offsets) & fp,
+                       1.0, 0.0)
     elif mode == "binary":
         out = np.where(core, 1.0, 0.0)
     elif mode == "soft":

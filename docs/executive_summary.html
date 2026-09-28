@@ -13,8 +13,16 @@ released</strong> (session 2, <code>reports/h16_blocked.json</code>, protocol <c
 <strong>H20 ELIGIBLE</strong> (session 3, <code>reports/h20_blocked.json</code>, protocol
 <code>…-policy-sweep-v3</code>: 3DEP 10 m scarp channels on top of H16, selected policy
 <code>thin10_binary</code>, beat the H16 incumbent on the development mean <strong>and</strong> the
-confirmation fold); <strong>H13 and H19 NOT ELIGIBLE</strong> (confirmation regressed);
-H12 rejected. When more than one artifact is approved, the hub lists the
+confirmation fold); <strong>H24 ELIGIBLE but not released</strong> (session 4,
+<code>reports/h24_blocked.json</code>, protocol <code>…-policy-sweep-v4</code>: the preregistered
+<code>ridge15_binary</code> emission on the H20 field, dev 0.23553 / conf 0.22525 — beaten
+the same session by H25); <strong>H25 ELIGIBLE and released</strong> (session 4,
+<code>reports/h25_blocked.json</code>, protocol <code>…-policy-sweep-v4</code>: +36 DEM-context
+channels, 166 features, selected policy <code>ridge15_binary</code>, dev mean <strong>0.23663</strong>,
+confirmation <strong>0.25179</strong>, beating the same-run H20 arm and the H20/thin10
+incumbent on both); <strong>H13 and H19 NOT ELIGIBLE</strong> (confirmation regressed);
+H12 rejected. Both session-4 runs reproduced the session-3 report exactly
+(max |ΔDTI| = 0) before any decision was read. When more than one artifact is approved, the hub lists the
 <strong>newest first and marks it RECOMMENDED</strong> — each later release had to beat the
 earlier one under the same frozen protocol; older approved artifacts stay
 downloadable for provenance. The website is static: CPU scripts generate
@@ -51,7 +59,9 @@ A local pass is not a guarantee of backend acceptance or a competitive score.</p
 <h2>4. Build and release</h2>
 <p>See README.md for data → features → blocked comparison. <strong>Do not run old baseline final training and label it a passing candidate.</strong>
 For H16 the bound pipeline is: <code>build_continuation.py</code> (all-systems 10-channel grid) → <code>train_final.py --extra data/features_continuation.npy --hypothesis H16 --bind-to reports/h16_blocked.json</code> (refuses to bind unless the report's decision is eligible; writes the training manifest, sets <code>promotion_allowed</code>, and records <code>final_prediction</code> in the report) → <code>build_submission.py --prob ... --policy topk06_binary --validation reports/h16_blocked.json</code>.
-For H20 (session 3): <code>fetch_external.py --tag ext/dem10-36326816737</code> → <code>build_dem10_grid.py</code> → <code>build_continuation.py</code> → <code>train_final.py --extra data/features_continuation.npy,data/external/dem10/dem10_channels.f32.npy --hypothesis H20 --bind-to reports/h20_blocked.json --work-dir final_out_h20</code> → <code>build_submission.py --prob final_out_h20/prob_final.npy --policy thin10_binary --validation reports/h20_blocked.json</code>. Column order <code>[107 | H16 10 | dem10 13]</code> must match the validated arm.
+For H20 (session 3): <code>fetch_external.py --tag ext/dem10-36326816737</code> → <code>build_dem10_grid.py</code> → <code>build_continuation.py</code> → <code>train_final.py --extra data/features_continuation.npy,data/external/dem10/dem10_channels.f32.npy --hypothesis H20 --bind-to reports/h20_blocked.json --work-dir final_out_h20</code> → <code>build_submission.py --prob final_out_h20/prob_final.npy --policy thin10_binary --validation reports/h20_blocked.json</code>. Column order <code>[107 | H16 10 | dem10 13]</code> must match the validated arm.</p>
+<p>For H25 (session 4, current): same restore/build steps plus
+<code>build_dem10_context.py</code>, then <code>train_final.py --extra data/features_continuation.npy,data/external/dem10/dem10_channels.f32.npy,data/external/dem10/dem10_context.f32.npy --hypothesis H25 --bind-to reports/h25_blocked.json --work-dir final_out_h25</code> → <code>build_submission.py --prob final_out_h25/prob_final.npy --policy ridge15_binary --validation reports/h25_blocked.json</code>. Column order <code>[107 | H16 10 | dem10 13 | context 36]</code> must match the validated arm. Manifests are keyed by the validation report (<code>final_manifest_h25.json</code>), so a later release never overwrites an earlier release's binding.
 The final-prediction manifest must tie the generated NPY hash to its training recipe and the compatible completed validation report.
 <code>build_submission.py --validation ...</code> refuses missing, non-improving, incomplete, mismatched-policy or unbound evidence (fail-closed gates in <code>src/gems10/release.py</code>, protocol-aware for v1, v2 and v3 reports; v3 additionally requires every recorded incumbent comparison to pass; validated code hashes may live in git history when the working tree has moved on).
 <code>--experiment</code> writes diagnostics only into <code>scratch/experiments/</code>, never the download hub.</p>
@@ -83,4 +93,4 @@ Multiple repositories do not by themselves establish multiple registrations or a
 </tr>
 </tbody>
 </table>
-<p>Historical group scores live in <code>reports/submission_audit.json</code> labelled user-reported; they do not reveal current remaining slots.</p></article></main><footer class="wrap"><b>Maximize P(Win). Own the Outcome.</b><p>Local evidence is not a private competition score. AI-assisted research; official links and limitations are explicit.</p><p>Site built 2026-09-27T19:03:26+00:00 · <a href="https://github.com/buffedlizard55-lab/GEMSDOE10">Repository</a> · <a href="data/site.json">Machine-readable manifest</a></p></footer></body></html>
+<p>Historical group scores live in <code>reports/submission_audit.json</code> labelled user-reported; they do not reveal current remaining slots.</p></article></main><footer class="wrap"><b>Maximize P(Win). Own the Outcome.</b><p>Local evidence is not a private competition score. AI-assisted research; official links and limitations are explicit.</p><p>Site built 2026-09-28T00:38:27+00:00 · <a href="https://github.com/buffedlizard55-lab/GEMSDOE10">Repository</a> · <a href="data/site.json">Machine-readable manifest</a></p></footer></body></html>

@@ -187,3 +187,100 @@ def test_release_v3_refuses_the_real_h19_report():
              final_prediction={'sha256': 'pred', 'training_manifest_sha256': 'm'})
     with pytest.raises(ValueError):
         release.check_release(d, 'pred', d['policy_selection']['H16'])
+
+
+def evidence_v4(candidate='H20', policy='ridge10_binary'):
+    """Session-4 protocol: v4 union, named external incumbent arm (H20)."""
+    d = evidence_v3(candidate=candidate)
+    d['protocol'] = 'spatial-4x4-strided-v1-buffer40-policy-sweep-v4'
+    d['policy_selection'] = dict(d['policy_selection'], **{candidate: policy})
+    for row in d['folds']:
+        row['scores'][candidate] = {policy: {'dti': .20},
+                                    'thin10_binary': {'dti': .19}}
+    d['decision'] = {
+        'eligible': True, 'candidate_arm': candidate, 'candidate_policy': policy,
+        'comparisons': {
+            'baseline107': {'passes': True},
+            'baseline107_discovery': {'passes': True},
+            'H16': {'passes': True},
+            'incumbent_report:H20': {'passes': True, 'arm': 'H20',
+                                     'baseline_policy': 'thin10_binary',
+                                     'delta_by_fold': [.01, .01, .01, .01]}}}
+    return d
+
+
+def test_release_v4_named_incumbent_arm():
+    d = evidence_v4()
+    release.check_release(d, 'pred', 'ridge10_binary')
+    with pytest.raises(ValueError, match='policy'):
+        release.check_release(d, 'pred', 'thin10_binary')
+    # failing named-arm comparison
+    bad = copy.deepcopy(d)
+    bad['decision']['comparisons']['incumbent_report:H20']['passes'] = False
+    with pytest.raises(ValueError, match='H20'):
+        release.check_release(bad, 'pred', 'ridge10_binary')
+    # negative confirmation delta on the named-arm comparison, even if flagged
+    bad = copy.deepcopy(d)
+    bad['decision']['comparisons']['incumbent_report:H20']['delta_by_fold'] = \
+        [.01, .01, .01, -.005]
+    with pytest.raises(ValueError, match='confirmation'):
+        release.check_release(bad, 'pred', 'ridge10_binary')
+    # unknown protocol string is refused outright
+    bad = copy.deepcopy(d)
+    bad['protocol'] = 'spatial-4x4-strided-v1-buffer40-policy-sweep-v5'
+    with pytest.raises(ValueError, match='protocol'):
+        release.check_release(bad, 'pred', 'ridge10_binary')
+
+
+def test_v4_policy_union_matches_preregistration():
+    """Session-4 register: v4 = v3 (16) + ridge{04,06,08,10,12,15}_binary."""
+    import importlib.util
+    root = Path(__file__).resolve().parents[1]
+    spec_ = importlib.util.spec_from_file_location(
+        'vc_gate', root / 'scripts' / 'validate_candidate.py')
+    mod = importlib.util.module_from_spec(spec_)
+    spec_.loader.exec_module(mod)
+    v4 = mod.POLICY_SETS['v4']
+    assert v4[:16] == mod.POLICY_SETS['v3']
+    assert v4[16:] == [f'ridge{b:02d}_binary' for b in (4, 6, 8, 10, 12, 15)]
+    assert len(v4) == 22 and len(set(v4)) == 22
+    assert mod.PROTOCOL['v4'] in release.PROTOCOLS
+    assert mod.PROTOCOL['v3'] in release.PROTOCOLS
+    # default gate phase must stay as-built (bit-identical incumbents)
+    import inspect
+    from gems10 import alignment
+    assert inspect.signature(alignment.ray_continuation_channels).parameters[
+        'gate_phase'].default == 'asbuilt'
+
+
+def test_real_h20_report_passes_release_gate():
+    """The bound, released session-3 artifact must keep passing the gate."""
+    import json
+    path = Path(__file__).resolve().parents[1] / 'reports' / 'h20_blocked.json'
+    if not path.exists():
+        pytest.skip('report not present')
+    d = json.loads(path.read_text())
+    binding = d['final_prediction']
+    release.check_release(d, binding['sha256'], 'thin10_binary')
+    with pytest.raises(ValueError, match='bound'):
+        release.check_release(d, 'not-the-bound-sha', 'thin10_binary')
+
+
+def test_train_final_manifest_keyed_by_validation_report():
+    """A second release of the same arm must not clobber an earlier manifest."""
+    root = Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location(
+        'train_final_mod', root / 'scripts' / 'train_final.py')
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    # historical names are unchanged (existing report bindings keep matching)
+    assert mod.manifest_name_for(Path('reports/h16_blocked.json'), 'H16') == \
+        'final_manifest_h16.json'
+    assert mod.manifest_name_for(Path('reports/h20_blocked.json'), 'H20') == \
+        'final_manifest_h20.json'
+    # a new report for the same arm gets its own manifest file
+    assert mod.manifest_name_for(Path('reports/h24_blocked.json'), 'H20') == \
+        'final_manifest_h24.json'
+    # fallback keeps the old arm-keyed behaviour for non-blocked report paths
+    assert mod.manifest_name_for(Path('somewhere/other.json'), 'H99') == \
+        'final_manifest_h99.json'

@@ -1,5 +1,5 @@
 {
-  "built_utc": "2026-09-27T19:03:26+00:00",
+  "built_utc": "2026-09-28T00:38:27+00:00",
   "reports": [
     "budget_density_sweep.json",
     "cv_baseline.json",
@@ -9,12 +9,15 @@
     "diagnostic_validation.json",
     "final_manifest_h16.json",
     "final_manifest_h20.json",
+    "final_manifest_h25.json",
     "h12_blocked.json",
     "h12_reproduction.json",
     "h13_blocked.json",
     "h16_blocked.json",
     "h19_blocked.json",
     "h20_blocked.json",
+    "h24_blocked.json",
+    "h25_blocked.json",
     "official_feed.json",
     "rescore_baseline.json",
     "rescore_discovery.json",
@@ -227,5 +230,10 @@
       ]
     }
   ],
-  "refused_publications": []
+  "refused_publications": [
+    {
+      "metadata": "gems10-h25-ctx-ridge-20260927T232947704150Z-6452ae1d00.json",
+      "reason": "validation code changed or missing: HYPOTHESES.md"
+    }
+  ]
 }

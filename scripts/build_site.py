@@ -122,8 +122,8 @@ def _arm_dti(row, arm, selection):
 def _experiment_section(exp, filename):
     hyp = exp.get('hypothesis', 'H12')
     protocol = exp.get('protocol', '')
-    is_v2 = protocol.endswith('policy-sweep-v2') or protocol.endswith('policy-sweep-v3')
-    is_v3 = protocol.endswith('policy-sweep-v3')
+    is_v2 = protocol.endswith(('policy-sweep-v2', 'policy-sweep-v3',
+                               'policy-sweep-v4'))
     selection = exp.get('policy_selection', {}) if is_v2 else {}
     decision = exp.get('decision', {})
     status = str(exp.get('status', 'unknown')).upper()
@@ -135,10 +135,14 @@ def _experiment_section(exp, filename):
         if is_v2 else
         'Fixed top 2%, HGB 200 iterations. Four geographic stripe folds; 4 km '
         'training exclusion. Fold 3 is confirmation.')
-    if is_v3:
-        inc = (decision.get('comparisons') or {}).get('incumbent_report:H16')
+    if is_v2:
+        comparisons = decision.get('comparisons') or {}
+        inc_key = next((k for k in comparisons
+                        if k.startswith('incumbent_report:')), None)
+        inc = comparisons.get(inc_key) if inc_key else None
         if inc:
-            protocol_line += (f' Incumbent: H16/{esc(inc.get("baseline_policy", "?"))} from '
+            inc_arm = inc_key.split(':', 1)[1]
+            protocol_line += (f' Incumbent: {esc(inc_arm)}/{esc(inc.get("baseline_policy", "?"))} from '
                               f'{esc(inc.get("report", "?"))} — candidate '
                               f'{esc(selection.get(hyp, "?"))}: development mean Δ '
                               f'{inc.get("development_mean_delta", 0):+.6f}, confirmation Δ '
@@ -187,7 +191,7 @@ def results_html(audit, experiments):
         score_text = f'{score:.4f}' if score is not None else 'not supplied'
         content += f'<tr><td>{esc(a["id"])}</td><td>{score_text}</td><td>{a.get("positive_pixels", "—"):,}</td><td><code>{esc(a.get("sha256", ""))[:12]}</code></td><td><a href="{esc(a.get("source_url", "#"))}">{esc(a["status"])}</a></td></tr>' if a.get('positive_pixels') is not None else f'<tr><td>{esc(a["id"])}</td><td colspan="4">Unavailable; see audit JSON</td></tr>'
     content += '</tbody></table></div><h3>Why 0.1563 repeats</h3><p>GEMSDOE1, 5GEMSDOE and GEMSDOE2 recall have identical bytes and pixels. Current 8GEMSDOE hedge changes 54,533 cells, all on the existing catalogue: zero additional noncatalogue predictions. A new file name does not fix either problem.</p><p><a href="data/submission_audit.json">All immutable sources and pairwise changed-pixel counts →</a></p></section>'
-    content += '<section class="card"><h2>Historical reports are a different protocol</h2><p>Component-holdout ALL/top2 means: baseline 0.092885, discovery 0.103958, selftrain 0.089681. These are retained historical reports, not the spatial results above. FAR10 reverses the ranking and must not be substituted after seeing results. No local number here is comparable to 0.3049 as a private-score forecast.</p><a href="data/cv_baseline.json">Baseline report</a> · <a href="data/cv_discovery.json">Discovery</a> · <a href="data/cv_selftrain.json">Selftrain</a></section>'
+    content += '<section class="card"><h2>Historical reports are a different protocol</h2><p>Component-holdout ALL/top2 means: baseline 0.092885, discovery 0.103958, selftrain 0.089681. These are retained historical reports, not the spatial results above. FAR10 reverses the ranking and must not be substituted after seeing results. No local number here is a private-score forecast of the public leader.</p><a href="data/cv_baseline.json">Baseline report</a> · <a href="data/cv_discovery.json">Discovery</a> · <a href="data/cv_selftrain.json">Selftrain</a></section>'
     return content
 
 
@@ -205,14 +209,15 @@ def main():
     experiments = [(name, read_json(ROOT / 'reports' / name, {}))
                    for name in ('h12_blocked.json', 'h16_blocked.json',
                                 'h13_blocked.json', 'h19_blocked.json',
-                                'h20_blocked.json')
+                                'h20_blocked.json', 'h24_blocked.json',
+                                'h25_blocked.json')
                    if (ROOT / 'reports' / name).exists()]
     feed = read_json(ROOT / 'reports/official_feed.json', {})
     board = feed.get('leaderboard', {})
     panel = submission_panel(submissions)
     home = '''<div class="intro"><span class="eyebrow">RESEARCH LOG / NORTHWESTERN GREAT BASIN</span><h1>Find a different fault.<br><em>Not a different filename.</em></h1><p>Scientific hypotheses, spatially separated tests and auditable predictions. Built to discover missing geological structure—not repeat the same submission.</p></div>''' + panel
-    home += f'''<div class="stats"><div><span>PUBLIC LEADER SNAPSHOT</span><strong>{board.get('score', 0):.4f}</strong><small>{esc(board.get('rank1', 'Unknown'))} · {esc(board.get('last_success_date', 'unknown date'))}<br>{esc(board.get('status', 'unverified'))}</small></div><div><span>GROUP BEST / USER-REPORTED</span><strong>0.1563</strong><small>Exact duplicate identified<br>Upload history not authenticated</small></div><div><span>HYPOTHESES MEASURED</span><strong>05</strong><small>H12 · H13 · H16 · H19 · H20 on spatial-block holdouts<br>H21 closed by catalogue evidence · H15 unblocked, unmodelled</small></div></div>'''
-    home += '''<div class="grid"><section class="card"><span class="eyebrow">01 / AUDIT</span><h2>Copying is measurable.</h2><p>Ten published artifacts, immutable source commits, file hashes and canonical prediction hashes. Renamed and recompressed duplicates are refused.</p><a href="results.html">See the comparison →</a></section><section class="card"><span class="eyebrow">02 / EXPERIMENT</span><h2>Two faults, one offset.</h2><p>H16 lights rays that continue a discovered system's strike past its mapped end; H13 measures the zero-lag alignment dip of strip pairs across candidate traces. Both are tested on spatially blocked folds before any submission slot is spent. H12 (scarp polarity) was measured and rejected on the same geography.</p><a href="hypotheses.html">Read all hypotheses →</a></section><section class="card"><span class="eyebrow">03 / SESSION 3</span><h2>Thin lines, 10 m scarps, and a catalogue that is already the labels.</h2><p>H19 (skeleton emission) won the development folds but lost the confirmation fold (−0.021) — not released. H20 (13 label-free 3DEP 10 m scarp channels built on a GitHub runner, sha256-provenanced) was tested against the H16 incumbent under the same frozen protocol. H21 measured that the current USGS/INGENIOUS catalogues contain <b>no</b> trace absent from the provided labels (1 pixel each beyond 300 m), so the hidden truth lies outside every public catalogue.</p><a href="results.html">Fold tables and incumbent comparisons →</a></section></div><section class="card"><h2>Evidence has a boundary.</h2><p>Official staff confirm that new geometry of existing systems can count. They do not disclose the hidden faults’ data sources, types or coverage. A proxy score is not a promise of first place; fault pixels are not confirmed geothermal vents.</p><a href="sources.html">Official sources and freshness →</a> · <a href="verification.html">Limitations and irregularities →</a></section>'''
+    home += f'''<div class="stats"><div><span>PUBLIC LEADER SNAPSHOT</span><strong>{board.get('score', 0):.4f}</strong><small>{esc(board.get('rank1', 'Unknown'))} · {esc(board.get('last_success_date', 'unknown date'))}<br>{esc(board.get('status', 'unverified'))}</small></div><div><span>GROUP BEST / USER-REPORTED</span><strong>0.1563</strong><small>Exact duplicate identified<br>Upload history not authenticated</small></div><div><span>HYPOTHESES MEASURED</span><strong>07</strong><small>H12 · H13 · H16 · H19 · H20 · H24 · H25 on spatial-block holdouts<br>H21 closed by catalogue evidence · H15 unblocked · H27 untested</small></div></div>'''
+    home += '''<div class="grid"><section class="card"><span class="eyebrow">01 / AUDIT</span><h2>Copying is measurable.</h2><p>Ten published artifacts, immutable source commits, file hashes and canonical prediction hashes. Renamed and recompressed duplicates are refused.</p><a href="results.html">See the comparison →</a></section><section class="card"><span class="eyebrow">02 / EXPERIMENT</span><h2>Two faults, one offset.</h2><p>H16 lights rays that continue a discovered system's strike past its mapped end; H13 measures the zero-lag alignment dip of strip pairs across candidate traces. Both are tested on spatially blocked folds before any submission slot is spent. H12 (scarp polarity) was measured and rejected on the same geography.</p><a href="hypotheses.html">Read all hypotheses →</a></section><section class="card"><span class="eyebrow">03 / SESSION 3</span><h2>Thin lines, 10 m scarps, and a catalogue that is already the labels.</h2><p>H19 (skeleton emission) won the development folds but lost the confirmation fold (−0.021) — not released. H20 (13 label-free 3DEP 10 m scarp channels built on a GitHub runner, sha256-provenanced) was tested against the H16 incumbent under the same frozen protocol. H21 measured that the current USGS/INGENIOUS catalogues contain <b>no</b> trace absent from the provided labels (1 pixel each beyond 300 m), so the hidden truth lies outside every public catalogue.</p><a href="results.html">Fold tables and incumbent comparisons →</a></section><section class="card"><span class="eyebrow">04 / SESSION 4</span><h2>Ridge emission, DEM context, exact reproduction.</h2><p>Both session-4 runs reproduced the session-3 report exactly (max |ΔDTI| = 0) before scoring anything new. H24 (strike-normal ridge NMS emission) and H25 (+36 neighbourhood-context channels over the restored 3DEP-10 m grid) were preregistered, both became eligible, and H25 with the <code>ridge15_binary</code> policy is now the recommended download (dev mean 0.23663, confirmation 0.25179). The development margin over the same-run H20 arm is within fold noise; the confirmation margin carries the decision. H27 (corrected-phase continuation gate) is implemented but untested.</p><a href="hypotheses.html">Session-4 register and results →</a></section></div><section class="card"><h2>Evidence has a boundary.</h2><p>Official staff confirm that new geometry of existing systems can count. They do not disclose the hidden faults’ data sources, types or coverage. A proxy score is not a promise of first place; fault pixels are not confirmed geothermal vents.</p><a href="sources.html">Official sources and freshness →</a> · <a href="verification.html">Limitations and irregularities →</a></section>'''
     sources = '<div class="intro"><span class="eyebrow">OFFICIAL / DATED / REVIEWABLE</span><h1>Source ledger</h1><p>Daily checks preserve the last-good evidence when a page is unavailable. A failed refresh is not a new verification.</p></div>'
     for s in feed.get('sources', []):
         sources += f'<section class="card"><span class="eyebrow">{esc(s["status"])} · LAST SUCCESS {esc(s["last_success_date"])}</span><h2>{esc(s["claim"])}</h2><p>{esc(s["scope"])}</p><a href="{esc(s["url"])}">Read official source ↗</a>'

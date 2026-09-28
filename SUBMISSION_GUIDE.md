@@ -11,8 +11,16 @@ released** (session 2, `reports/h16_blocked.json`, protocol `…-policy-sweep-v2
 **H20 ELIGIBLE** (session 3, `reports/h20_blocked.json`, protocol
 `…-policy-sweep-v3`: 3DEP 10 m scarp channels on top of H16, selected policy
 `thin10_binary`, beat the H16 incumbent on the development mean **and** the
-confirmation fold); **H13 and H19 NOT ELIGIBLE** (confirmation regressed);
-H12 rejected. When more than one artifact is approved, the hub lists the
+confirmation fold); **H24 ELIGIBLE but not released** (session 4,
+`reports/h24_blocked.json`, protocol `…-policy-sweep-v4`: the preregistered
+`ridge15_binary` emission on the H20 field, dev 0.23553 / conf 0.22525 — beaten
+the same session by H25); **H25 ELIGIBLE and released** (session 4,
+`reports/h25_blocked.json`, protocol `…-policy-sweep-v4`: +36 DEM-context
+channels, 166 features, selected policy `ridge15_binary`, dev mean **0.23663**,
+confirmation **0.25179**, beating the same-run H20 arm and the H20/thin10
+incumbent on both); **H13 and H19 NOT ELIGIBLE** (confirmation regressed);
+H12 rejected. Both session-4 runs reproduced the session-3 report exactly
+(max |ΔDTI| = 0) before any decision was read. When more than one artifact is approved, the hub lists the
 **newest first and marks it RECOMMENDED** — each later release had to beat the
 earlier one under the same frozen protocol; older approved artifacts stay
 downloadable for provenance. The website is static: CPU scripts generate
@@ -60,6 +68,9 @@ A local pass is not a guarantee of backend acceptance or a competitive score.
 See README.md for data → features → blocked comparison. **Do not run old baseline final training and label it a passing candidate.**
 For H16 the bound pipeline is: `build_continuation.py` (all-systems 10-channel grid) → `train_final.py --extra data/features_continuation.npy --hypothesis H16 --bind-to reports/h16_blocked.json` (refuses to bind unless the report's decision is eligible; writes the training manifest, sets `promotion_allowed`, and records `final_prediction` in the report) → `build_submission.py --prob ... --policy topk06_binary --validation reports/h16_blocked.json`.
 For H20 (session 3): `fetch_external.py --tag ext/dem10-36326816737` → `build_dem10_grid.py` → `build_continuation.py` → `train_final.py --extra data/features_continuation.npy,data/external/dem10/dem10_channels.f32.npy --hypothesis H20 --bind-to reports/h20_blocked.json --work-dir final_out_h20` → `build_submission.py --prob final_out_h20/prob_final.npy --policy thin10_binary --validation reports/h20_blocked.json`. Column order `[107 | H16 10 | dem10 13]` must match the validated arm.
+
+For H25 (session 4, current): same restore/build steps plus
+`build_dem10_context.py`, then `train_final.py --extra data/features_continuation.npy,data/external/dem10/dem10_channels.f32.npy,data/external/dem10/dem10_context.f32.npy --hypothesis H25 --bind-to reports/h25_blocked.json --work-dir final_out_h25` → `build_submission.py --prob final_out_h25/prob_final.npy --policy ridge15_binary --validation reports/h25_blocked.json`. Column order `[107 | H16 10 | dem10 13 | context 36]` must match the validated arm. Manifests are keyed by the validation report (`final_manifest_h25.json`), so a later release never overwrites an earlier release's binding.
 The final-prediction manifest must tie the generated NPY hash to its training recipe and the compatible completed validation report.
 `build_submission.py --validation ...` refuses missing, non-improving, incomplete, mismatched-policy or unbound evidence (fail-closed gates in `src/gems10/release.py`, protocol-aware for v1, v2 and v3 reports; v3 additionally requires every recorded incumbent comparison to pass; validated code hashes may live in git history when the working tree has moved on).
 `--experiment` writes diagnostics only into `scratch/experiments/`, never the download hub.
