@@ -34,7 +34,9 @@ serialization + readback + SHA).
 
 ## 2. Leaderboard & duplicate diagnosis (verified 2026-09-27)
 
-- Public leaderboard: #1 DARD **0.3049**; top-25 floor 0.1587 (extradr19); group best
+- Public leaderboard (re-read 2026-09-27, session 4): #1 DARD **0.3168**
+  (rose from 0.3049 earlier the same day); #2–#5 = 0.2993 / 0.2854 / 0.2843 /
+  0.2806; #25 floor 0.1587 (fishnchips); group best
   **0.1563** (GEMSDOE family) sits below top 25. Gap to #1: 0.1486.
 - `reports/submission_audit.json`: GEMSDOE1 / 5GEMSDOE / GEMSDOE2 recall artifacts are
   **byte-identical** (same sha); 8GEMSDOE hedge differs only on 54,533 masked
@@ -229,6 +231,61 @@ tests/ — 15 files, 107 tests green (2026-09-27)
   penalties (model trained on full labels), so read it as a direction: a sparser
   hidden truth favours *thinner* emission than the locally selected budget.
 
+## 5c. Session-4 additions (2026-09-27, session 4)
+
+### Shallow-clone provenance trap (fixed)
+- This session's workspace was a **depth-1 clone**: the released artifacts' pinned
+  code blobs (`HYPOTHESES.md` both reports; `validate_candidate.py`/`modeling.py`
+  for H16) existed only in the pushed PR history, so `verify_training_binding`
+  failed and `build_site.py` refused **both** approved downloads until
+  `git fetch --unshallow origin` (+ `refs/pull/*/head`) restored the objects.
+  Always unshallow a restored workspace before trusting a "code changed or
+  missing" gate failure; CI/Pages checkouts now use `fetch-depth: 0`.
+- Evidence rule unchanged: never edit a report's pinned hashes. Reports are
+  measurements; recover the objects, don't rewrite the pins.
+
+### Structure-tensor orientation = NORMAL (not the line)
+- Measured: horizontal stripe → orientation 90°, vertical → 0°, 45° → −45°
+  ((x=col, y=row) basis). The docstring comment in `features.structure_tensor`
+  ("direction of least change") is wrong; H16's implemented gate
+  `clip(cos(2(o−strike)),0,1)` therefore passes lineaments **perpendicular**
+  to the system strike (90° out of phase with the preregistered
+  "orientation-matched" wording). As-built behaviour is preserved as
+  `gate_phase="asbuilt"` (default); the corrected `"aligned"` phase is H27 and
+  has never been scored. `tests/test_h27_gate.py` locks both.
+- For NMS-style geometry the normal is exactly what's needed: H24's
+  `ridge_nms` compares p at ±1/±2 px ALONG the tensor normal (= across
+  strike), tie-broken lexicographically by (p, distance-to-mask-edge) so HGB
+  plateaus reduce to their interior spine.
+
+### H24 engine notes
+- Policy grammar: `ridgeNN_binary` (NN = pre-NMS budget, whole percent);
+  emitted set ⊆ top-k support by construction; along-strike continuity
+  preserved (across-strike comparisons only).
+- **OOM lesson:** scoring the discovery arm with six ridge policies on this
+  4 GB host killed the first run (kernel OOM: anon-rss 3.82 GB, silent because
+  `| tee` masked the exit). Fixes: `ridge_offsets` computes the tensor in
+  **float32** (offsets round to integer pixels; halves the ~1 GB float64
+  transient), and runs use `MALLOC_ARENA_MAX=2`. Do not wrap long runs in
+  `| tee` — the pipeline returns tee's exit 0 on a SIGKILLed python.
+- `distance_transform_edt` on an all-true mask measures distance to the array
+  border (scipy convention) — only reachable in the degenerate constant-field
+  case; real top-k cores are proper subsets (test pins the behaviour).
+
+### Data placement re-run from zero (this session)
+- `fetch_data.py --download` restored the 419 MB feature stack in 19 s (five
+  mirror parts + whole-file pin OK); `build_features.py --tile-rows 128`
+  rebuilt in 133 s with sha256 **identical** to the session-3 report pin
+  (`fb0cfb40…`); `ext/dem10` tag restored + grid rebuilt (13 channels finite);
+  `build_dem10_context.py` derived the 36 H25 context channels (1.77 GB, 179 s,
+  all finite on the footprint).
+
+### Leaderboard moved intra-day
+- DARD 0.3049 → **0.3168** between session-3 and session-4 reads the same day;
+  the 0.1563 triple now sits at ranks #26–28; top-50 floor 0.0982. The dated
+  `reports/official_feed.json` entry is authoritative; prompt figures are
+  requirements records, not facts.
+
 ## 6. Known dead ends / errors (do not repeat)
 
 - NCC max-selection bias (see §5) — use the pooled zero-lag dip, never raw max.
@@ -269,7 +326,8 @@ tests/ — 15 files, 107 tests green (2026-09-27)
 6. Free/official external data only; unobtainable ⇒ hypothesis not viable here.
 7. 3-pass discipline (implement/verify → review & fix → re-check vs original request);
    end with merged PR to main + remaining-work list.
-8. Leaderboard goal: top placement (beat 0.3049) — contrarian but scientifically grounded.
+8. Leaderboard goal: top placement (beat the public leader — 0.3168 as of
+   2026-09-27 session 4) — contrarian but scientifically grounded.
 
 ## 8. Reproduce
 
@@ -287,5 +345,17 @@ OMP_NUM_THREADS=2 .venv/bin/python scripts/build_features.py --tile-rows 128
     --extra data/external/dem10/dem10_channels.f32.npy --incumbent-report reports/h16_blocked.json --work scratch/h20
 .venv/bin/python scripts/fetch_external.py --tag ext/catalogue-36326816737      # H21 evidence
 .venv/bin/python scripts/budget_density_sweep.py --report reports/h19_blocked.json --arm H16 --out reports/budget_density_sweep.json
-.venv/bin/python -m pytest tests/ -q                       # 108 tests
+# session 4 (v4 policy union = v3 + ridgeNN; reproduction of the H20 report is checked first;
+# the ridge structure tensor runs in float32 and long runs need MALLOC_ARENA_MAX=2 on this box)
+MALLOC_ARENA_MAX=2 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 .venv/bin/python scripts/validate_candidate.py \
+    --hypothesis H20 --policy-set v4 --extra data/external/dem10/dem10_channels.f32.npy \
+    --incumbent-report reports/h20_blocked.json --incumbent-arm H20 \
+    --report reports/h24_blocked.json --work scratch/h24
+MALLOC_ARENA_MAX=2 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 .venv/bin/python scripts/validate_candidate.py \
+    --hypothesis H25 --policy-set v4 \
+    --extra data/external/dem10/dem10_channels.f32.npy,data/external/dem10/dem10_context.f32.npy \
+    --incumbent-report reports/h20_blocked.json --incumbent-arm H20 \
+    --report reports/h25_blocked.json --work scratch/h25
+.venv/bin/python scripts/verify_project.py                    # tests + link checks + gate checks
+.venv/bin/python -m pytest tests/ -q                       # 127 tests
 ```

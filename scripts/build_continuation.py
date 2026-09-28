@@ -27,18 +27,30 @@ def read_band(path: Path, name: str) -> np.ndarray:
 
 
 def continuation_grid(systems: list, bands: dict, lineaments: dict,
-                      shape: tuple[int, int]) -> tuple[np.ndarray, list[str]]:
+                      shape: tuple[int, int],
+                      gate_phase: str = "asbuilt") -> tuple[np.ndarray, list[str]]:
     out, names = alignment.ray_continuation_channels(
-        bands["tmi"], lineaments, systems, ncc_band=bands["rtp"])
+        bands["tmi"], lineaments, systems, ncc_band=bands["rtp"],
+        gate_phase=gate_phase)
     return out, names
 
 
 def main():
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--gate-phase", choices=("asbuilt", "aligned"),
+                    default="asbuilt",
+                    help="'asbuilt' reproduces every existing report; 'aligned' "
+                         "is the H27 corrected-phase grid (written to a "
+                         "separate output file)")
+    args = ap.parse_args()
+    gate_phase = args.gate_phase
     data = ROOT / "data"
     feat = data / "training_features.tif"
     if sha256_file(feat) != spec.PINS["training_features.tif"]["sha256"]:
         raise ValueError("feature input hash mismatch")
-    dest = data / "features_continuation.npy"
+    dest = data / ("features_continuation.npy" if gate_phase == "asbuilt"
+                   else "features_continuation_aligned.npy")
     with rasterio.open(data / "labels.tif") as ds:
         labels = ds.read(1)
     from gems10 import systems as S
@@ -60,10 +72,12 @@ def main():
     # ray engine needs the tmi validity pattern only (0/NaN mask, as in the
     # per-fold path); scores come from the lineaments, not the band values.
     bands["tmi"] = np.where(tmi_invalid, np.nan, 0.0).astype(np.float32)
-    out, names = continuation_grid(strikes, bands, lineaments, labels.shape)
+    out, names = continuation_grid(strikes, bands, lineaments, labels.shape,
+                                   gate_phase=gate_phase)
     np.save(dest, out)
     dest.with_suffix(".meta.json").write_text(json.dumps({
         "channels": names, "hypothesis": "H16", "n_systems": n,
+        "gate_phase": gate_phase,
         "input_sha256": sha256_file(feat),
         "labels_sha256": sha256_file(data / "labels.tif"),
         "module_sha256": sha256_file(ROOT / "src/gems10/alignment.py"),

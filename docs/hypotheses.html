@@ -4,7 +4,7 @@
 <title>Geological hypotheses · GEMSDOE10</title><link rel="stylesheet" href="assets/style.css"></head>
 <body><a class="skip" href="#main">Skip to content</a><header><div class="wrap masthead"><a class="brand" href="index.html"><span class="mark">G/10</span><span>GEMSDOE10<small>GEOTHERMAL FAULT RESEARCH</small></span></a><span class="edition">Evidence before emission<br>DOE GEMS Prize · 2026</span></div><nav class="wrap"><a href="index.html" >Submission hub</a><a href="executive_summary.html" >How to submit</a><a href="results.html" >Results & audit</a><a href="hypotheses.html" aria-current=page>Research</a><a href="sources.html" >Official sources</a><a href="verification.html" >Review</a></nav></header>
 <main id="main" class="wrap"><article><h1>Hypothesis register — frozen before implementation, 2026-09-27</h1>
-<p>Read README.md and PROJECT_BRIEF.md first. <strong>No weekly slot without a measured improvement over the current best on the same spatial holdout.</strong> Expected improvement rankings below are qualitative scientific judgments, not predicted DTI gains. None can promise 0.3049. The target is fault pixels, not geothermal vents, heat production, or resource reserves.</p>
+<p>Read README.md and PROJECT_BRIEF.md first. <strong>No weekly slot without a measured improvement over the current best on the same spatial holdout.</strong> Expected improvement rankings below are qualitative scientific judgments, not predicted DTI gains. None can promise the public leader's score (0.3168, re-verified 2026-09-27 session 4; was 0.3049 earlier the same day). The target is fault pixels, not geothermal vents, heat production, or resource reserves.</p>
 <h2>What has already been tried</h2>
 <p>Code audit at base commit <code>4805254</code>: 19 input bands; horizontal/vertical gradients, analytic signal, tilt, multiscale curvature and slope-of-slope; structure tensors; Frangi/Gabor ridges; strain/conductivity/seismicity products; HGB; whole-component holdouts; top-k/soft/halo policies; catalogue strike rays and relay corridors; self-training; lidar ridge and radiometric external stacks. See <code>scripts/build_features.py</code>, <code>src/gems10/{features,discovery,selftrain,external,placement}.py</code>. The persisted external data and trained models are absent in this checkout. Claims of their prior performance are historical reports, not fresh reproductions.</p>
 <p>Sibling websites show neural-network ensembles (1/2/5), gap-catalogue supervision and ridge/node placement (3/4), HGB structural transforms (6), and lidar/radiometric coherence (8). Novelty here means the explicit test below is not implemented in this checkout or described in the reviewed sibling landing pages; it is not a claim to worldwide novelty or an exhaustive audit of every sibling experiment.</p>
@@ -62,9 +62,328 @@
 <li>H15: <a href="https://gdr.openei.org/submissions/1391">official GDR resource list</a> describes shallow temperature, paleo deposits, and well/spring observations. Exact archives: <a href="https://gdr.openei.org/files/1391/paleo_geothermal_regional.zip">paleo</a>, <a href="https://gdr.openei.org/files/1391/2m_temperature_probe_INGENIOUS_regional_data.zip">2 m probes</a>, <a href="https://gdr.openei.org/files/1391/wellspringdata.gdb.zip">well/spring</a>. Page access is not equivalent to successful binary acquisition.</li>
 <li><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/">DrivenData problem</a> defines the prediction target and allowed external data. <a href="https://community.drivendata.org/t/where-do-you-draw-the-line/11536/2">Staff 11536/2</a> defines new as any fault pixel not already captured by USGS/INGENIOUS, including new geometry of existing systems. Thus distance &gt;1 km from known traces is a sensitivity check, <strong>not</strong> a verified property of hidden labels or an exclusive selection target.</li>
 </ul>
+<h2>Session-4 register (2026-09-27, session 4) — frozen BEFORE any new holdout contact</h2>
+<p><strong>Verified context this session (before any scoring):</strong> feature stack rebuilt from the
+mirror-restored <code>training_features.tif</code> (sha256 <code>4371c82e…</code> matches the spec pin);
+<code>data/features107.f32.npy</code> rebuilt and measured equal to the session-3 report pin
+(<code>fb0cfb4060474b374bbfabd431cd8ab9c4ef1c55c322244295e326c259a4fe80</code>); tag
+<code>ext/dem10-36326816737</code> restored through <code>scripts/fetch_external.py</code> (13 channels +
+manifest, all sha256-checked) and reassembled with <code>scripts/build_dem10_grid.py</code>
+(all 13 channels finite on the footprint); 110 tests green. Current <strong>holdout best =
+H20 arm, <code>thin10_binary</code></strong> (<code>reports/h20_blocked.json</code>: development mean <strong>0.18984</strong>,
+confirmation <strong>0.18680</strong>). Every candidate below must beat those two numbers (not the
+older H16 incumbent) under the frozen spatial protocol to be eligible.</p>
+<p><strong>New first-hand engineering finding this session (motivates H27):</strong> the
+<code>Lineament.orientation</code> returned by <code>features.structure_tensor</code> is the <strong>normal to the
+line</strong> (direction of greatest change), measured empirically this session: a horizontal
+stripe (line along columns) yields orientation 90°, a vertical stripe 0°, a 45° stripe
+−45° — the module docstring comment ("direction of least change (the line)") is
+incorrect. <code>alignment.ray_continuation_channels</code> gates lineament energy with
+<code>clip(cos(2·(o − strike)), 0, 1)</code>, where <code>strike</code> is the PCA line direction
+(<code>discovery.Strike.angle</code>): for a lineament <em>parallel</em> to the system strike
+(o = strike ± 90°) this equals −1 and is clipped to <strong>0</strong>, so the implemented <code>cont_*</code>
+channels fire on lineaments <em>perpendicular</em> to the continuation direction, the
+opposite of the preregistered "orientation-matched" intent (H16 item 2). The released
+H16/H20 artifacts are bound to the as-implemented behaviour and are not thereby
+invalidated — the measured numbers stand — but the corrected phase has never been
+scored. Recorded in REVIEW.md this session.</p>
+<p><strong>Public leaderboard re-read first-hand this session (2026-09-27, session 4,
+pages 1–2 via fetch_page):</strong> #1 DARD <strong>0.3168</strong> — the 0.3049 figure in the
+preserved prompt and the session-3 register is now stale (DARD improved
+intra-day); #2–#5 unchanged (0.2993 / 0.2854 / 0.2843 / 0.2806); the triple
+<strong>0.1563</strong> sits at ranks #26–28 (<code>extradr19</code>, <code>SDCF9</code>, <code>smashi34</code>); top-50
+floor 0.0982. Recorded in <code>reports/official_feed.json</code>.</p>
+<p><strong>External-source checks for candidates that need data (2026-09-27):</strong>
+- H22 needs the USGS ComCat event catalogue: the official FDSN service descriptor
+  <code>https://earthquake.usgs.gov/fdsnws/event/1/application.json</code> was fetched
+  successfully this session (fetch_page) → source obtainable; bulk event queries are
+  still runner-transport only (sandbox TLS restriction, KNOWLEDGE §5b).
+- H24/H25/H27 need <strong>no new external data</strong>: H24 operates on saved OOF probability
+  fields; H25 derives from the already-restored <code>dem10</code> tag; H27 rebuilds provided-band
+  lineaments. No candidate is proposed as viable without its source in hand.
+- H23 needs the <em>hidden truth density</em>, which no free official source can provide
+  (staff explicitly withhold test coverage — <a href="https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527/7">11527/7</a>);
+  therefore H23 is <strong>analysis-only</strong> this session and cannot consume a slot.
+- The 1 m lidar follow-up (H20-a) needs the competition's <code>1m_DEM_links.csv</code>
+  (login-gated) or its Dropbox PDF mirror (TLS-failed from this runtime; not
+  re-verified today) → <strong>not proposed as viable this session</strong>; blocked with a named
+  path in NEXT_STEPS.md.</p>
+<p><strong>Ranked candidates (rank = qualitative expected DTI opportunity per unit cost vs the
+H20/thin10 holdout best; no numeric forecast):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>ID · layers</th>
+<th>Physical signature / transform</th>
+<th>Why it can catch a fault missing from USGS/INGENIOUS rather than redraw the catalogue</th>
+<th>Difference from everything implemented here</th>
+<th>Data readiness / cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1 / low–medium</strong></td>
+<td><strong>H24 — probability-ridge NMS emission.</strong> No new layer: the saved OOF probability fields of the H20 stack (107 baseline + H16 continuation 10 + 3DEP-10 m 13).</td>
+<td>New policy family <code>ridgeNN_binary</code> (NN ∈ {4,6,8,10,12,15}% pre-NMS budget): take the top-NN% mask, then keep only pixels that are local maxima <strong>across the local strike</strong> of p — normal direction from <code>structure_tensor(p)</code> (verified above to be the gradient/normal), comparisons at ±1 and ±2 px along the normal, lexicographic tie-break (p, then distance-to-mask-edge) so flat HGB plateaus reduce to their interior spine — emit 1.0.</td>
+<td>It detects nothing new by itself; like H19 it converts across-strike FP width into budget for <em>additional</em> candidate structures, but unlike H19's Zhang–Suen skeleton (which follows the <strong>binary mask geometry</strong> and drifted &gt;300 m off the sparse confirmation fold, <code>reports/h19_blocked.json</code>) it follows the <strong>probability ridge</strong> — the model's own best line — and by construction cannot leave the top-k support. Whether ridge emission beats the already-localised <code>thin10</code> selection on the H20 field is exactly what the holdout will measure.</td>
+<td>No ridge/NMS policy exists in <code>modeling</code>/<code>placement</code> (grepped): the policy union is top-k (binary/soft/envelope/halo2) and mask-skeleton thinning only. Not a union of priors, not a new detector. Falsifier: selected ridge policy fails to beat H20/thin10 on development mean <strong>and</strong> confirmation.</td>
+<td>Provided data + OOF fields regenerated by the frozen H20 protocol (the rerun doubles as an exact-reproduction check of <code>reports/h20_blocked.json</code>). Low–medium cost: one policy engine + one 3-arm run (~40 min).</td>
+</tr>
+<tr>
+<td><strong>2 / medium</strong></td>
+<td><strong>H25 — spatial context of the external 10 m channels.</strong> Same stack as H24 plus 36 new channels built from the restored <code>dem10</code> grid: for the six mechanistic channels {<code>slope_max</code>, <code>steep_ratio_max</code>, <code>onesided</code>, <code>onesided3</code>, <code>hgm200_mean</code>, <code>resid_range</code>}, NaN-aware box <strong>mean / max / std over 7×7 and 15×15</strong> (0.7 / 1.5 km) → <code>ctx_*</code> = 6×6 = 36; total 166 features.</td>
+<td>Regional context of a local signature: a scarp candidate is more credible where the surrounding kilometre is also steep/one-sided, and less credible where the same local relief is an isolated noise patch. HGB sees only per-pixel values, so it cannot infer "is this pixel part of a region…" without these aggregates.</td>
+<td>The 13 external channels enter the model raw (H20); no neighbourhood statistic exists over the external stack anywhere in this checkout (grepped <code>uniform_filter</code>/<code>window</code>/<code>context</code> — only provided-band multiscale builds and 1-D NCC windows). It is not another local edge detector and not a catalogue prior. Falsifier: H25 arm fails to beat the same-run H20 arm and the external H20/thin10 holdout best on development mean <strong>and</strong> confirmation.</td>
+<td>Same tag <code>ext/dem10-36326816737</code> already in <code>data/external/dem10/</code>; builder derives the context grid locally (no network). Medium cost: one builder + arm plumbing + one 4-arm run (~55 min).</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>3 / high / unresolvable locally</strong></td>
+<td><strong>H23 — density-robust emission-budget rule.</strong> No new layer; a decision rule mapping (possibly sparsified) truth density to the emission budget of the <em>released field</em>.</td>
+<td>Decision rule, not physics: choose the budget so the marginal hit-rate estimate satisfies the metric's break-even identity (q* ≈ DTI/5 family) under simulated sparsity, instead of argmax development DTI at catalogue density.</td>
+<td>The hidden truth is the <em>new</em>-fault set only — sparser than any local fold (session-3 sweep: best budget moves thin12 → thin04 as simulated density falls, <code>reports/budget_density_sweep.json</code>); a budget matched to that regime would spend fewer FP-weight pixels per hit everywhere at once.</td>
+<td>Nothing in the repo selects a budget by a density-robust rule; all selection is argmax at catalogue density. <strong>Why it cannot be validated this session:</strong> the rule must be chosen now, but the session-3 sweep has already revealed the density→optimum mapping (any rule written today is informed by it — not blind), the hidden density is not observable from any free official source, and a release of a non-selected policy is refused by the gate by design. → <strong>Analysis-only</strong>; the honest validation paths are (i) a user-approved <em>measurement</em> pair of uploads of the same field at two budgets (user decision, not ours) or (ii) future evidence that identifies the hidden density. No slot, no autonomous promotion.</td>
+<td>Zero compute; works from existing reports. Cost: documentation only.</td>
+</tr>
+<tr>
+<td><strong>4 / medium</strong></td>
+<td><strong>H27 — corrected-phase lineament gate (aligned-lineament continuation).</strong> Provided bands <code>tmi</code>, <code>det_elev</code>, <code>rtp</code>; same rays/radii/NCC controls as H16; gate becomes <code>clip(−cos(2·(o − strike)), 0, 1)</code> so lineaments <strong>parallel</strong> to the strike (o ⊥ … as measured) pass, matching the preregistration's "orientation-matched" wording. Applied to a new arm <code>[107 + 10 fixed + 13 dem10]</code> (130 features) so the comparison against the H20 holdout best is like-for-like.</td>
+<td>The same continuation evidence as H16 but with the physically intended phase: energy of lineaments that <em>continue the system's own orientation</em> beyond the endpoint, minus the same NCC controls.</td>
+<td>Staff say new geometry concentrates around existing systems (11516/4, 11536/2); if genuinely strike-parallel continuation structure is what marks unmapped strands, the as-built gate suppressed exactly that signal and the corrected channels can carry it.</td>
+<td>The implemented <code>cont_*</code> channels are 90° out of phase with their preregistered intent (measured this session, above); the corrected phase has never been trained or scored. Not a re-threshold, not a union. Falsifier: fixed arm fails to beat the same-run as-built H20 arm and external H20/thin10 on development mean <strong>and</strong> confirmation.</td>
+<td>Provided data only. Builder gains an explicit <code>gate_phase</code> parameter (default = as-built, bit-identical) so all incumbents reproduce unchanged. Medium cost: parameterised builder + one 4-arm run (~55 min); rank-4 only because it must both fix the phase <em>and</em> out-score the dem10-extended incumbent.</td>
+</tr>
+<tr>
+<td><strong>5 / high; data-checkable but not runnable here</strong></td>
+<td><strong>H22 — seismicity lineament coherence</strong> (carried from the session-3 register, source re-checked today). USGS ComCat FDSN <code>https://earthquake.usgs.gov/fdsnws/event/1/</code> (public domain, application descriptor fetched 2026-09-27).</td>
+<td>Strike-aligned anisotropic kernel density of event hypocentres at 2–10 km scales + structure-tensor coherence, vs the provided 100 km-radius density bands.</td>
+<td>Micro-seismicity alignments mark active structure without fresh scarps and independent of magnetics/gravity/topography.</td>
+<td>No event-level lineament transform exists here (provided bands are regional densities).</td>
+<td>Bulk query must run on the GitHub runner (transport pattern of <code>scripts/ext/</code>); ranked below H24/H25/H27 for this session because the transport job does not exist yet and most Quaternary faults are seismically quiet on catalogue timescales. Not run this session.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Preregistered session-4 protocol (identical folds, buffer, HGB settings, sampling and
+policy-selection rule as sessions 2–3; union extended to v4 = v3 ∪ {ridge04, ridge06,
+ridge08, ridge10, ridge12, ridge15}_binary):</strong></p>
+<ol>
+<li><strong>Incumbent.</strong> <code>reports/h20_blocked.json</code>, H20 arm under <code>thin10_binary</code>
+   (development mean 0.18984, confirmation 0.18680). The validation runner gains an
+   explicit <code>--incumbent-arm</code> so the comparison reads the named arm's selected policy
+   from the incumbent report; the comparison key is recorded as
+   <code>incumbent_report:H20</code> and must pass like any other.</li>
+<li><strong>H24.</strong> Rerun the frozen H20 protocol with the v4 union
+   (<code>--hypothesis H20 --policy-set v4 --report reports/h24_blocked.json
+   --incumbent-report reports/h20_blocked.json --incumbent-arm H20</code>). First, the
+   shared-policy scores of arms baseline107 / baseline107_discovery / H16 / H20 must
+   reproduce <code>reports/h20_blocked.json</code> exactly (max |ΔDTI| = 0); otherwise stop and
+   diagnose. Then per-arm selection = argmax mean development DTI over the v4 union.
+   H24 is eligible only if the H20 arm's selected policy beats the external incumbent
+   (H20/thin10) on the development mean <strong>and</strong> the confirmation fold and also beats
+   every same-run arm under its own selected policy. If selection returns
+   <code>thin10_binary</code> itself (a tie), deltas are 0 and eligibility correctly fails.</li>
+<li><strong>H25.</strong> One 4-arm run (<code>--hypothesis H25 --policy-set v4 --extra
+   dem10_channels.f32.npy,dem10_context.f32.npy --report reports/h25_blocked.json
+   --incumbent-report reports/h20_blocked.json --incumbent-arm H20</code>); arms =
+   baseline107, H16, H20 (same-run reproduction anchor on shared v3 policies), H25.
+   H25 is eligible only if its selected policy beats the external incumbent
+   (H20/thin10) and every same-run arm on development mean <strong>and</strong> confirmation fold.
+   The context grid builder, its channel list and window sizes are frozen above; no
+   channel subset selection after results.</li>
+<li><strong>H27.</strong> Deferred to a later run this session or the next session; if run, arms =
+   baseline107, H16, H20 (as-built), H27 (fixed gate); eligibility identical to item 3
+   against the external H20/thin10 incumbent and all same-run arms. The default
+   <code>gate_phase</code> remains as-built so items 2–3 reproduce exactly.</li>
+<li><strong>H23.</strong> No run. Documented above as analysis-only; it cannot consume a slot and
+   cannot change the site's approved download.</li>
+<li><strong>Release.</strong> Only a candidate actually scored under items 2–4 may be released:
+   (field, policy) pairs are never mixed post hoc; a passing candidate still needs the
+   full-data fit with a hash-bound manifest (<code>train_final.py --bind-to</code>) and every
+   <code>build_submission.py</code> gate. A failure at any step = no slot, negative recorded.</li>
+<li><strong>What this cannot show.</strong> Catalogue-generalisation proxy on four correlated stripe
+   folds with a re-used confirmation geography and development-selected policy; nothing
+   here forecasts the private score; no slot is spent by this repository.</li>
+</ol>
+<h2>Session-4 results (2026-09-27, session 4) — measured, no slot spent</h2>
+<p><strong>H24 (<code>reports/h24_blocked.json</code>, protocol <code>spatial-4x4-strided-v1-buffer40-policy-sweep-v4</code>,
+22 policies, elapsed 1905 s) — ELIGIBLE under protocol item 2.</strong></p>
+<ul>
+<li><strong>Reproduction gate passed exactly first:</strong> the 16 shared v3 policies on arms
+  baseline107 / baseline107_discovery / H16 / H20 reproduce <code>reports/h20_blocked.json</code>
+  with <code>max_abs_dti_diff: 0.0, exact: true</code> (all four arms), before any new-policy
+  score was used. Score-mask hashes and prediction-file hashes in the report were
+  re-checked independently against the saved OOF grids.</li>
+<li><strong>Selection (preregistered argmax over development folds 0–2):</strong> all four arms
+  selected <code>ridge15_binary</code>. The candidate is therefore <strong>H20 arm + ridge15_binary</strong>.</li>
+<li><strong>Per-fold DTIs at the selected policies:</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>fold</th>
+<th>role</th>
+<th>baseline107</th>
+<th>H16</th>
+<th>H20 (candidate)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>development</td>
+<td>0.19443</td>
+<td>0.19967</td>
+<td><strong>0.20406</strong></td>
+</tr>
+<tr>
+<td>1</td>
+<td>development</td>
+<td>0.21744</td>
+<td>0.22100</td>
+<td><strong>0.22408</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>development</td>
+<td>0.26341</td>
+<td>0.26986</td>
+<td><strong>0.27846</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td>confirmation</td>
+<td>0.21046</td>
+<td>0.20728</td>
+<td><strong>0.22525</strong></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Eligibility (all <code>passes: true</code> in <code>decision.comparisons</code>):</strong></li>
+<li>vs external incumbent <strong>H20/thin10</strong> (<code>reports/h20_blocked.json</code>): development-mean
+    delta <strong>+0.04569</strong> (0.23553 vs 0.18984), confirmation delta <strong>+0.03845</strong>
+    (0.22525 vs 0.18680);</li>
+<li>vs same-run baseline107 (ridge15): dev <strong>+0.01044</strong>, conf <strong>+0.01479</strong>;</li>
+<li>vs same-run H16 (ridge15): dev <strong>+0.00536</strong>, conf <strong>+0.01797</strong>;</li>
+<li>vs same-run baseline107_discovery (ridge15): dev <strong>+0.01044</strong>, conf <strong>+0.01479</strong>
+    — identical to the baseline107 deltas because the discovery fusion (10 px strike
+    rays, 0.4/0.5 weights) is provably inside the 40 px score buffer, so the fused and
+    raw fields coincide exactly on every score region (observed DTIs equal to all
+    printed digits on all four folds).</li>
+<li><strong>H20-arm policy ladder (fold 0 / 1 / 2 / 3):</strong> <code>topk02_binary</code> 0.11475 / 0.14225 /
+  0.18679 / 0.19853; <code>topk06_binary</code> 0.15370 / 0.16992 / 0.21324 / 0.18021;
+  <code>thin10_binary</code> 0.16483 / 0.18130 / 0.22339 / 0.18680; <code>ridge06_binary</code>
+  0.16791 / 0.19147 / 0.25317 / 0.22707; <code>ridge10_binary</code> 0.19130 / 0.21569 /
+  0.27183 / 0.22928; <code>ridge15_binary</code> 0.20406 / 0.22408 / 0.27846 / 0.22525.
+  <code>ridge06</code> already beats <code>thin10</code> on every fold; the ladder is monotone on the
+  development folds (ridge15 &gt; ridge10 &gt; ridge06 &gt; thin10) and only ridge10 edges
+  ridge15 on the confirmation fold — selection correctly used development folds only.</li>
+<li><strong>Independent verification performed before recording this result</strong> (same session,
+  separate script): (i) <code>dti = tp/(tp + 0.2·fp + 0.8·fn)</code> recomputed from stored
+  components matches every printed DTI to 6 dp; (ii) ridge15 and thin10 emissions
+  re-derived from the saved OOF grid <code>scratch/h24/H20_fold0.npy</code> match the stored
+  <code>dti</code> and <code>n_pos_pred</code> exactly (0.204056/39099 and 0.164834/32517); (iii) the
+  emission is a strict subset of its top-15% core (39,099 of 139,376 px kept);
+  (iv) the fold-0 score-mask hash in the report matches a fresh computation.
+  On fold 0 the candidate has TP_w 3,628 / FP_w 35,570 / FN_w 8,798 versus thin10's
+  2,700 / 29,491 / 9,727 — TP +34 % against FP +21 %, the mechanism the register
+  predicted (the 15 % pre-NMS budget reaches further down the probability ranking
+  than thin10's 10 % support, and the strike-normal NMS keeps only the ridge of each
+  reached structure).</li>
+<li><strong>What this cannot show (unchanged):</strong> catalogue-generalisation proxy on four
+  correlated stripe folds with a development-selected policy; the confirmation fold's
+  geography has been used before in sessions 2–3; nothing here forecasts the private
+  score; <strong>no slot was spent</strong>. The run's first attempt was OOM-killed mid-fold-1
+  (float64 structure-tensor transients, <code>| tee</code> masked the kill); the retry used the
+  float32 tensor fix + <code>MALLOC_ARENA_MAX=2</code> and reproduced everything exactly —
+  recorded in <code>REVIEW.md</code>, <code>KNOWLEDGE.md</code> §5c.</li>
+<li><strong>Status:</strong> new holdout best at the time of this writing = <strong>H20/ridge15_binary</strong>
+  (development mean 0.23553, confirmation 0.22525) — superseded the same session by
+  the H25 result below. Releasing a candidate as a downloadable artifact still
+  requires the full-data fit with a hash-bound manifest (protocol item 6); nothing
+  is submitted autonomously.</li>
+</ul>
+<p><strong>H25 (<code>reports/h25_blocked.json</code>, protocol <code>spatial-4x4-strided-v1-buffer40-policy-sweep-v4</code>,
+22 policies, elapsed 2507 s) — ELIGIBLE under protocol item 3.</strong></p>
+<ul>
+<li><strong>Reproduction gate passed exactly:</strong> the shared v3 policies on arms baseline107 /
+  baseline107_discovery / H16 / H20 again reproduce <code>reports/h20_blocked.json</code>
+  (<code>max_abs_dti_diff: 0.0, exact: true</code>) — the H20 anchor arm inside this run is
+  bit-for-bit the released incumbent field despite the H25 arm co-running.</li>
+<li><strong>Selection:</strong> every arm selected <code>ridge15_binary</code>. Candidate = <strong>H25 arm
+  (166 features = 107 + H16 10 + dem10 13 + context 36) + ridge15_binary</strong>.</li>
+<li><strong>Per-fold DTIs at the selected policies:</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>fold</th>
+<th>role</th>
+<th>baseline107</th>
+<th>H16</th>
+<th>H20</th>
+<th>H25 (candidate)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>development</td>
+<td>0.19443</td>
+<td>0.19967</td>
+<td>0.20406</td>
+<td>0.20097</td>
+</tr>
+<tr>
+<td>1</td>
+<td>development</td>
+<td>0.21744</td>
+<td>0.22100</td>
+<td>0.22408</td>
+<td><strong>0.22476</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>development</td>
+<td>0.26341</td>
+<td>0.26986</td>
+<td>0.27846</td>
+<td><strong>0.28415</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td>confirmation</td>
+<td>0.21046</td>
+<td>0.20728</td>
+<td>0.22525</td>
+<td><strong>0.25179</strong></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Eligibility (all <code>passes: true</code>):</strong></li>
+<li>vs external incumbent <strong>H20/thin10</strong>: dev <strong>+0.04679</strong>, confirmation <strong>+0.06498</strong>;</li>
+<li>vs same-run <strong>H20</strong> (each under its selected ridge15): dev <strong>+0.00109</strong>,
+    confirmation <strong>+0.02654</strong> — the preregistered falsifier passes, but note the
+    shape honestly: fold 0 is <em>negative</em> (0.20097 vs 0.20406) and the development
+    margin is within fold noise; the confirmation margin is decisive;</li>
+<li>vs baseline107 / baseline107_discovery: dev +0.01153, conf +0.04133; vs H16:
+    dev +0.00645, conf +0.04450.</li>
+<li><strong>Where the context channels actually help (policy ladder):</strong> under the <em>incumbent</em>
+  policy <code>thin10_binary</code> the H25 arm's development mean is 0.18995 — i.e. <strong>zero</strong>
+  versus the incumbent's 0.18984 — while its confirmation jumps to 0.21751
+  (+0.0307 over 0.18680). The context gain is concentrated on the sparse
+  confirmation geography; on the development folds it only interacts with the ridge
+  policy (ridge15: H25 0.23663 vs H20 0.23553 dev mean, +0.00109).</li>
+<li><strong>Status:</strong> new holdout best = <strong>H25/ridge15_binary</strong> (development mean 0.23663,
+  confirmation 0.25179), ahead of H20/ridge15 (0.23553 / 0.22525) and of the released
+  H20/thin10 (0.18984 / 0.18680). Same limits as H24: proxy folds, re-used
+  confirmation geography, no forecast of the private score, no slot spent.</li>
+</ul>
 <h2>Session-3 register (2026-09-27, later session) — frozen BEFORE any new holdout result</h2>
 <p><strong>Verified context this session (first-hand reads, links in <code>reports/official_feed.json</code>):</strong>
-<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/">public leaderboard</a> #1 DARD 0.3049, then 0.2993 / 0.2854 / 0.2843 / 0.2806; an account named <code>doegemsDrivendata</code> sits at 0.1847 (its role is not stated on the page — do not call it the official benchmark without confirmation); <strong>0.1563 appears three times</strong> (<code>extradr19</code>, <code>SDCF9</code>, <code>smashi34</code>, ranks 25–27). The <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/">problem page</a> states the hidden labels were "manually identified by fault experts", that the competition itself distributes <code>1m_DEM_links.csv</code> (1 m DEM download links) alongside the 100 m features, and that any external data is allowed if the licence permits use and sharing with the sponsor. Staff <a href="https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527/7">11527/7</a> (re-read; no newer staff post in that thread) still withhold data sources, fault types and coverage.</p>
+<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/">public leaderboard</a> #1 DARD 0.3049 (session-3 read; superseded by the session-4 re-read above: 0.3168), then 0.2993 / 0.2854 / 0.2843 / 0.2806; an account named <code>doegemsDrivendata</code> sits at 0.1847 (its role is not stated on the page — do not call it the official benchmark without confirmation); <strong>0.1563 appears three times</strong> (<code>extradr19</code>, <code>SDCF9</code>, <code>smashi34</code>, ranks 25–27). The <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/">problem page</a> states the hidden labels were "manually identified by fault experts", that the competition itself distributes <code>1m_DEM_links.csv</code> (1 m DEM download links) alongside the 100 m features, and that any external data is allowed if the licence permits use and sharing with the sponsor. Staff <a href="https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527/7">11527/7</a> (re-read; no newer staff post in that thread) still withhold data sources, fault types and coverage.</p>
 <p><strong>What the session-2 numbers say about where the score is lost (measured, <code>reports/h16_blocked.json</code>):</strong> at the selected policy <code>topk06_binary</code>, fold 0 has TP_w 3,084 / FP_w 49,365 / FN_w 9,342 — i.e. α·FP (9,873) is <em>larger</em> than β·FN (7,473). The FP mass comes from predicted pixels ≥300 m from any held-out trace: false structures <strong>and</strong> across-strike thickness of blobs around true structures. The truth is a rasterised 1-px line; TP is a per-truth-pixel <em>max</em> inside 300 m, FP is a per-predicted-pixel <em>sum</em>. Thickness therefore buys nothing and costs 0.2 per pixel. This is a property of the published metric, not a guess about the hidden labels.</p>
 <p><strong>Ranked candidates (rank = qualitative expected DTI opportunity / implementation cost; no numeric forecast):</strong></p>
 <table>
@@ -311,4 +630,4 @@
 <li>Score with the published distance-weighted Tversky formula, predictions and ground truth restricted to the score mask. This is catalogue-generalization, not private-new-fault validation. Known training pixels lie outside score blocks. Component-holdout comparisons remain supplemental and cannot be silently mixed with these values.</li>
 <li>No training-final/publishing if H12 fails. If it passes this matched baseline, first establish whether the historical campaign winner (including self-training) can be reproduced on the same geography before claiming it beat the current best. Format-valid diagnostic TIFs must be labelled <strong>EXPERIMENT — DO NOT SUBMIT</strong>. Public download promotion requires evidence and content-duplicate checks.</li>
 <li>Log actual input/code hashes, fold masks, feature definition, config, scores, runtime, decision and limitations. Never infer future leaderboard score from proxy DTI. No competition upload is authorized by a local test alone.</li>
-</ol></article></main><footer class="wrap"><b>Maximize P(Win). Own the Outcome.</b><p>Local evidence is not a private competition score. AI-assisted research; official links and limitations are explicit.</p><p>Site built 2026-09-27T19:03:26+00:00 · <a href="https://github.com/buffedlizard55-lab/GEMSDOE10">Repository</a> · <a href="data/site.json">Machine-readable manifest</a></p></footer></body></html>
+</ol></article></main><footer class="wrap"><b>Maximize P(Win). Own the Outcome.</b><p>Local evidence is not a private competition score. AI-assisted research; official links and limitations are explicit.</p><p>Site built 2026-09-28T00:40:52+00:00 · <a href="https://github.com/buffedlizard55-lab/GEMSDOE10">Repository</a> · <a href="data/site.json">Machine-readable manifest</a></p></footer></body></html>

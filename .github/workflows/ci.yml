@@ -7,7 +7,13 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
+      # The evidence gate falls back to git history for pinned code
+      # hashes (release.verify_training_binding); a depth-1 checkout
+      # silently breaks that fallback (shallow-clone incident,
+      # REVIEW.md session 4).
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"

@@ -82,6 +82,96 @@ def _skeleton(mask: np.ndarray) -> np.ndarray:
     return img.astype(bool)
 
 
+def ridge_nms(core: np.ndarray, p: np.ndarray,
+              offsets: list[tuple[np.ndarray, np.ndarray]] | None = None
+              ) -> np.ndarray:
+    """Probability-ridge non-maximum suppression across the local strike (H24).
+
+    Keep pixels of `core` that are local maxima of `p` along the local NORMAL
+    direction (structure-tensor orientation of `p`, measured to be the
+    direction of greatest change — see HYPOTHESES.md session-4 register),
+    comparing at ±1 and ±2 px offsets along that normal. Ties (common: HGB
+    outputs are piecewise constant) are broken lexicographically by
+    (p, distance-to-mask-edge), so a flat plateau reduces to its interior
+    spine instead of surviving whole.
+
+    `offsets` may supply precomputed (dr, dc) neighbour displacements for the
+    two distances (as `modeling` does, cached per probability field); when
+    None they are derived from the structure tensor of `p`.
+
+    Properties, by construction:
+      * output ⊆ core (never leaves the top-k support, unlike a skeleton that
+        can wander off the probability mass);
+      * along-strike continuity is preserved — comparisons are across strike
+        only, so a line rising along strike is never sampled against its own
+        downstream values;
+      * deterministic; NaN-free binary output.
+    """
+    core = np.asarray(core, dtype=bool)
+    p = np.asarray(p, dtype=np.float64)
+    if not core.any():
+        return np.zeros_like(core)
+    if offsets is None:
+        offsets = ridge_offsets(np.where(np.isfinite(p), p, np.nan))
+
+    dt = ndimage.distance_transform_edt(core)
+    H, W = core.shape
+    rr = np.arange(H)[:, None]
+    cc = np.arange(W)[None, :]
+    keep = core.copy()
+
+    def neighbor_ge(r: np.ndarray, c: np.ndarray, dr: np.ndarray,
+                    dc_: np.ndarray) -> np.ndarray:
+        """True where p at (r, c) beats (lexicographically: p, then interior
+        distance) p at the shifted neighbour; out-of-image counts as smaller
+        (keeps edge pixels)."""
+        nr = r + dr
+        nc = c + dc_
+        inside = (nr >= 0) & (nr < H) & (nc >= 0) & (nc < W)
+        nr_c = np.clip(nr, 0, H - 1)
+        nc_c = np.clip(nc, 0, W - 1)
+        q = p[nr_c, nc_c]
+        qdt = dt[nr_c, nc_c]
+        me = p[r, c]
+        medt = dt[r, c]
+        return ~inside | (me > q) | ((me == q) & (medt >= qdt))
+
+    for dr, dc in offsets:
+        for sgn in (1, -1):
+            keep &= core & neighbor_ge(rr, cc, sgn * dr, sgn * dc)
+    return keep
+
+
+def ridge_offsets(filled: np.ndarray) -> list[tuple[np.ndarray, np.ndarray]]:
+    """±d-neighbour displacements along the structure-tensor normal of p.
+
+    `filled` is (H, W) float with NaN outside; returns int arrays
+    [(dr1, dc1), (dr2, dc2)] rounding d·(sin o, cos o) for d in (1, 2)
+    ((row, col) basis; the tensor orientation o is in the (x=col, y=row)
+    basis and is the normal to the local line — verified empirically,
+    HYPOTHESES.md session-4 register).
+    """
+    from . import features
+    # float32 on purpose: the offsets are rounded to integer pixels, and on
+    # this 4 GB host the float64 tensor temporaries (~1 GB peak) caused an
+    # OOM-kill during a policy sweep (REVIEW.md session 4). float32 halves
+    # the transient; offsets are identical in every synthetic control.
+    lin = features.structure_tensor(filled.astype(np.float32, copy=False),
+                                    sigma=1.5, integration_sigma=4.0)
+    o = lin.orientation
+    offsets = []
+    for d in (1.0, 2.0):
+        dr = np.round(d * np.sin(o))
+        dc = np.round(d * np.cos(o))
+        dr = np.where(np.isfinite(dr), dr, 0.0)
+        dc = np.where(np.isfinite(dc), dc, 0.0)
+        bad = (dr == 0) & (dc == 0)  # cannot happen for |n| = 1 at d >= 1
+        if bad.any():
+            dc = np.where(bad, 1.0, dc)
+        offsets.append((dr.astype(np.int16), dc.astype(np.int16)))
+    return offsets
+
+
 def thin_keep(mask: np.ndarray, spacing: int) -> np.ndarray:
     """Skeleton, then keep one pixel per `spacing` pixels of arc length.
 

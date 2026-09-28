@@ -1,5 +1,5 @@
 {
-  "built_utc": "2026-09-27T19:03:26+00:00",
+  "built_utc": "2026-09-28T00:40:52+00:00",
   "reports": [
     "budget_density_sweep.json",
     "cv_baseline.json",
@@ -9,12 +9,15 @@
     "diagnostic_validation.json",
     "final_manifest_h16.json",
     "final_manifest_h20.json",
+    "final_manifest_h25.json",
     "h12_blocked.json",
     "h12_reproduction.json",
     "h13_blocked.json",
     "h16_blocked.json",
     "h19_blocked.json",
     "h20_blocked.json",
+    "h24_blocked.json",
+    "h25_blocked.json",
     "official_feed.json",
     "rescore_baseline.json",
     "rescore_discovery.json",
@@ -150,6 +153,108 @@
           "name": "file-exists",
           "ok": true,
           "detail": "1717585 bytes",
+          "hard": true
+        },
+        {
+          "name": "single-band",
+          "ok": true,
+          "detail": "band count = 1",
+          "hard": true
+        },
+        {
+          "name": "dtype-float32",
+          "ok": true,
+          "detail": "dtype = float32",
+          "hard": true
+        },
+        {
+          "name": "crs-epsg32611",
+          "ok": true,
+          "detail": "CRS = EPSG:32611 (epsg 32611)",
+          "hard": true
+        },
+        {
+          "name": "resolution-100m",
+          "ok": true,
+          "detail": "resolution = (100.0, 100.0)",
+          "hard": true
+        },
+        {
+          "name": "shape",
+          "ok": true,
+          "detail": "shape = (3730, 3292), expected (3730, 3292)",
+          "hard": true
+        },
+        {
+          "name": "geotransform",
+          "ok": true,
+          "detail": "transform = (100.0, 0.0, 243350.0, 0.0, -100.0, 4508550.0)",
+          "hard": true
+        },
+        {
+          "name": "nodata-nan",
+          "ok": true,
+          "detail": "declared nodata = nan",
+          "hard": true
+        },
+        {
+          "name": "values-in-0-1",
+          "ok": true,
+          "detail": "finite range = [0.0, 1.0]",
+          "hard": true
+        },
+        {
+          "name": "no-inf",
+          "ok": true,
+          "detail": "inf pixels = 0",
+          "hard": true
+        },
+        {
+          "name": "template-verified",
+          "ok": true,
+          "detail": "official sample submission sha256 ok, footprint = 5167373 px",
+          "hard": true
+        },
+        {
+          "name": "NAN-INSIDE-FOOTPRINT",
+          "ok": true,
+          "detail": "0 non-finite pixels inside the scored footprint (non-finite scored values violate the [0,1] contract; the original backend rejection cause is not known)",
+          "hard": true
+        },
+        {
+          "name": "footprint-matches-official",
+          "ok": true,
+          "detail": "0 finite pixels outside the official footprint (use --allow-footprint-subset for experiments only)",
+          "hard": true
+        }
+      ]
+    },
+    {
+      "field_sha256": "bfed712ab536139f73dac5df2eeb2a4608bf78e91e92262e82c229af71405da6",
+      "noncatalogue_sha256": "15e1696b1aeda08a1bb29c9c2c309fd9085af2aefe56e49296cfb3abeafc0dd0",
+      "positive_pixels": 174232,
+      "noncatalogue_positive_pixels": 161366,
+      "name": "gems10-h25-ctx-ridge",
+      "policy": "ridge15_binary",
+      "generated_utc": "20260927T232947704150Z",
+      "status": "approved",
+      "probability_sha256": "6452ae1d00ba094b69c048344efd41235ede2c7e65de73ad57b313069c06ce0f",
+      "file": "gems10-h25-ctx-ridge-20260927T232947704150Z-6452ae1d00.tif",
+      "sha256": "1381e784fb8b8340beffd0e735ac9eea89ad35d1a807f8a9bab5506e3fc8275e",
+      "bytes": 1772935,
+      "zip": "gems10-h25-ctx-ridge-20260927T232947704150Z-6452ae1d00.zip",
+      "zip_sha256": "96149798ce14fb1a3c9bb4a044e722e4228c4783e63e8e988a1d53bc84410510",
+      "validation_sha256": "b6c5cbe838f778fef32bcf315e357ea2dbbb96b036168a67f61c498b0b789f13",
+      "validation_file": "h25_blocked.json",
+      "suggested_note": "gems10-h25-ctx-ridge | H25 166ch (107+H16+dem10+36ctx) | ridge15_binary | validated reports/h25_blocked.json eligible 2026-09-27",
+      "footprint_px": 5167373,
+      "positive_px": 174232,
+      "mass": 174232.0,
+      "gate": [
+        {
+          "name": "file-exists",
+          "ok": true,
+          "detail": "1772935 bytes",
           "hard": true
         },
         {

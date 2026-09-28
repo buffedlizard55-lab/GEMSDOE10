@@ -327,8 +327,21 @@ def ray_continuation_channels(band: np.ndarray,
                               ncc_rays: tuple[int, ...] = NCC_RADII,
                               ncc_band: np.ndarray | None = None,
                               min_n_px: int = 8,
-                              max_width: float = 20.0) -> tuple[np.ndarray, list[str]]:
+                              max_width: float = 20.0,
+                              gate_phase: str = "asbuilt") -> tuple[np.ndarray, list[str]]:
     """H16: endpoint-conditioned continuation evidence (pre-registered).
+
+    gate_phase selects the orientation-gate sign (HYPOTHESES.md session-4
+    register, H27):
+      "asbuilt" (default) — clip(+cos(2·(o − strike)), 0, 1): the behaviour
+        every existing report and released artifact was measured with. Since
+        `features.structure_tensor.orientation` is the NORMAL to the line
+        (measured 2026-09-27), this passes lineaments perpendicular to the
+        system strike — 90° out of phase with the preregistered
+        "orientation-matched" wording.
+      "aligned" — clip(−cos(2·(o − strike)), 0, 1): passes lineaments
+        PARALLEL to the strike (o = strike ± 90° ⇒ +1), the physically
+        intended continuation signature. Never used by an existing report.
 
     band/ncc_band: (H,W) float (NaN ok; 0-filled internally for sampling).
     lineaments: {name: Lineament} with .energy/.coherence/.orientation.
@@ -336,6 +349,8 @@ def ray_continuation_channels(band: np.ndarray,
     Returns (H, W, C) float32 (NaN where no ray covers) and channel names.
     """
     from .features import Lineament  # noqa: F401  (type hint only)
+    if gate_phase not in ("asbuilt", "aligned"):
+        raise ValueError(f"unknown gate_phase: {gate_phase!r}")
     band = np.asarray(band, dtype=np.float32)
     H, W = band.shape
     names: list[str] = []
@@ -394,7 +409,12 @@ def ray_continuation_channels(band: np.ndarray,
                     e = lin.energy[pts_r, pts_c]
                     c = lin.coherence[pts_r, pts_c]
                     o = lin.orientation[pts_r, pts_c]
-                    match = np.cos(2.0 * (o - s.angle))
+                    if gate_phase == "asbuilt":
+                        match = np.cos(2.0 * (o - s.angle))
+                    elif gate_phase == "aligned":
+                        match = -np.cos(2.0 * (o - s.angle))
+                    else:
+                        raise ValueError(f"unknown gate_phase: {gate_phase!r}")
                     score = np.where(np.isfinite(e) & np.isfinite(c),
                                      e * np.clip(c, 0, 1) * np.clip(match, 0, 1),
                                      np.nan)

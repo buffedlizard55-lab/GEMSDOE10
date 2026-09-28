@@ -1,101 +1,101 @@
-# Next steps — after session 3 (2026-09-27)
+# Next steps — after session 4 (2026-09-27)
 
 Read README.md (including the preserved project prompt), HYPOTHESES.md
-(session-3 register + results), KNOWLEDGE.md §5b (transport + facts), REVIEW.md
-and LIMITATIONS.md first. Everything below is ranked by expected effect on
-P(win) per unit of work; nothing here promises a leaderboard score.
+(session-4 register + results), KNOWLEDGE.md §5b–§5c (transport, traps, facts),
+REVIEW.md and LIMITATIONS.md first. Everything below is ranked by expected
+effect on P(win) per unit of work; nothing here promises a leaderboard score.
 
 ## Current state (measured)
 
-- **New recommended artifact — H20:** `gems10-h20-dem10-scarp-thin-20260927T155223039488Z-ffc91a1686.tif`
-  (130-feature HGB = 107 baseline + H16 continuation 10 + 3DEP-10 m scarp 13,
-  policy `thin10_binary`, 153,957 cells = 2.98% of the footprint; hash-bound to
-  `reports/h20_blocked.json` + `reports/final_manifest_h20.json`). Beat the H16
-  incumbent under the frozen protocol: dev mean **+0.01473**, confirmation
-  **+0.01406** (absolute 0.16483 / 0.18130 / 0.22339 · 0.18680). The H16
-  artifact (`…-3431b83c7c.tif`, 6%) stays on the hub as superseded/provenance.
-  No slot has been spent on either; both are unmeasured on the leaderboard.
-- **H19 thin-line emission — NOT ELIGIBLE** (`reports/h19_blocked.json`): dev
-  mean +0.00744 vs the incumbent, confirmation −0.02111. Protocol reproduction
-  of the session-2 report was exact (max |ΔDTI| = 0).
-- **H20 data pipeline** is reproducible: tag `ext/dem10-36326816737` →
-  `scripts/fetch_external.py` → `scripts/build_dem10_grid.py` (49 blocks, 440 s
-  on the runner; 12 tiles with sha256). The channels alone are weak (univariate
-  AUC ≤ 0.58); the gain is interaction-driven and concentrated in folds 2–3.
-- **H21 catalogue differencing — CLOSED (decisive negative):** the provided
-  labels are the current public catalogue (1 pixel of USGS QFFD / INGENIOUS v1 /
-  v2 lies >300 m from the labels). There is no catalogue-lag population.
-- **H15 unblocked, unmodelled:** point archives (paleo-geothermal 281 in-footprint
-  points, 2 m probes 2,782) restored from `ext/catalogue-36326816737`.
-- **Budget sensitivity measured:** `reports/budget_density_sweep.json` (H20
-  OOF grids) — the optimal emission budget shrinks as the truth gets sparser
-  (see P0). H20's `thin10_binary` already emits ~3% (vs H16's 6%), which sits
-  closer to the sparse-fold optimum, but it was *selected*, not *derived*.
+- **New recommended artifact — H25:** `gems10-h25-ctx-ridge-20260927T232947704150Z-6452ae1d00.tif`
+  (166-feature HGB = 107 baseline + H16 continuation 10 + 3DEP-10 m scarp 13 +
+  36 DEM-context channels, policy `ridge15_binary`, 174,232 cells = 3.37 % of the
+  footprint; hash-bound to `reports/h25_blocked.json` + `reports/final_manifest_h25.json`).
+  Development folds 0.20097 / 0.22476 / 0.28415 (mean **0.23663**), confirmation
+  **0.25179** — beats the same-run H20+ridge15 (+0.0011 dev, +0.0265 conf) and the
+  released H20/thin10 incumbent (+0.0468 dev, +0.0650 conf). Honest caveats: the
+  development margin over same-run H20 is within fold noise and fold 0 is *negative*
+  (0.20097 vs 0.20406); the decision rests on the confirmation fold. Under thin10
+  the context channels alone add nothing on development (+0.0001) — their value is
+  the ridge-policy interaction on sparse geography.
+- **Close second — H24's H20+ridge15** (`reports/h24_blocked.json`, dev mean
+  0.23553 / conf 0.22525): same H20 field as the old artifact with the
+  preregistered ridge emission; kept as evidence, superseded by H25.
+- **Both session-4 runs reproduced `reports/h20_blocked.json` exactly**
+  (max |ΔDTI| = 0, 16 shared policies × 4 arms) before any decision was read.
+- **H27** (corrected-phase continuation gate) is implemented and tested
+  (`gate_phase="aligned"`, `tests/test_h27_gate.py`) but **not run** — time.
+- The session-3 H20/thin10 and H16/topk06 artifacts remain on the hub as
+  superseded/provenance. No slot has been spent on anything; all numbers above
+  are spatial-holdout proxies, not leaderboard scores.
+- **Provenance fixed:** the workspace's shallow clone broke both approvals
+  ("validation code changed or missing"); `git fetch --unshallow origin` +
+  PR-ref fetch restored every pinned blob, and both workflows now use
+  `fetch-depth: 0`.
+- H21 catalogue differencing stays closed (labels = the public catalogue);
+  the emission-density question is still open (see P0).
 
-## P0: the emission-budget question (largest known lever, unresolved)
+## P0: run H27 (only unexecuted preregistered candidate)
 
-The metric penalty scales with emitted pixels ÷ truth pixels. Locally the H16
-field prefers 6% where held-out truth is 1.1–1.3% of the region and 3% where it
-is 0.84% (fold 3: topk03 0.18792 vs topk06 0.17274). The hidden truth (new faults
-only) is almost certainly sparser than the catalogue, so the budget that wins
-locally is probably above the hidden optimum — but the hidden density is
-unknown and cannot be estimated from local data. `reports/budget_density_sweep.json`
-(H20 OOF grids; catalogue systems randomly kept with probability f, the removed
-systems' pixels masked "known") shows the development-mean best policy
-moving from `thin12` at f = 1 (0.189) to `thin08` at f = ½ (0.137), `thin04` at
-f = ¼ (0.095) and `thin04` at f = ⅒ (0.058); the sparse confirmation fold prefers
-`topk02` → `topk02` → `topk01` → `topk01`. Thinned policies beat top-k on the
-development folds at every density. Caveat: the
-simulation removes truth but the model was trained on the full catalogue, so it
-overstates the penalty of wide budgets somewhat; it is a direction, not a
-calibration. Options, in order of evidential value:
+H27 is fully implemented: `gate_phase="aligned"` flips the continuation gate to
+the physically intended phase (the as-built gate passes lineaments *perpendicular*
+to strike — measured in REVIEW.md), an H27 arm exists in `validate_candidate.py`,
+`--gate-phase` exists in `build_continuation.py`, tests are green. The one run:
 
-1. Treat the sweep as the prior: if the hidden truth is ≤ ½ as dense as the
-   catalogue, a `thin06`–`thin08` emission of the *same H20 field* is expected to
-   beat the released `thin10` — but this is untested on any holdout that has
-   that density, and the gate will not publish a non-selected policy.
-2. If the account holder is willing to spend slots on *measurement*, two uploads
-   of the **same H20 field** at two budgets (e.g. thin06 and thin10) identify the
-   density regime from the public score pair (the field is fixed, only n changes).
-   This is the user's call — it is not a holdout-validated improvement and the
-   repository's release gate will not publish a non-selected policy by itself.
-3. Preregister a density-robust policy rule (e.g. budget chosen so that the
-   marginal hit-rate estimate q(n) ≈ DTI/5 on the development folds under a
-   *sparsified* truth) and evaluate it under the frozen protocol as a new
-   hypothesis (H23) — this is the only route that can change the site's approved
-   download without user-side probing.
+```
+MALLOC_ARENA_MAX=2 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 .venv/bin/python \
+  scripts/validate_candidate.py --hypothesis H27 --policy-set v4 \
+  --extra data/external/dem10/dem10_channels.f32.npy \
+  --incumbent-report reports/h20_blocked.json --incumbent-arm H20 \
+  --report reports/h27_blocked.json --work scratch/h27
+```
+
+(~45 min, 4 arms). Eligibility identical to H24/H25: beat the external incumbent
+(H20/thin10 — or, if the incumbent rule is updated, the *then-current* holdout
+best) and every same-run arm on development mean **and** confirmation. Note the
+updated holdout best for future candidates: **H25/ridge15, dev 0.23663,
+conf 0.25179** — a future candidate must beat *that* (protocol item 1 defines the
+incumbent as the named report's arm/policy; decide at preregistration whether
+H25 replaces H20/thin10 as the incumbent reference and record it *before* scoring).
 
 ## P1: candidate work, ranked
 
-1. **H19b — ridge (non-maximum-suppression) thinning instead of skeleton thinning.**
-   H19 failed where blobs are wide because a skeleton follows the blob's centre,
-   not the probability ridge. Keep pixels that are local maxima of the OOF
-   probability across the local strike (structure-tensor orientation of p),
-   inside the top-k mask; score with `scripts/rescore_blocked.py` on the saved
-   grids (second look — label it so), then, if promising, preregister and re-run.
-2. **H20 follow-ups (now justified by a measured gain):** (a) 1 m lidar
-   versions of the one-sided-step and residual channels from the official
-   `1m_DEM_links.csv` tiles (needs the runner; ~100× the 10 m data — stage by
-   footprint block, publish per-block tags); (b) multi-scale 10 m channels
-   (hgm at 100/400 m, aspect-conditioned steps) — cheap, same pipeline; (c) an
-   H20 model with fold-1 diagnostics (the only geography where H20 does not
-   beat H16 at top-k budgets). Per-channel ablation needs re-training under the
-   frozen protocol (≈ 35 min per arm on this machine).
-3. **H22 seismicity lineament coherence** (ComCat event catalogue via the runner;
-   `scripts/ext/` pattern) — untested; ranked below H19b/H20 in the register.
-4. **H15 paleo-discharge residual** — data now in hand; needs an observation
-   model that respects resource-biased sampling before any protocol run.
-5. **H18 / H17 / H14** remain untested backups (session-2 register).
+1. **Submission decision (user's call):** the H25/ridge15 artifact is the
+   holdout-validated best and is one click on the hub. Whether it spends a
+   weekly slot is the account holder's decision (SUBMISSION_GUIDE.md); the
+   repository will not upload automatically.
+2. **H25 follow-ups, preregistered before any run:** (a) diagnose fold 0 — the
+   only fold where H25 loses to H20 under ridge15 (context may be adding noise
+   where the confirmation geography differs); (b) wider context windows
+   (31×31 ≈ 3 km) or a second-order interaction set; (c) a density-aware
+   emission *sweep over the ridge family* extending
+   `reports/budget_density_sweep.json` (now that ridge15 is the released policy,
+   the thin-family sweep results are historical).
+3. **H22 seismicity lineament coherence** (USGS ComCat via the runner;
+   `scripts/ext/` pattern) — source descriptor verified, transport job still
+   to be written; ranked below the H25 follow-ups.
+4. **H15 paleo-discharge residual** — point archives in hand (`ext/catalogue-*`);
+   needs an observation model that respects resource-biased sampling.
+5. **H20/H25 external-data scale-ups:** 1 m lidar stage (login-gated
+   `1m_DEM_links.csv`, blocked with a named path), multi-scale 10 m channels.
+6. **H18 / H17 / H14** remain untested backups (session-2 register).
 
-## P0-bis: git history note (resolved)
+## P0-bis: git history (resolved — the lesson now ships in CI)
 
-The GitHub token expired at the end of session 3 and the session's local
-commits were lost when the workspace was restored; the full working tree was
-re-committed as a single commit (`3d316b3`) on top of the pushed CI commits
-(`8d9b513`) and merged to `main` through the session-3 PR. The `code` hashes
-pinned in `reports/h20_blocked.json` (validate_candidate.py, HYPOTHESES.md at
-`d04f25d`) are all present in the working tree or in git history, so both
-approved artifacts re-verify (`build_site.py`: 2 approved, 0 refused).
+Sessions 2–3 pins live in pushed PR history, and this workspace started shallow
+(depth 1), which made `build_site.py` refuse both approvals until
+`git fetch --unshallow origin` + `git fetch origin '+refs/pull/*/head:refs/remotes/pr/*'`
+restored 32 commits (pinned blobs `b00f5fa0`, `8dddfa4e`, `e2877ce0`,
+`1756ba1e`, …). Both workflows now check out with `fetch-depth: 0`.
+**If a gate ever says "validation code changed or missing" again, unshallow first,
+then reassess — never re-pin reports to silence it.**
+
+**Session-4 end state (BLOCKER for the next session):** the GitHub token expired
+mid-session (`gh auth status` → token in GH_TOKEN no longer valid). Commits
+`4ac76f8` and `ea78b79` (all session-4 results, releases and docs) are **local
+only** on `arena/01a0e4b8-gemsdoe10`. First action next session: reconnect
+GitHub in Arena, `git push origin arena/01a0e4b8-gemsdoe10`, open the PR, merge
+to main — the site workflow and evidence gates then run on the pushed history.
 
 ## P2: hygiene
 
@@ -104,14 +104,19 @@ approved artifacts re-verify (`build_site.py`: 2 approved, 0 refused).
 - The external-data workflow is push-triggered via `scripts/ext/JOBS`
   (dispatch is 403 for this token). Set JOBS to the job you need *before*
   editing anything under `scripts/ext/`, or both jobs run.
-- `wellspringdata.gdb` layers were not enumerated by `ogrinfo` in run
-  36326816737; fix the layer listing (`ogrinfo -so -q <gdb>` output parsing) if
-  H15 needs wells/springs.
+- Long local runs: never wrap in `| tee` (it masks OOM kills as exit 0 —
+  session-4 lesson), use `MALLOC_ARENA_MAX=2 OMP_NUM_THREADS=2
+  OPENBLAS_NUM_THREADS=2` on this 4 GB box.
+- `wellspringdata.gdb` layer listing is still unfixed (`ogrinfo -so -q` parsing)
+  if H15 needs wells/springs.
 - Keep the three-pass discipline and the PR-then-merge rule every session.
 
 ## What must not be claimed
 
 - No leaderboard forecast from any local delta (four correlated stripe folds,
-  re-used confirmation geography, development-selected policy).
+  re-used confirmation geography, development-selected policy; the H25
+  development margin over same-run H20 is within fold noise).
 - No geothermal-resource claim; the target is fault pixels.
 - No slot spent, no upload made, no credentials touched by this repository.
+- The H27 phase correction is *implemented*, not *validated* — never present it
+  as a result until its report exists.

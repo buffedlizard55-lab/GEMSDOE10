@@ -28,6 +28,21 @@ from gems10 import discovery, external, modeling, selftrain, spec, systems  # no
 from run_cv import train_proximity_channel  # noqa: E402
 
 
+def manifest_name_for(report_path: Path, hypothesis: str) -> str:
+    """Name the release manifest after the VALIDATION REPORT, not the arm label.
+
+    ``reports/h16_blocked.json`` → ``final_manifest_h16.json`` (same names as the
+    original arm-keyed scheme, so existing hash bindings keep matching), while a
+    second release of the same arm against a different report
+    (``reports/h24_blocked.json``) gets its own ``final_manifest_h24.json`` instead
+    of clobbering an earlier release's manifest.
+    """
+    stem = report_path.stem
+    if stem.endswith("_blocked"):
+        return f"final_manifest_{stem[:-len('_blocked')]}.json"
+    return f"final_manifest_{hypothesis.lower()}.json"
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--data-dir", default=str(REPO_ROOT / "data"))
@@ -176,9 +191,14 @@ def main() -> int:
         with open(model_path, "wb") as fh:
             pickle.dump(clf, fh)
         prob_sha = sha256_file(work_dir / "prob_final.npy")
-        manifest_name = f"final_manifest_{args.hypothesis.lower()}.json"
+        # Manifest file is keyed by the VALIDATION REPORT (h16/h20/h24...), not by
+        # the arm label: releasing a second artifact for the same arm (e.g. the
+        # H20 stack validated by reports/h24_blocked.json) must not overwrite the
+        # manifest that an earlier release already hash-binds in its report.
+        manifest_name = manifest_name_for(report_path, args.hypothesis)
         manifest = {
             "hypothesis": args.hypothesis,
+            "validation_report": report_path.name,
             "probability_sha256": prob_sha,
             "validation_protocol": report.get("protocol"),
             "validated_inputs": report.get("inputs"),

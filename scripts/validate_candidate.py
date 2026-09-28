@@ -47,19 +47,27 @@ from gems10.raster import sha256_file
 
 # Preregistered policy sets. v2: HYPOTHESES.md session-2 item 4.
 # v3: session-3 item 2 — the v2 eight plus the thin-line family (H19).
+# v4: session-4 register — v3 plus the probability-ridge family (H24).
 POLICY_SETS = {
     "v2": ["topk01_binary", "topk02_binary", "topk03_binary", "topk04_binary",
            "topk06_binary", "topk02_soft", "topk02_envelope", "topk02_halo2"],
 }
 POLICY_SETS["v3"] = POLICY_SETS["v2"] + [f"thin{b:02d}_binary"
                                          for b in (2, 4, 6, 8, 10, 12, 15, 20)]
+POLICY_SETS["v4"] = POLICY_SETS["v3"] + [f"ridge{b:02d}_binary"
+                                         for b in (4, 6, 8, 10, 12, 15)]
 PROTOCOL = {"v2": "spatial-4x4-strided-v1-buffer40-policy-sweep-v2",
-            "v3": "spatial-4x4-strided-v1-buffer40-policy-sweep-v3"}
+            "v3": "spatial-4x4-strided-v1-buffer40-policy-sweep-v3",
+            "v4": "spatial-4x4-strided-v1-buffer40-policy-sweep-v4"}
 PRIMARY = "topk02_binary"
 CONFIG = {"iterations": 200, "lr": 0.05, "depth": 7, "l2": 1,
           "seed": 7, "negatives": 200000, "buffer_px": 40}
-STATIC_EXTRA = {"H13", "H20"}          # hypotheses that take --extra
-NEEDS_H16 = {"H16", "H20"}             # hypotheses whose stack includes the H16 channels
+STATIC_EXTRA = {"H13", "H20", "H25", "H27"}  # hypotheses that take --extra
+NEEDS_H16 = {"H16", "H20", "H25", "H27"}  # hypotheses whose stack includes H16 channels
+# Extra-grid slice per arm: arm name -> how many leading --extra grids it takes
+# (None = all). The H20 arm inside an H25 run takes ONLY the dem10 grid so its
+# column layout matches the released incumbent exactly.
+ARM_EXTRAS = {"H13": None, "H20": 1, "H25": None, "H27": None}
 DEV_FOLDS, CONF_FOLD = (0, 1, 2), 3
 
 
@@ -92,12 +100,14 @@ def select_policy(folds: list, arm: str, policies: list[str]) -> str:
 
 
 def h16_extra_for_fold(train: np.ndarray, labels: np.ndarray,
-                       bands_cache: dict, lineaments: dict):
+                       bands_cache: dict, lineaments: dict,
+                       gate_phase: str = "asbuilt"):
     m = train & (labels == 1)
     sys_id, n, _ = systems.label_systems(m.astype(np.int8))
     strikes = discovery.system_strikes(sys_id, np.arange(1, n + 1))
     grid, names = alignment.ray_continuation_channels(
-        bands_cache["tmi"], lineaments, strikes, ncc_band=bands_cache["rtp"])
+        bands_cache["tmi"], lineaments, strikes, ncc_band=bands_cache["rtp"],
+        gate_phase=gate_phase)
     return grid, names, len(strikes)
 
 
@@ -119,14 +129,22 @@ def paired_comparison(folds: list, cand_arm: str, cand_pol: str,
 def main():
     import argparse
     ap = argparse.ArgumentParser()
-    ap.add_argument("--hypothesis", required=True, choices=["H13", "H16", "H20"])
-    ap.add_argument("--extra", type=Path, default=None,
-                    help="static extra grid (H13 offset grid; H20 dem10 grid). Ignored for H16.")
+    ap.add_argument("--hypothesis", required=True,
+                    choices=["H13", "H16", "H20", "H25", "H27"])
+    ap.add_argument("--extra", type=str, default=None,
+                    help="static extra grid(s) .npy, comma-separated in column "
+                         "order (H13 offset grid; H20 dem10 grid; H25 "
+                         "dem10,dem10_context). Ignored for H16.")
     ap.add_argument("--policy-set", choices=sorted(POLICY_SETS), default="v3")
     ap.add_argument("--incumbent-report", type=Path, default=None,
-                    help="earlier completed report whose H16 arm (under its selected policy) "
-                         "the candidate must also beat; for --hypothesis H16 it is also an "
-                         "exact-reproduction check of the shared policies")
+                    help="earlier completed report whose named arm (under its "
+                         "selected policy) the candidate must also beat; for "
+                         "--hypothesis H16 it doubles as an exact-reproduction "
+                         "check of the shared policies (any run: reproduction "
+                         "over arms present in both reports)")
+    ap.add_argument("--incumbent-arm", default="H16",
+                    help="arm of --incumbent-report to compare against "
+                         "(session 4: 'H20' when the incumbent is the H20 report)")
     ap.add_argument("--report", type=Path, default=None)
     ap.add_argument("--work", type=Path, default=None)
     args = ap.parse_args()
@@ -142,13 +160,20 @@ def main():
     feat_path = ROOT / "data/features107.f32.npy"
     if not feat_path.exists():
         raise SystemExit("run scripts/build_features.py first")
-    extra_static = None
+    extra_paths: list[Path] = []
+    extra_static: list[np.ndarray] = []
     if h in STATIC_EXTRA:
-        if args.extra is None or not args.extra.exists():
-            raise SystemExit(f"{h} requires --extra <static grid .npy>")
-        extra_static = np.load(args.extra, mmap_mode="r")
-        if extra_static.ndim != 3 or extra_static.shape[:2] != (3730, 3292):
-            raise SystemExit(f"--extra must be (3730, 3292, C); got {extra_static.shape}")
+        if not args.extra:
+            raise SystemExit(f"{h} requires --extra <static grid .npy>[,...]")
+        for item in args.extra.split(","):
+            ep = Path(item.strip())
+            if not ep.exists():
+                raise SystemExit(f"--extra grid missing: {ep}")
+            extra_paths.append(ep)
+            grid = np.load(ep, mmap_mode="r")
+            if grid.ndim != 3 or grid.shape[:2] != (3730, 3292):
+                raise SystemExit(f"--extra must be (3730, 3292, C); got {grid.shape}")
+            extra_static.append(grid)
     feat = np.load(feat_path, mmap_mode="r")
     with rasterio.open(ROOT / "data/labels.tif") as ds:
         labels = ds.read(1)
@@ -160,9 +185,10 @@ def main():
         incumbent = json.loads(args.incumbent_report.read_text())
         if not args.incumbent_report.resolve().is_relative_to(ROOT):
             raise SystemExit("--incumbent-report must live inside the repository")
-        if incumbent.get("status") != "completed" or "H16" not in incumbent.get(
-                "policy_selection", {}):
-            raise SystemExit("--incumbent-report must be a completed report with an H16 arm")
+        if incumbent.get("status") != "completed" or \
+                args.incumbent_arm not in incumbent.get("policy_selection", {}):
+            raise SystemExit("--incumbent-report must be a completed report with "
+                             f"the arm {args.incumbent_arm!r}")
 
     # Per-fold H16 inputs: bands + lineaments are label-free, compute once.
     # Keep memory bounded: float32 lineaments, bands freed after lineaments.
@@ -200,9 +226,14 @@ def main():
     inputs = {p.name: sha256_file(p) for p in
               [feat_path, ROOT / "data/labels.tif", ROOT / "data/sample_submission.tif",
                ROOT / "data/training_features.tif"]}
-    if extra_static is not None:
-        inputs[Path(args.extra).name] = sha256_file(args.extra)
-    arms = ["baseline107"] + (["H16"] if h == "H20" else []) + [h]
+    for ep in extra_paths:
+        inputs[ep.name] = sha256_file(ep)
+    arms = ["baseline107"]
+    if h in ("H20", "H25", "H27"):
+        arms.append("H16")
+    if h in ("H25", "H27"):
+        arms.append("H20")          # same-run reproduction anchor vs the incumbent
+    arms.append(h)
     report = {
         "hypothesis": h, "status": "running", "promotion_allowed": False,
         "protocol": PROTOCOL[args.policy_set],
@@ -221,14 +252,25 @@ def main():
                         "Confirmation geography re-used from H12 (inspected; not pristine)",
                         "Baseline107 Frangi normalization inherits tile-local scale",
                         "H16 features rebuild from train systems per fold; H13/H20 extras are label-free"]}
-    if h == "H13":
-        report["new_channels"] = json.loads(
-            args.extra.with_suffix(".meta.json").read_text())["channels"]
-    elif h == "H20":
-        meta = args.extra.with_suffix(".meta.json")
-        report["new_channels"] = (json.loads(meta.read_text())["channels"] if meta.exists()
-                                  else [f"extra_{i}" for i in range(extra_static.shape[2])])
-        report["external_data"] = json.loads(meta.read_text()).get("source") if meta.exists() else None
+    if h == "H27":
+        report["gate_phase"] = ("aligned (H27 corrected-phase continuation "
+                                "channels; H16/H20 arms stay as-built)")
+    if h in STATIC_EXTRA:
+        channels, sources = [], []
+        for i, ep in enumerate(extra_paths):
+            meta_p = ep.with_suffix(".meta.json")
+            if meta_p.exists():
+                meta = json.loads(meta_p.read_text())
+                channels += meta.get("channels",
+                                     [f"extra_{j}" for j in range(extra_static[i].shape[2])])
+                if meta.get("source"):
+                    sources.append(meta["source"])
+            else:
+                channels += [f"extra_{j}" for j in range(extra_static[i].shape[2])]
+        report["new_channels"] = channels
+        if h in ("H20", "H25"):
+            report["external_data"] = (sources[0] if len(sources) == 1
+                                       else sources) if sources else None
     else:
         report["new_channels"] = [f"cont_{b}_r{t}" for b in ("tmi", "det_elev")
                                   for t in alignment.RAY_RADII]
@@ -262,9 +304,14 @@ def main():
                   "training_negatives": int(neg.size), "gt_pixels": int(gt.sum()),
                   "scores": {}}
         extra_fold = None
+        extra_fold_aligned = None
         if h in NEEDS_H16:
             extra_fold, extra_names, n_strikes = h16_extra_for_fold(
                 train, labels, bands_cache, lineaments)
+            if h == "H27":
+                extra_fold_aligned, _, _ = h16_extra_for_fold(
+                    train, labels, bands_cache, lineaments,
+                    gate_phase="aligned")
             fin = np.isfinite(extra_fold)
             result["h16_train_systems"] = n_strikes
             result["h16_coverage_train_px"] = {
@@ -274,14 +321,21 @@ def main():
         for name in arms:
             # Column order per arm (must match train_final.py):
             #   baseline107: [feat]
-            #   H13:         [feat | static]
+            #   H13:         [feat | statics...]
             #   H16:         [feat | h16]
-            #   H20:         [feat | h16 | static]
+            #   H20:         [feat | h16 | static0]        (dem10 only — the
+            #                released layout, even inside an H25 run)
+            #   H25:         [feat | h16 | statics...]     (dem10 + context)
             grids = []
-            if name in ("H16", "H20"):
-                grids.append(extra_fold)
-            if name in ("H13", "H20"):
-                grids.append(extra_static)
+            if name in ("H16", "H20", "H25", "H27"):
+                grids.append(extra_fold if name != "H27"
+                             else extra_fold_aligned)
+            if name == "H13":
+                grids.extend(extra_static)
+            elif name == "H20":
+                grids.extend(extra_static[:1])
+            elif name == "H25":
+                grids.extend(extra_static)
             X = feat[rows, cols].astype(np.float32)
             for g in grids:
                 X = np.concatenate([X, np.asarray(g[rows, cols], dtype=np.float32)], axis=1)
@@ -339,6 +393,10 @@ def main():
             result["extra_fold_sha256"] = hashlib.sha256(
                 np.ascontiguousarray(extra_fold).tobytes()).hexdigest()
             del extra_fold
+        if extra_fold_aligned is not None:
+            result["extra_fold_aligned_sha256"] = hashlib.sha256(
+                np.ascontiguousarray(extra_fold_aligned).tobytes()).hexdigest()
+            del extra_fold_aligned
         result["seconds"] = round(time.time() - t0, 2)
         report["folds"].append(result)
         save()
@@ -358,21 +416,30 @@ def main():
                                                  lambda r, b=base, bp=bpol: r["scores"][b][bp]["dti"])}
     reproduction = None
     if incumbent is not None:
-        inc_pol = incumbent["policy_selection"]["H16"]
+        inc_arm = args.incumbent_arm
+        inc_pol = incumbent["policy_selection"][inc_arm]
         inc_rows = {r["fold"]: r for r in incumbent["folds"]}
-        comparisons["incumbent_report:H16"] = {
-            "report": report["incumbent_report"], "baseline_policy": inc_pol,
+        comparisons[f"incumbent_report:{inc_arm}"] = {
+            "report": report["incumbent_report"], "arm": inc_arm,
+            "baseline_policy": inc_pol,
             **paired_comparison(rows_sorted, h, cand,
-                                lambda r: inc_rows[r["fold"]]["scores"]["H16"][inc_pol]["dti"])}
-        if h == "H16":
-            shared = [p for p in incumbent["policies"] if p in policies]
-            diffs = []
-            for r in rows_sorted:
-                for arm in ("baseline107", "baseline107_discovery", "H16"):
-                    for p in shared:
-                        diffs.append(abs(r["scores"][arm][p]["dti"]
-                                         - inc_rows[r["fold"]]["scores"][arm][p]["dti"]))
-            reproduction = {"shared_policies": shared, "max_abs_dti_diff": float(max(diffs)),
+                                lambda r: inc_rows[r["fold"]]["scores"][inc_arm][inc_pol]["dti"])}
+        # Exact-reproduction anchor: every arm of this run that also exists in
+        # the incumbent report, over shared policies (session 4; for
+        # --hypothesis H16 vs its own report this reduces to the session-2/3
+        # three-arm check, unchanged).
+        shared = [p for p in incumbent.get("policies", []) if p in policies]
+        common_arms = [a for a in scored_arms
+                       if all(a in r["scores"] for r in incumbent.get("folds", []))]
+        diffs = []
+        for r in rows_sorted:
+            for arm in common_arms:
+                for p in shared:
+                    diffs.append(abs(r["scores"][arm][p]["dti"]
+                                     - inc_rows[r["fold"]]["scores"][arm][p]["dti"]))
+        if diffs:
+            reproduction = {"shared_policies": shared, "arms": common_arms,
+                            "max_abs_dti_diff": float(max(diffs)),
                             "exact": bool(max(diffs) == 0.0)}
     eligible = all(c["passes"] for c in comparisons.values())
     report["policy_selection"] = selection

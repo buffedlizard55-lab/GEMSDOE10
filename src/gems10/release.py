@@ -9,9 +9,13 @@ import math
 # v3 (session 3): v2 structure with the 16-policy union (thin family added), an
 # explicit `arms` list, and `decision.comparisons` that must ALL pass — including
 # the same-run H16 incumbent arm and the external incumbent report when present.
+# v4 (session 4): identical structure with the 22-policy union (ridge family,
+# H24) and an external incumbent comparison against any named arm
+# (`incumbent_report:<arm>`, e.g. the H20 holdout best).
 PROTOCOLS = ("spatial-4x4-strided-v1-buffer40-top2",
              "spatial-4x4-strided-v1-buffer40-policy-sweep-v2",
-             "spatial-4x4-strided-v1-buffer40-policy-sweep-v3")
+             "spatial-4x4-strided-v1-buffer40-policy-sweep-v3",
+             "spatial-4x4-strided-v1-buffer40-policy-sweep-v4")
 
 
 def _fold_dti(row, arm, selection):
@@ -38,7 +42,7 @@ def check_release(report, probability_sha256, policy):
     if report.get("protocol") not in PROTOCOLS:
         raise ValueError("incompatible or missing spatial holdout protocol")
     is_v2 = report.get("protocol") in PROTOCOLS[1:]
-    is_v3 = report.get("protocol") == PROTOCOLS[2]
+    has_comparisons = report.get("protocol") in PROTOCOLS[2:]  # v3/v4 path
     if is_v2:
         selection = report.get("policy_selection")
         if not selection:
@@ -67,14 +71,14 @@ def check_release(report, probability_sha256, policy):
             deltas.append(c-b)
         if sum(deltas[:3])/3 <= 0 or deltas[3] <= 0:
             raise ValueError(f"{candidate} did not beat {baseline} on development AND confirmation")
-    if is_v3:
+    if has_comparisons:
         # Every recorded comparison (baselines, same-run incumbent arm, external
         # incumbent report) must pass, recomputed here from the fold rows where
         # the arm is present in this report; the external one is trusted from
         # the recorded deltas but must be flagged as passing.
         comparisons = (report.get("decision") or {}).get("comparisons") or {}
         if not comparisons:
-            raise ValueError("v3 report lacks decision comparisons")
+            raise ValueError("comparison protocol report lacks decision comparisons")
         for name, comp in comparisons.items():
             if not comp.get("passes"):
                 raise ValueError(f"{candidate} did not beat incumbent {name}")
