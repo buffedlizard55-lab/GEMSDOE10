@@ -17,7 +17,7 @@ on:
   workflow_dispatch:
     inputs:
       jobs:
-        description: "comma list: dem10,catalogue"
+        description: "comma list: dem10,catalogue,lidar1m"
         default: "dem10,catalogue"
       max_blocks:
         description: "debug: limit DEM blocks (0 = all)"
@@ -107,3 +107,35 @@ jobs:
           mkdir -p out/catalogue
           echo "build=${{ steps.build.outcome }} run=${{ github.run_id }} sha=${{ github.sha }}" > out/catalogue/STATUS.txt
           bash scripts/ext/publish_tag.sh out/catalogue "$TAG" "H21 catalogue differencing + H15 point sets, run ${{ github.run_id }}, build=${{ steps.build.outcome }}"
+  lidar1m:
+    # H31 step 1 (session 5): inventory ONLY — lists 3DEP 1 m projects/tiles over
+    # the footprint (sizes from the public S3 listing, naming verified on COG
+    # headers), no tile pixels downloaded. Output tag ext/lidar1m-inventory-<run>.
+    needs: setup
+    if: ${{ contains(needs.setup.outputs.jobs, 'lidar1m') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install -q numpy scipy rasterio
+      - name: Verify committed template + labels (pins)
+        run: pip install -q -r requirements.txt && python scripts/fetch_data.py --no-features
+      - name: 3DEP 1 m tile inventory over the footprint (H31 step 1)
+        id: build
+        run: |
+          set -o pipefail
+          mkdir -p out/lidar1m
+          python -u scripts/ext/lidar1m_inventory.py 2>&1 | tee out/lidar1m/build.log
+      - name: Publish as orphan commit + immutable tag
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.build.outcome == 'success' && format('ext/lidar1m-inventory-{0}', github.run_id) || format('ext/failed-lidar1m-inventory-{0}', github.run_id) }}
+        run: |
+          mkdir -p out/lidar1m
+          echo "build=${{ steps.build.outcome }} run=${{ github.run_id }} sha=${{ github.sha }}" > out/lidar1m/STATUS.txt
+          bash scripts/ext/publish_tag.sh out/lidar1m "$TAG" "H31 3DEP 1 m inventory, run ${{ github.run_id }}, build=${{ steps.build.outcome }}"
