@@ -100,14 +100,15 @@ R ∈ {1, 2} px around known pixels. Only this protocol can measure the effect.
 - Keep `reports/official_feed.json` dated; the leaderboard moves intra-day.
 - Never pipe long runs through `tee`; use `MALLOC_ARENA_MAX=2` on 4 GB hosts.
 
-## Session-5 end state (BLOCKER unless resolved in-session)
+## Session-5 end state (resolved in-session)
 
-The GitHub token expired mid-session again (`gh auth status` → token in GH_TOKEN
-no longer valid; same pattern as session 4). If commits after `ed73867` are
-still local-only on `arena/01a0e57e-gemsdoe10`, the first action next session
-is: reconnect GitHub in Arena → `git push origin arena/01a0e57e-gemsdoe10` →
-open the PR → merge to main (the Pages workflow then publishes H28 on the live
-hub). Check with `git status -sb` / `git log origin/arena/01a0e57e-gemsdoe10..`.
+The GitHub token expired mid-session (same pattern as session 4) and was then
+reconnected: all session-5 commits were pushed and PR #9 (branch → main) was
+opened and merged at the end of the session. Confirm with
+`gh pr view 9 --json state,mergedAt`; if it is not MERGED, merge it first. If a
+token expires again, commits stay local — reconnect GitHub in Arena, push, PR,
+merge. Note: this clone fetches only `main`, so `origin/<branch>` refs can be
+absent; check the remote with `git ls-remote origin refs/heads/<branch>`.
 
 ## Limitations in the way
 
