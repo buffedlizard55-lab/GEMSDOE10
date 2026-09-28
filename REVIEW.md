@@ -2,18 +2,23 @@
 
 ## Executive decision
 
-**Current recommendation (session 4):** the hub's newest approved artifact —
-`gems10-h25-ctx-ridge-…-6452ae1d00.tif` (H25 stack, `ridge15_binary`) — is the only
-candidate whose development mean *and* confirmation fold beat the previous holdout
-best under the frozen protocol, with both session-4 runs reproducing the
-session-3 report exactly before any decision was read. Whether it spends a weekly
-slot is the account holder's decision; nothing uploads automatically.
+**Current recommendation (session 5):** the hub's newest approved artifact —
+`gems10-h28-dotted-ridge-…-6452ae1d00.tif` (the unchanged H25 model with the
+along-strike dotted emission `ridge20_d3`) — beat the previous holdout best
+(H25/`ridge15_binary`) under the preregistered density-matched protocol v5 on the
+development mean *and* the confirmation fold (0.16909 / 0.18697 vs 0.13718 /
+0.14986), and is also ahead at full density (dev +0.0002, within noise; conf
++0.0115). The session-4 OOF grids and final model were reproduced byte-for-byte
+before any decision was read. Whether it spends a weekly slot is the account
+holder's decision; nothing uploads automatically. (Session 4's recommendation,
+H25/`ridge15_binary`, stays downloadable for provenance.)
 
 Standing rules that produced this: do not use a weekly slot merely to rename or
 re-encode an existing prediction; do not infer scientific novelty from a different
 repository name; do not equate a local catalogue proxy with the private new-fault
 target (H25's development margin over the same-run H20 arm is within fold noise —
-its confirmation margin carries the decision). A failed experiment is evidence,
+its confirmation margin carries the decision; H28's full-density development margin
+is likewise within noise — its decision rests on the density-matched scores). A failed experiment is evidence,
 not a deliverable to upload.
 
 ## Duplicate investigation: actual files, not rounded scores
