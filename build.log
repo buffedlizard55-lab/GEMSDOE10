@@ -1,0 +1,10 @@
+[    1s] 87 NV_/CA_ 1 m projects
+[    4s] CA_FEMAR9Southeast_D24: 11 tiles, 1.0 GB, 0.7% of footprint
+[   12s] CA_SierraNevada_B22: 12 tiles, 1.7 GB, 0.6% of footprint
+[   18s] NV_EastCentral_2021_D21: 19 tiles, 1.6 GB, 2.4% of footprint
+[   20s] NV_Humboldt_2021_D21: 12 tiles, 0.7 GB, 1.7% of footprint
+[   22s] NV_NorthWestElko_2020_D20: 72 tiles, 15.9 GB, 12.3% of footprint
+[   26s] NV_Southern_D23: 31 tiles, 4.1 GB, 3.1% of footprint
+[   28s] NV_USFSR4_D23: 17 tiles, 2.1 GB, 2.0% of footprint
+[   36s] NV_WestCentral_EarthMRI_2020_D20: 512 tiles, 130.3 GB, 86.8% of footprint
+{"union_footprint_fraction": 0.98258, "total_tiles": 686, "total_bytes": 157425746692, "seconds": 36.5}
