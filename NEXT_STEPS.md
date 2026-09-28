@@ -15,7 +15,8 @@ nothing here promises a leaderboard score.
   22.2 % of mass within 300 m of catalogue faults (H25: 27.8 %). Protocol v5:
   density-matched dev mean **0.16909** / confirmation **0.18697** vs **0.13718 /
   0.14986** for H25/ridge15 (+23 % / +25 %, 24 of 24 simulated truths); full
-  density 0.23687 / 0.26330 (not worse). Hash-bound: `reports/h28_blocked.json` +
+  density 0.23687 / 0.26330 — it also beats the incumbent at full density on
+  both (dev +0.0002, within noise; conf +0.0115), i.e. under the v4 rule too. Hash-bound: `reports/h28_blocked.json` +
   `reports/final_manifest_h28.json`.
 - **H29 (km-scale line support) not eligible:** confirmation −0.0060 vs H25
   under v5; neutral at full density. Negative recorded.
@@ -76,12 +77,21 @@ fold, add a random subset of the held-out systems to TRAINING as positives
 systems with the added ones masked, and compare emission with/without excluding
 R ∈ {1, 2} px around known pixels. Only this protocol can measure the effect.
 
-## P2: carried hypotheses
+## P2: carried hypotheses and follow-ups
 
 - **H22** ComCat seismicity lineaments (needs a runner job; FDSN event service).
 - **H18** cross-field edge coincidence (provided bands only).
 - **H27 variant**: H25 layout + corrected-phase (aligned) continuation gate.
-- **H15** paleo-discharge points (archives in tag `ext/catalogue-36326816737`).
+- **H15** paleo-discharge points (archives in tag `ext/catalogue-36326816737`);
+  the `wellspringdata.gdb` layer listing (`ogrinfo -so -q` parsing) is still unfixed.
+- **H25/H28 follow-ups (carried from session 4):** (a) fold 0 — H28 ties the
+  baseline107 arm there under v5 (0.14596 vs 0.14635) although it beats the
+  incumbent by +0.031; diagnose what the context channels add or cost on that
+  geography; (b) wider context windows (31×31 ≈ 3 km).
+- **Emission follow-up:** the v5 table shows `ridge30_d2` best at full density
+  and `ridge20_d3` best at matched density; a spacing-4 family and a
+  probability-weighted spacing (dense on high-p traces, sparse on low-p) are
+  the natural next preregistered emission test.
 
 ## P3: hygiene
 
@@ -89,6 +99,15 @@ R ∈ {1, 2} px around known pixels. Only this protocol can measure the effect.
   only needs saved OOF grids); keep `--policy-set anchor` for OOF generation.
 - Keep `reports/official_feed.json` dated; the leaderboard moves intra-day.
 - Never pipe long runs through `tee`; use `MALLOC_ARENA_MAX=2` on 4 GB hosts.
+
+## Session-5 end state (BLOCKER unless resolved in-session)
+
+The GitHub token expired mid-session again (`gh auth status` → token in GH_TOKEN
+no longer valid; same pattern as session 4). If commits after `ed73867` are
+still local-only on `arena/01a0e57e-gemsdoe10`, the first action next session
+is: reconnect GitHub in Arena → `git push origin arena/01a0e57e-gemsdoe10` →
+open the PR → merge to main (the Pages workflow then publishes H28 on the live
+hub). Check with `git status -sb` / `git log origin/arena/01a0e57e-gemsdoe10..`.
 
 ## Limitations in the way
 

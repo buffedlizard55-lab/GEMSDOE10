@@ -14,7 +14,7 @@ static: it never trains in the browser and never uploads to DrivenData.
 
 | Session | Candidate (policy) | Protocol | Decision |
 |---|---|---|---|
-| 5 | **H28** = the H25 model + along-strike dotting (`ridge20_d3`) | v5 density-matched | **eligible · released · RECOMMENDED** (density-matched dev 0.16909 / conf 0.18697 vs 0.13718 / 0.14986 for H25/ridge15; full density 0.23687 / 0.26330) |
+| 5 | **H28** = the H25 model + along-strike dotting (`ridge20_d3`) | v5 density-matched | **eligible · released · RECOMMENDED** (density-matched dev 0.16909 / conf 0.18697 vs 0.13718 / 0.14986 for H25/ridge15; full density 0.23687 / 0.26330, also ahead of H25 there) |
 | 5 | H29 = H25 + km-scale oriented line support | v5 density-matched | not eligible (confirmation −0.0060 vs H25) |
 | 4 | H25 = H20 + 36 DEM-context channels (`ridge15_binary`) | v4 | eligible · released (dev 0.23663 / conf 0.25179), superseded by H28 (same model, new emission) |
 | 4 | H24 = H20 field + ridge NMS (`ridge15_binary`) | v4 | eligible · superseded by H25 |
