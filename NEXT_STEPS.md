@@ -1,122 +1,123 @@
-# Next steps — after session 4 (2026-09-27)
+# Next steps — after session 5 (2026-09-28)
 
 Read README.md (including the preserved project prompt), HYPOTHESES.md
-(session-4 register + results), KNOWLEDGE.md §5b–§5c (transport, traps, facts),
-REVIEW.md and LIMITATIONS.md first. Everything below is ranked by expected
-effect on P(win) per unit of work; nothing here promises a leaderboard score.
+(session-5 register + results), KNOWLEDGE.md §5d, REVIEW.md (S5-1…S5-8) and
+LIMITATIONS.md first. Ranked by expected effect on P(win) per unit of work;
+nothing here promises a leaderboard score.
 
 ## Current state (measured)
 
-- **New recommended artifact — H25:** `gems10-h25-ctx-ridge-20260927T232947704150Z-6452ae1d00.tif`
-  (166-feature HGB = 107 baseline + H16 continuation 10 + 3DEP-10 m scarp 13 +
-  36 DEM-context channels, policy `ridge15_binary`, 174,232 cells = 3.37 % of the
-  footprint; hash-bound to `reports/h25_blocked.json` + `reports/final_manifest_h25.json`).
-  Development folds 0.20097 / 0.22476 / 0.28415 (mean **0.23663**), confirmation
-  **0.25179** — beats the same-run H20+ridge15 (+0.0011 dev, +0.0265 conf) and the
-  released H20/thin10 incumbent (+0.0468 dev, +0.0650 conf). Honest caveats: the
-  development margin over same-run H20 is within fold noise and fold 0 is *negative*
-  (0.20097 vs 0.20406); the decision rests on the confirmation fold. Under thin10
-  the context channels alone add nothing on development (+0.0001) — their value is
-  the ridge-policy interaction on sparse geography.
-- **Close second — H24's H20+ridge15** (`reports/h24_blocked.json`, dev mean
-  0.23553 / conf 0.22525): same H20 field as the old artifact with the
-  preregistered ridge emission; kept as evidence, superseded by H25.
-- **Both session-4 runs reproduced `reports/h20_blocked.json` exactly**
-  (max |ΔDTI| = 0, 16 shared policies × 4 arms) before any decision was read.
-- **H27** (corrected-phase continuation gate) is implemented and tested
-  (`gate_phase="aligned"`, `tests/test_h27_gate.py`) but **not run** — time.
-- The session-3 H20/thin10 and H16/topk06 artifacts remain on the hub as
-  superseded/provenance. No slot has been spent on anything; all numbers above
-  are spatial-holdout proxies, not leaderboard scores.
-- **Provenance fixed:** the workspace's shallow clone broke both approvals
-  ("validation code changed or missing"); `git fetch --unshallow origin` +
-  PR-ref fetch restored every pinned blob, and both workflows now use
-  `fetch-depth: 0`.
-- H21 catalogue differencing stays closed (labels = the public catalogue);
-  the emission-density question is still open (see P0).
+- **Recommended artifact — H28:** `gems10-h28-dotted-ridge-20260928T020256236880Z-6452ae1d00.tif` (sha256 `7637b72d…`,
+  suggested note `gems10-h28-dotted-ridge | ridge20_d3 | sha 7637b72d4c`). The
+  H25 model (final probability grid and model pickle byte-identical to the
+  session-4 release) with the along-strike dotted ridge emission `ridge20_d3`:
+  69,281 cells (1.34 % of the footprint, ~40 % of H25's), all isolated pixels;
+  22.2 % of mass within 300 m of catalogue faults (H25: 27.8 %). Protocol v5:
+  density-matched dev mean **0.16909** / confirmation **0.18697** vs **0.13718 /
+  0.14986** for H25/ridge15 (+23 % / +25 %, 24 of 24 simulated truths); full
+  density 0.23687 / 0.26330 — it also beats the incumbent at full density on
+  both (dev +0.0002, within noise; conf +0.0115), i.e. under the v4 rule too. Hash-bound: `reports/h28_blocked.json` +
+  `reports/final_manifest_h28.json`.
+- **H29 (km-scale line support) not eligible:** confirmation −0.0060 vs H25
+  under v5; neutral at full density. Negative recorded.
+- **Suggested use of the next weekly slot (account holder's call):** H28 is the
+  only candidate that wins the density-matched test; if it is uploaded, record
+  the returned score with its file hash — it is also the first GEMSDOE10
+  artifact whose leaderboard score would calibrate the proxy.
 
-## P0: run H27 (only unexecuted preregistered candidate)
+- **Leaderboard probe (new evidence):** all seven scored group artifacts are
+  binary; inverting their scores bounds the hidden new-fault density to
+  ~0.13–0.6 % of the scored area (2–8× sparser than the catalogue proxy). The
+  worst artifact put 68 % of its pixels within 300 m of known faults. Our local
+  folds cannot see either effect — hence protocol v5 (`reports/lb_probe.json`).
+- **1 m lidar coverage measured:** USGS 3DEP 1 m tiles cover **98.3 %** of the
+  footprint (686 tiles, 157 GB); GeoDAWN West Central alone 86.8 %
+  (`reports/lidar1m_inventory.json`, runner tag `ext/lidar1m-inventory-36365777149`).
+- Exact reproduction extended to grids: baseline107 and H25 OOF grids are
+  byte-identical to session 4's.
+- No slot has been spent by this repository. The account holder decides uploads.
 
-H27 is fully implemented: `gate_phase="aligned"` flips the continuation gate to
-the physically intended phase (the as-built gate passes lineaments *perpendicular*
-to strike — measured in REVIEW.md), an H27 arm exists in `validate_candidate.py`,
-`--gate-phase` exists in `build_continuation.py`, tests are green. The one run:
+## P0: H31 — metre-scale scarp channels from the GeoDAWN 1 m lidar
 
-```
-MALLOC_ARENA_MAX=2 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 .venv/bin/python \
-  scripts/validate_candidate.py --hypothesis H27 --policy-set v4 \
-  --extra data/external/dem10/dem10_channels.f32.npy \
-  --incumbent-report reports/h20_blocked.json --incumbent-arm H20 \
-  --report reports/h27_blocked.json --work scratch/h27
-```
+Why first: the lidar covers essentially the whole region and is the most
+plausible data behind the experts' "new" faults (1–5 m piedmont scarps are
+invisible at 10–100 m). H20's 10 m aggregates already gave the largest
+single feature gain in this repo.
 
-(~45 min, 4 arms). Eligibility identical to H24/H25: beat the external incumbent
-(H20/thin10 — or, if the incumbent rule is updated, the *then-current* holdout
-best) and every same-run arm on development mean **and** confirmation. Note the
-updated holdout best for future candidates: **H25/ridge15, dev 0.23663,
-conf 0.25179** — a future candidate must beat *that* (protocol item 1 defines the
-incumbent as the named report's arm/policy; decide at preregistration whether
-H25 replaces H20/thin10 as the incumbent reference and record it *before* scoring).
+Design (runner job **`scarp1m`**, sharded; the inventory job `lidar1m` is done). Name it so it does not CONTAIN another job's name: the workflow selects jobs with `contains(JOBS, '<name>')`, a substring test, so `lidar1m_scarp` would also re-run the inventory job:
+1. Matrix of ~24 shards over `inventory.json` tiles (deterministic split by key;
+   ~6.5 GB per shard). Each shard streams its tiles (never keeps more than one
+   10 k × 10 k tile), computes metre-scale statistics in the tile's native
+   NAD83 UTM, then accumulates them into 100 m competition cells (EPSG:32611,
+   template transform) with sum/max/count accumulators. Zone-10 tiles: map the
+   10 m block centres to 32611 with `rasterio.warp.transform` (coarse grid +
+   bilinear interpolation of coordinates), not per metre pixel.
+2. Channels (label-free, mirror `scripts/ext/dem10_scarp.py` at 1 m scales):
+   slope max/p95 per cell; residual relief at 2/5/20 m (z − G_σ z);
+   one-sidedness of the residual gradient (scarp vs channel) at 5 m and 20 m;
+   steep-run length (longest connected run of slope > 15° along the dominant
+   orientation); scarp-template (Hilley et al. 2010-style) amplitude at 5–20 m
+   widths; valid fraction.
+3. Publish each shard as `ext/lidar1m-<shard>-<run>` (files < 95 MB, float32
+   vectors over footprint indices), plus a merge script in the sandbox
+   (`scripts/build_lidar1m_grid.py`) that sha-checks and assembles the grid.
+4. Validate as H31 = H25 stack + lidar channels under protocol v5 (the
+   density-matched decision, with full-density non-inferiority); same release gate.
+Budget: ~1 h wall per shard on standard runners (download ~2 min/GB + compute
+~30–60 s per tile). Test the per-tile function locally on a synthetic 1 m DEM
+first; the sandbox cannot read the real tiles.
 
-## P1: candidate work, ranked
+## P1: close the known-fault "shadow" blind spot (H30)
 
-1. **Submission decision (user's call):** the H25/ridge15 artifact is the
-   holdout-validated best and is one click on the hub. Whether it spends a
-   weekly slot is the account holder's decision (SUBMISSION_GUIDE.md); the
-   repository will not upload automatically.
-2. **H25 follow-ups, preregistered before any run:** (a) diagnose fold 0 — the
-   only fold where H25 loses to H20 under ridge15 (context may be adding noise
-   where the confirmation geography differs); (b) wider context windows
-   (31×31 ≈ 3 km) or a second-order interaction set; (c) a density-aware
-   emission *sweep over the ridge family* extending
-   `reports/budget_density_sweep.json` (now that ridge15 is the released policy,
-   the thin-family sweep results are historical).
-3. **H22 seismicity lineament coherence** (USGS ComCat via the runner;
-   `scripts/ext/` pattern) — source descriptor verified, transport job still
-   to be written; ranked below the H25 follow-ups.
-4. **H15 paleo-discharge residual** — point archives in hand (`ext/catalogue-*`);
-   needs an observation model that respects resource-biased sampling.
-5. **H20/H25 external-data scale-ups:** 1 m lidar stage (login-gated
-   `1m_DEM_links.csv`, blocked with a named path), multi-scale 10 m channels.
-6. **H18 / H17 / H14** remain untested backups (session-2 register).
+Our released fields put 28–46 % of their mass within 300 m of catalogue faults;
+the final model is fitted in-sample on those faults, so smooth features make
+"shadow" ridges beside them. Build an **in-sample masked-known protocol**: per
+fold, add a random subset of the held-out systems to TRAINING as positives
+(exactly like the final fit sees known faults), score the remaining held-out
+systems with the added ones masked, and compare emission with/without excluding
+R ∈ {1, 2} px around known pixels. Only this protocol can measure the effect.
 
-## P0-bis: git history (resolved — the lesson now ships in CI)
+## P2: carried hypotheses and follow-ups
 
-Sessions 2–3 pins live in pushed PR history, and this workspace started shallow
-(depth 1), which made `build_site.py` refuse both approvals until
-`git fetch --unshallow origin` + `git fetch origin '+refs/pull/*/head:refs/remotes/pr/*'`
-restored 32 commits (pinned blobs `b00f5fa0`, `8dddfa4e`, `e2877ce0`,
-`1756ba1e`, …). Both workflows now check out with `fetch-depth: 0`.
-**If a gate ever says "validation code changed or missing" again, unshallow first,
-then reassess — never re-pin reports to silence it.**
+- **H22** ComCat seismicity lineaments (needs a runner job; FDSN event service).
+- **H18** cross-field edge coincidence (provided bands only).
+- **H27 variant**: H25 layout + corrected-phase (aligned) continuation gate.
+- **H15** paleo-discharge points (archives in tag `ext/catalogue-36326816737`);
+  the `wellspringdata.gdb` layer listing (`ogrinfo -so -q` parsing) is still unfixed.
+- **H25/H28 follow-ups (carried from session 4):** (a) fold 0 — H28 ties the
+  baseline107 arm there under v5 (0.14596 vs 0.14635) although it beats the
+  incumbent by +0.031; diagnose what the context channels add or cost on that
+  geography; (b) wider context windows (31×31 ≈ 3 km).
+- **Emission follow-up:** the v5 table shows `ridge30_d2` best at full density
+  and `ridge20_d3` best at matched density; a spacing-4 family and a
+  probability-weighted spacing (dense on high-p traces, sparse on low-p) are
+  the natural next preregistered emission test.
 
-**Session-4 end state (BLOCKER for the next session):** the GitHub token expired
-mid-session (`gh auth status` → token in GH_TOKEN no longer valid). Commits
-`4ac76f8` and `ea78b79` (all session-4 results, releases and docs) are **local
-only** on `arena/01a0e4b8-gemsdoe10`. First action next session: reconnect
-GitHub in Arena, `git push origin arena/01a0e4b8-gemsdoe10`, open the PR, merge
-to main — the site workflow and evidence gates then run on the pushed history.
+## P3: hygiene
 
-## P2: hygiene
+- Reuse `scripts/evaluate_density_matched.py` for every future candidate (it
+  only needs saved OOF grids); keep `--policy-set anchor` for OOF generation.
+- Keep `reports/official_feed.json` dated; the leaderboard moves intra-day.
+- Never pipe long runs through `tee`; use `MALLOC_ARENA_MAX=2` on 4 GB hosts.
 
-- `data/external/` products are ignored; re-restore with the tag commands in
-  KNOWLEDGE.md §8. Tags are immutable evidence — do not delete them.
-- The external-data workflow is push-triggered via `scripts/ext/JOBS`
-  (dispatch is 403 for this token). Set JOBS to the job you need *before*
-  editing anything under `scripts/ext/`, or both jobs run.
-- Long local runs: never wrap in `| tee` (it masks OOM kills as exit 0 —
-  session-4 lesson), use `MALLOC_ARENA_MAX=2 OMP_NUM_THREADS=2
-  OPENBLAS_NUM_THREADS=2` on this 4 GB box.
-- `wellspringdata.gdb` layer listing is still unfixed (`ogrinfo -so -q` parsing)
-  if H15 needs wells/springs.
-- Keep the three-pass discipline and the PR-then-merge rule every session.
+## Session-5 end state (resolved in-session)
 
-## What must not be claimed
+The GitHub token expired mid-session (same pattern as session 4) and was then
+reconnected: all session-5 commits were pushed and PR #9 (branch → main) was
+opened and merged at the end of the session. Confirm with
+`gh pr view 9 --json state,mergedAt`; if it is not MERGED, merge it first. If a
+token expires again, commits stay local — reconnect GitHub in Arena, push, PR,
+merge. Note: this clone fetches only `main`, so `origin/<branch>` refs can be
+absent; check the remote with `git ls-remote origin refs/heads/<branch>`.
 
-- No leaderboard forecast from any local delta (four correlated stripe folds,
-  re-used confirmation geography, development-selected policy; the H25
-  development margin over same-run H20 is within fold noise).
-- No geothermal-resource claim; the target is fault pixels.
-- No slot spent, no upload made, no credentials touched by this repository.
-- The H27 phase correction is *implemented*, not *validated* — never present it
-  as a result until its report exists.
+## Limitations in the way
+
+- Private truth is hidden: every local number is a proxy. The density bound is
+  derived from user-reported scores whose account/file association is not
+  authenticated.
+- The sandbox reaches only GitHub/PyPI; USGS/AWS/DrivenData data flow through
+  the GitHub runner and immutable `ext/*` tags (or the research fetch tool for
+  small pages).
+- 2 CPU / 3.8 GB RAM: one validation run at a time (~15 min for 3 arms).
+- Uploads, weekly-slot accounting and final-submission choice require the
+  authorized DrivenData account holder.

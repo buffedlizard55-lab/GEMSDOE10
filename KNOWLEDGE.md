@@ -286,6 +286,81 @@ tests/ — 15 files, 107 tests green (2026-09-27)
   `reports/official_feed.json` entry is authoritative; prompt figures are
   requirements records, not facts.
 
+## 5d. Session-5 additions (2026-09-28, session 5)
+
+### Leaderboard probe — what the scored artifacts say about the hidden truth
+- `scripts/lb_probe.py` → `reports/lb_probe.json` (inputs: the ten audited sibling
+  artifacts, re-fetched this session and byte-identical to the session-4 audit).
+- **All seven distinct scored fields are binary** (value 1.0 only).
+- Mass within 300 m of catalogue faults vs score: 6GEMSDOE **68 %** → 0.0286 (worst);
+  GEMSDOE1 ens12 **18.5 %** (59 % beyond 1 km) → 0.1563 (best). Blobby emission
+  (≥5 positive neighbours for 62–72 % of pixels: GEMSDOE4, 6GEMSDOE) → ~0.03.
+- Isolated-pixel "pindrop" fields reach 2.4× more area per pixel (uniform-truth
+  expected recall 0.27 vs 0.11 for line fields) but scored 0.119 / 0.083 —
+  coverage without placement skill does not win.
+- **Density inversion.** Binary fields + DTI = r/(0.8+0.2r+0.2f) + FP ≈ φ·mass give
+  r_i(ρ) = s_i(0.8 + 0.2·mass_i/(ρA))/(1 − 0.2 s_i). ρ < 0.12 % is infeasible
+  (best artifact would need r > 1); all implied placement skills ≥ ~0.9 only for
+  ρ ≲ 0.3 %; at the catalogue's 1.18 % the pindrop fields would be placed worse
+  than random (skill 0.41). Working bound: **hidden new-fault density ≈ 0.13–0.6 %
+  of the scored area, 2–8× sparser than the catalogue proxy**. A bound, not an
+  estimate (user-reported scores; FP ≈ φ·mass ignores small near-truth credit).
+- **Proxy blind spot.** Local score blocks contain no training faults, so emission
+  next to KNOWN faults is never scored locally — but it is on the leaderboard.
+  Our released artifacts put 45.8 % (H16), 34.0 % (H20), 27.8 % (H25) of their
+  mass within 300 m of catalogue faults.
+- 8GEMSDOE's all-catalogue hedge (every catalogue pixel = 1) scored exactly
+  0.1563 like the unhedged field: masked predictions earned no credit. That is
+  why v5 scores with `zero_ignored=True` (known-pixel predictions removed
+  before the kernel).
+
+### Along-strike dotting arithmetic (H28)
+- Kernel on a straight run: every-2nd pixel keeps (1 + 2/3)/2 = 0.83 of a true
+  trace's recall with 1/2 the pixels; every-3rd keeps (1 + 2/3 + 2/3)/3 = 0.78
+  with 1/3; every-4th 0.67; every-5th 0.60.
+- Analytic on the H25 ridge15 fold components: at full catalogue density dotting
+  is ≈ neutral (−0.013…+0.006); with truth 4× sparser (f ≈ 10) the same change is
+  worth ≈ +25–30 % relative — the regime the leaderboard probe points to.
+- MEASURED (H25 OOF grids, `reports/density_matched_v5.json`): `ridge15_d2` vs
+  `ridge15_binary` — full density dev 0.24524 vs 0.23663 (+0.009, better than the
+  analytic range), density-matched 0.16590 vs 0.13718 (+0.029). The selected
+  `ridge20_d3`: density-matched 0.16909 / conf 0.18697, full 0.23687 / 0.26330.
+  Dotting lets a LARGER ridge core be afforded; undotted larger cores
+  (`ridge20/30_binary`) lose at matched density.
+
+### Exact binary metric
+- `metric.binary_components` = `metric.components` bit-for-bit for binary
+  predictions (tests), via 28-offset gathers at sparse point sets
+  (milliseconds). `zero_ignored` selects the masking semantics.
+
+### Overlooked official source verified obtainable (H31, next session)
+- USGS 3DEP 1 m DEM projects **`NV_WestCentral_EarthMRI_2020_D20`** and
+  **`NV_NorthWestElko_2020_D20`** — the GeoDAWN lidar (data.gov: "GeoDAWN West
+  Central Nevada EarthMRI Data", published 2023-05-15; USGS: GeoDAWN combined
+  airborne geophysics with 3DEP lidar). Listing:
+  `https://prd-tnm.s3.amazonaws.com/?list-type=2&prefix=StagedProducts/Elevation/1m/Projects/NV_WestCentral_EarthMRI_2020_D20/TIFF/`
+  (~900 tiles, 8–256 MB, UTM 10/11). Public domain (3DEP). The research fetch tool
+  can list it; sandbox bash cannot reach AWS (TLS); the GitHub runner can.
+  Other NV 1 m projects in the bucket: Humboldt_2021_D21, Reno_Carson_QL1/QL2_2017,
+  EastCentral_2021_D21, USFSR4_D23, NyeNE_D23, Southern_D23, UpperHumboldt_2016.
+- **MEASURED coverage (runner job `lidar1m`, tag `ext/lidar1m-inventory-36365777149`,
+  summary `reports/lidar1m_inventory.json`): 3DEP 1 m tiles cover 98.3 % of the
+  competition footprint — 686 tiles, 157.4 GB.** West Central (GeoDAWN) 86.8 % /
+  512 tiles / 130.3 GB; NW Elko 12.3 % / 72 / 15.9 GB; NV_Southern_D23 3.1 %;
+  NV_EastCentral 2.4 %; NV_USFSR4 2.0 %; NV_Humboldt 1.7 %; CA_FEMAR9Southeast 0.7 %;
+  CA_SierraNevada_B22 0.6 % (overlaps). Tile naming `USGS_1M_<zone>_x<E/10km>y<N/10km>`
+  = upper-left corner, 10 km tiles, NAD83 UTM (EPSG:269<zone>) — verified on COG
+  headers for 3 tiles per project. The GeoDAWN lidar was flown over essentially the
+  whole competition region: the strongest single candidate for what the experts
+  mapped from. A full derivation (H31) is a sharded runner job (~16–24 shards of
+  ~7–10 GB each; stream tile → metre-scale scarp statistics → 100 m accumulators).
+
+### Forum (re-read 2026-09-28)
+- Thread 11527 post 7 (staff): no disclosure of test-fault sources, types or
+  coverage; Phase 2 truth = expanded by expert review of all Phase 1
+  submissions. Posts 8–10 participants only. New thread 11543 (using a
+  teammate's geological judgments as labels) unanswered.
+
 ## 6. Known dead ends / errors (do not repeat)
 
 - NCC max-selection bias (see §5) — use the pooled zero-lag dip, never raw max.

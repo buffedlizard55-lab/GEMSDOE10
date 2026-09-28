@@ -1,0 +1,467 @@
+{
+ "tag": "ext/lidar1m-inventory-36365777149",
+ "source": "https://prd-tnm.s3.amazonaws.com/?list-type=2&prefix=StagedProducts/Elevation/1m/Projects/",
+ "union_footprint_fraction": 0.98258,
+ "total_tiles": 686,
+ "total_bytes": 157425746692,
+ "verified_headers": [
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/CA_FEMAR9Southeast_D24/TIFF/USGS_1M_11_x37y420_CA_FEMAR9Southeast_D24.tif",
+   "header_bounds": [
+    369993.9996973939,
+    4189994.000019666,
+    380005.9996973939,
+    4200006.000019666
+   ],
+   "header_epsg": 26911,
+   "name_bounds": [
+    370000.0,
+    4190000.0,
+    380000.0,
+    4200000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/CA_FEMAR9Southeast_D24/TIFF/USGS_1M_11_x38y419_CA_FEMAR9Southeast_D24.tif",
+   "header_bounds": [
+    379993.99971667473,
+    4179993.999999474,
+    390005.99971667473,
+    4190005.999999474
+   ],
+   "header_epsg": 26911,
+   "name_bounds": [
+    380000.0,
+    4180000.0,
+    390000.0,
+    4190000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/CA_FEMAR9Southeast_D24/TIFF/USGS_1M_11_x39y418_CA_FEMAR9Southeast_D24.tif",
+   "header_bounds": [
+    389993.9996805722,
+    4169993.9999883906,
+    400005.9996805722,
+    4180005.9999883906
+   ],
+   "header_epsg": 26911,
+   "name_bounds": [
+    390000.0,
+    4170000.0,
+    400000.0,
+    4180000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/CA_SierraNevada_B22/TIFF/USGS_1M_10_x75y442_CA_SierraNevada_B22.tif",
+   "header_bounds": [
+    749994.0000346373,
+    4409994.000008713,
+    760006.0000346373,
+    4420006.000008713
+   ],
+   "header_epsg": 26910,
+   "name_bounds": [
+    750000.0,
+    4410000.0,
+    760000.0,
+    4420000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/CA_SierraNevada_B22/TIFF/USGS_1M_10_x75y443_CA_SierraNevada_B22.tif",
+   "header_bounds": [
+    749993.9999723879,
+    4419993.999989983,
+    760005.9999723879,
+    4430005.999989983
+   ],
+   "header_epsg": 26910,
+   "name_bounds": [
+    750000.0,
+    4420000.0,
+    760000.0,
+    4430000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/CA_SierraNevada_B22/TIFF/USGS_1M_11_x24y441_CA_SierraNevada_B22.tif",
+   "header_bounds": [
+    239993.9996683976,
+    4399994.000045835,
+    250005.9996683976,
+    4410006.000045835
+   ],
+   "header_epsg": 26911,
+   "name_bounds": [
+    240000.0,
+    4400000.0,
+    250000.0,
+    4410000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/NV_EastCentral_2021_D21/TIFF/USGS_1M_11_x45y444_NV_EastCentral_2021_D21.tif",
+   "header_bounds": [
+    449993.99970056297,
+    4429994.000009169,
+    460005.99970056297,
+    4440006.000009169
+   ],
+   "header_epsg": 26911,
+   "name_bounds": [
+    450000.0,
+    4430000.0,
+    460000.0,
+    4440000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/NV_EastCentral_2021_D21/TIFF/USGS_1M_11_x46y444_NV_EastCentral_2021_D21.tif",
+   "header_bounds": [
+    459993.9996783406,
+    4429994.000009169,
+    470005.9996783406,
+    4440006.000009169
+   ],
+   "header_epsg": 26911,
+   "name_bounds": [
+    460000.0,
+    4430000.0,
+    470000.0,
+    4440000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/NV_EastCentral_2021_D21/TIFF/USGS_1M_11_x47y444_NV_EastCentral_2021_D21.tif",
+   "header_bounds": [
+    469993.99972454325,
+    4429993.999969562,
+    480005.99972454325,
+    4440005.999969562
+   ],
+   "header_epsg": 26911,
+   "name_bounds": [
+    470000.0,
+    4430000.0,
+    480000.0,
+    4440000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/NV_Humboldt_2021_D21/TIFF/USGS_1M_11_x27y449_NV_Humboldt_2021_D21.tif",
+   "header_bounds": [
+    269993.9996903514,
+    4479994.000001088,
+    280005.9996903514,
+    4490006.000001088
+   ],
+   "header_epsg": 26911,
+   "name_bounds": [
+    270000.0,
+    4480000.0,
+    280000.0,
+    4490000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/NV_Humboldt_2021_D21/TIFF/USGS_1M_11_x27y450_NV_Humboldt_2021_D21.tif",
+   "header_bounds": [
+    269993.9996809127,
+    4489994.000045478,
+    280005.9996809127,
+    4500006.000045478
+   ],
+   "header_epsg": 26911,
+   "name_bounds": [
+    270000.0,
+    4490000.0,
+    280000.0,
+    4500000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/NV_Humboldt_2021_D21/TIFF/USGS_1M_11_x28y450_NV_Humboldt_2021_D21.tif",
+   "header_bounds": [
+    279993.9996844484,
+    4489994.000052579,
+    290005.9996844484,
+    4500006.000052579
+   ],
+   "header_epsg": 26911,
+   "name_bounds": [
+    280000.0,
+    4490000.0,
+    290000.0,
+    4500000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/NV_NorthWestElko_2020_D20/TIFF/USGS_1M_11_x49y444_NV_NorthWestElko_2020_D20.tif",
+   "header_bounds": [
+    489993.9996577061,
+    4429994.000044293,
+    500005.9996577061,
+    4440006.000044293
+   ],
+   "header_epsg": 26911,
+   "name_bounds": [
+    490000.0,
+    4430000.0,
+    500000.0,
+    4440000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/NV_NorthWestElko_2020_D20/TIFF/USGS_1M_11_x49y445_NV_NorthWestElko_2020_D20.tif",
+   "header_bounds": [
+    489993.99971489405,
+    4439994.000012761,
+    500005.99971489405,
+    4450006.000012761
+   ],
+   "header_epsg": 26911,
+   "name_bounds": [
+    490000.0,
+    4440000.0,
+    500000.0,
+    4450000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/NV_NorthWestElko_2020_D20/TIFF/USGS_1M_11_x49y446_NV_NorthWestElko_2020_D20.tif",
+   "header_bounds": [
+    489993.999676364,
+    4449994.000039146,
+    500005.999676364,
+    4460006.000039146
+   ],
+   "header_epsg": 26911,
+   "name_bounds": [
+    490000.0,
+    4450000.0,
+    500000.0,
+    4460000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/NV_Southern_D23/TIFF/USGS_1M_11_x41y432_NV_Southern_D23.tif",
+   "header_bounds": [
+    409993.99966400047,
+    4309993.999995157,
+    420005.99966400047,
+    4320005.999995157
+   ],
+   "header_epsg": 26911,
+   "name_bounds": [
+    410000.0,
+    4310000.0,
+    420000.0,
+    4320000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/NV_Southern_D23/TIFF/USGS_1M_11_x41y433_NV_Southern_D23.tif",
+   "header_bounds": [
+    409993.9996816544,
+    4319994.0000232775,
+    420005.9996816544,
+    4330006.0000232775
+   ],
+   "header_epsg": 26911,
+   "name_bounds": [
+    410000.0,
+    4320000.0,
+    420000.0,
+    4330000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/NV_Southern_D23/TIFF/USGS_1M_11_x42y429_NV_Southern_D23.tif",
+   "header_bounds": [
+    419993.9996783917,
+    4279994.000011683,
+    430005.9996783917,
+    4290006.000011683
+   ],
+   "header_epsg": 26911,
+   "name_bounds": [
+    420000.0,
+    4280000.0,
+    430000.0,
+    4290000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/NV_USFSR4_D23/TIFF/USGS_1M_10_x76y441_NV_USFSR4_D23.tif",
+   "header_bounds": [
+    759993.9999587781,
+    4399994.000052751,
+    770005.9999587781,
+    4410006.000052751
+   ],
+   "header_epsg": 26910,
+   "name_bounds": [
+    760000.0,
+    4400000.0,
+    770000.0,
+    4410000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/NV_USFSR4_D23/TIFF/USGS_1M_11_x24y441_NV_USFSR4_D23.tif",
+   "header_bounds": [
+    239993.9996683976,
+    4399994.000045835,
+    250005.9996683976,
+    4410006.000045835
+   ],
+   "header_epsg": 26911,
+   "name_bounds": [
+    240000.0,
+    4400000.0,
+    250000.0,
+    4410000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/NV_USFSR4_D23/TIFF/USGS_1M_11_x25y441_NV_USFSR4_D23.tif",
+   "header_bounds": [
+    249993.99970849807,
+    4399994.000045835,
+    260005.99970849807,
+    4410006.000045835
+   ],
+   "header_epsg": 26911,
+   "name_bounds": [
+    250000.0,
+    4400000.0,
+    260000.0,
+    4410000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/NV_WestCentral_EarthMRI_2020_D20/TIFF/USGS_1M_10_x75y442_NV_WestCentral_EarthMRI_2020_D20.tif",
+   "header_bounds": [
+    749994.0000346373,
+    4409994.000008713,
+    760006.0000346373,
+    4420006.000008713
+   ],
+   "header_epsg": 26910,
+   "name_bounds": [
+    750000.0,
+    4410000.0,
+    760000.0,
+    4420000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/NV_WestCentral_EarthMRI_2020_D20/TIFF/USGS_1M_10_x75y443_NV_WestCentral_EarthMRI_2020_D20.tif",
+   "header_bounds": [
+    749993.9999723879,
+    4419993.999989983,
+    760005.9999723879,
+    4430005.999989983
+   ],
+   "header_epsg": 26910,
+   "name_bounds": [
+    750000.0,
+    4420000.0,
+    760000.0,
+    4430000.0
+   ],
+   "match": true
+  },
+  {
+   "key": "StagedProducts/Elevation/1m/Projects/NV_WestCentral_EarthMRI_2020_D20/TIFF/USGS_1M_10_x76y442_NV_WestCentral_EarthMRI_2020_D20.tif",
+   "header_bounds": [
+    759993.9999853178,
+    4409994.000008713,
+    770005.9999853178,
+    4420006.000008713
+   ],
+   "header_epsg": 26910,
+   "name_bounds": [
+    760000.0,
+    4410000.0,
+    770000.0,
+    4420000.0
+   ],
+   "match": true
+  }
+ ],
+ "projects": {
+  "CA_FEMAR9Southeast_D24": {
+   "tiles_intersecting": 11,
+   "bytes": 991880046,
+   "footprint_cells_covered": 35383,
+   "footprint_fraction": 0.00685
+  },
+  "CA_SierraNevada_B22": {
+   "tiles_intersecting": 12,
+   "bytes": 1726283734,
+   "footprint_cells_covered": 28950,
+   "footprint_fraction": 0.0056
+  },
+  "NV_EastCentral_2021_D21": {
+   "tiles_intersecting": 19,
+   "bytes": 1631031644,
+   "footprint_cells_covered": 124086,
+   "footprint_fraction": 0.02401
+  },
+  "NV_Humboldt_2021_D21": {
+   "tiles_intersecting": 12,
+   "bytes": 664896152,
+   "footprint_cells_covered": 90167,
+   "footprint_fraction": 0.01745
+  },
+  "NV_NorthWestElko_2020_D20": {
+   "tiles_intersecting": 72,
+   "bytes": 15921628992,
+   "footprint_cells_covered": 636575,
+   "footprint_fraction": 0.12319
+  },
+  "NV_Southern_D23": {
+   "tiles_intersecting": 31,
+   "bytes": 4102856518,
+   "footprint_cells_covered": 158058,
+   "footprint_fraction": 0.03059
+  },
+  "NV_USFSR4_D23": {
+   "tiles_intersecting": 17,
+   "bytes": 2070058606,
+   "footprint_cells_covered": 101723,
+   "footprint_fraction": 0.01969
+  },
+  "NV_WestCentral_EarthMRI_2020_D20": {
+   "tiles_intersecting": 512,
+   "bytes": 130317111000,
+   "footprint_cells_covered": 4486228,
+   "footprint_fraction": 0.86818
+  }
+ }
+}

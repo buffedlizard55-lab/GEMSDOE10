@@ -1,0 +1,912 @@
+{
+  "hypothesis": "H29",
+  "status": "completed",
+  "promotion_allowed": false,
+  "protocol": "spatial-4x4-strided-v1-buffer40-oof-generation-anchor",
+  "policy_set": "anchor",
+  "arms": [
+    "baseline107",
+    "H25",
+    "H29"
+  ],
+  "score_population": "held-out catalogue pixels in spatial score blocks (proxy only)",
+  "confirmation_fold": 3,
+  "primary_policy": "topk02_binary",
+  "policies": [
+    "ridge15_binary"
+  ],
+  "config": {
+    "iterations": 200,
+    "lr": 0.05,
+    "depth": 7,
+    "l2": 1,
+    "seed": 7,
+    "negatives": 200000,
+    "buffer_px": 40
+  },
+  "versions": {
+    "python": "3.11.2",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "sklearn": "1.9.1"
+  },
+  "inputs": {
+    "features107.f32.npy": "fb0cfb4060474b374bbfabd431cd8ab9c4ef1c55c322244295e326c259a4fe80",
+    "labels.tif": "7ba308ccdc4418b31a178f4f1ef21aaa6e152e4028f2f6f64b01f7eb25ae4093",
+    "sample_submission.tif": "2176d08e485aa2cd2860ce8df539db4faf4d76163b38a4dd8c30a40454d35cbc",
+    "training_features.tif": "4371c82e3b8339b807bdffcf4ef59a225520fe2988d521be208ae33743123bc5",
+    "dem10_channels.f32.npy": "2504068b6e367d1270761d150325341d26a1cea3ab1439ce35a762c8f7fae0ff",
+    "dem10_context.f32.npy": "3b70c447cb9f83a2385fb6c31e6315209e904dc86f148d9a1a1184ea8fb04261",
+    "linesupport.f32.npy": "c38297615f3f876f4b0fd8b9a754f49f87f8507098c44be4cef67cc1cb89c943"
+  },
+  "code": {
+    "scripts/validate_candidate.py": "571a2a54ea40a0b41c27852a4c50a0a72eb82d4a2eea093d1cb57b78795d55de",
+    "src/gems10/alignment.py": "5050c67ab17acfd57b7a64238ad63adc94844ca1f6ea5daa6c19f8722a6e5b08",
+    "src/gems10/cv.py": "3b9eccab9cd463dee220a5e1dd80280c684e217e8505a52edafd43f2404a1a4f",
+    "src/gems10/modeling.py": "e96eb6b2c874e7111b59f56a4391d15b942fcd52b17479f6a52c1bf63fa9056d",
+    "src/gems10/placement.py": "29861f3c89e44940241729623d2bdd649e82891063fa079f8f173b2e80252c75",
+    "src/gems10/metric.py": "44d94976bddd148b24df7e8ecac4d1448753033cf981ec6a270295210a93f4f6",
+    "src/gems10/discovery.py": "56c802cb250be03837bf12d6a210eee899c43c9c6e95a0290c6cd53600c9f153",
+    "src/gems10/systems.py": "802bec30affea03cf3bc88e428bc39aa05a2eb1dcda4ec27c21e606dd62b0086",
+    "src/gems10/features.py": "ff6b81240dbaaa7bc73ca5ba89574b4aef5e8f7e54a6752947094f4c77d80331",
+    "scripts/build_features.py": "a46d7c97c93a425b71f5f77b03f2e3f03a55031ddd6725cc0736ad56dd7a4d93",
+    "HYPOTHESES.md": "a98ef27bcadb4c819f263c9c835b7d6d0d42d038aa2e286ea76ff768cbc9688a"
+  },
+  "folds": [
+    {
+      "fold": 0,
+      "role": "development",
+      "train_mask_sha256": "bf4c828a1e7117380e5530d2041d851deb54564c8d5c34bd07455d85847adb13",
+      "score_mask_sha256": "5687362b0be7237d6d9f5611f2bee5f1db56e6575c04a2d482a26c8f3e5c3430",
+      "train_pixels": 4162198,
+      "score_pixels": 929173,
+      "training_positives": 47176,
+      "training_negatives": 200000,
+      "gt_pixels": 12426,
+      "scores": {
+        "baseline107": {
+          "ridge15_binary": {
+            "tp_w": 3386.7411028768156,
+            "fp_w": 34004.99732554932,
+            "fn_w": 9039.258897123185,
+            "dti": 0.19442633841723406,
+            "n_pos_pred": 37285,
+            "n_gt": 12426
+          }
+        },
+        "baseline107_discovery": {
+          "ridge15_binary": {
+            "tp_w": 3386.7411028768156,
+            "fp_w": 34004.99732554932,
+            "fn_w": 9039.258897123185,
+            "dti": 0.19442633841723406,
+            "n_pos_pred": 37285,
+            "n_gt": 12426
+          }
+        },
+        "H25": {
+          "ridge15_binary": {
+            "tp_w": 3406.164908180152,
+            "fp_w": 31632.543568837038,
+            "fn_w": 9019.835091819848,
+            "dti": 0.20097097257069185,
+            "n_pos_pred": 34984,
+            "n_gt": 12426
+          }
+        },
+        "H29": {
+          "ridge15_binary": {
+            "tp_w": 3414.3325201118996,
+            "fp_w": 32490.327633052468,
+            "fn_w": 9011.6674798881,
+            "dti": 0.19941513592218596,
+            "n_pos_pred": 35876,
+            "n_gt": 12426
+          }
+        },
+        "random_budget_control": {
+          "topk02_binary": {
+            "tp_w": 2073.3493537619506,
+            "fp_w": 17685.193703721725,
+            "fn_w": 10352.65064623805,
+            "dti": 0.14924225794944995,
+            "n_pos_pred": 18583,
+            "n_gt": 12426
+          }
+        }
+      },
+      "h16_train_systems": 2265,
+      "h16_coverage_train_px": {
+        "cont_tmi_r5": 319367,
+        "cont_tmi_r15": 319367,
+        "cont_tmi_r30": 319367,
+        "cont_tmi_r60": 319367,
+        "cont_det_elev_r5": 319367,
+        "cont_det_elev_r15": 319367,
+        "cont_det_elev_r30": 319367,
+        "cont_det_elev_r60": 319367,
+        "cont_ncc_r15": 319367,
+        "cont_ncc_r30": 319367
+      },
+      "n_features": {
+        "baseline107": 107,
+        "H25": 166,
+        "H29": 182
+      },
+      "prediction_files": {
+        "baseline107": {
+          "file": "scratch/h29/baseline107_fold0.npy",
+          "sha256": "896ce18fc3029763f1c714ce37666a0e53cb7316610cf516f8a8b1451280244f"
+        },
+        "baseline107_discovery": {
+          "file": "scratch/h29/baseline107_discovery_fold0.npy",
+          "sha256": "896ce18fc3029763f1c714ce37666a0e53cb7316610cf516f8a8b1451280244f"
+        },
+        "H25": {
+          "file": "scratch/h29/H25_fold0.npy",
+          "sha256": "df5483466b2924ef654ebccfa9e3cf7e18e650f6907fcdfb3b6bfe50aaacccfd"
+        },
+        "H29": {
+          "file": "scratch/h29/H29_fold0.npy",
+          "sha256": "f0507c62a9154df52eaee08c31cda4d64a7ae64c654449a6bba4f1fae00126fb"
+        }
+      },
+      "extra_fold_sha256": "d7aadba0721b938d160c623f6fd376ccf80dd0b961cb333fcbb68376cf14c94e",
+      "seconds": 198.04
+    },
+    {
+      "fold": 1,
+      "role": "development",
+      "train_mask_sha256": "a266f14e483dd5575ca92d840f2212ec14b3f59fbc43c749eb19768d2f9a1cd2",
+      "score_mask_sha256": "a1c362d451d28c62a4cd4a2712dd7dcd44ae6be54b4d2b40098897ee6f457888",
+      "train_pixels": 2874007,
+      "score_pixels": 2083992,
+      "training_positives": 31624,
+      "training_negatives": 200000,
+      "gt_pixels": 26366,
+      "scores": {
+        "baseline107": {
+          "ridge15_binary": {
+            "tp_w": 7961.416113509429,
+            "fp_w": 69642.5348847502,
+            "fn_w": 18404.58388649057,
+            "dti": 0.21744428967758306,
+            "n_pos_pred": 77240,
+            "n_gt": 26366
+          }
+        },
+        "baseline107_discovery": {
+          "ridge15_binary": {
+            "tp_w": 7961.416113509429,
+            "fp_w": 69642.5348847502,
+            "fn_w": 18404.58388649057,
+            "dti": 0.21744428967758306,
+            "n_pos_pred": 77240,
+            "n_gt": 26366
+          }
+        },
+        "H25": {
+          "ridge15_binary": {
+            "tp_w": 7969.650287464348,
+            "fp_w": 63857.84507715053,
+            "fn_w": 18396.34971253565,
+            "dti": 0.22476121234902136,
+            "n_pos_pred": 71473,
+            "n_gt": 26366
+          }
+        },
+        "H29": {
+          "ridge15_binary": {
+            "tp_w": 8150.710338153442,
+            "fp_w": 65740.13444454852,
+            "fn_w": 18215.289661846557,
+            "dti": 0.22722303230861887,
+            "n_pos_pred": 73548,
+            "n_gt": 26366
+          }
+        },
+        "random_budget_control": {
+          "topk02_binary": {
+            "tp_w": 4173.226995924228,
+            "fp_w": 39907.73546275546,
+            "fn_w": 22192.773004075774,
+            "dti": 0.1395308450151679,
+            "n_pos_pred": 41680,
+            "n_gt": 26366
+          }
+        }
+      },
+      "h16_train_systems": 1622,
+      "h16_coverage_train_px": {
+        "cont_tmi_r5": 219412,
+        "cont_tmi_r15": 219412,
+        "cont_tmi_r30": 219412,
+        "cont_tmi_r60": 219412,
+        "cont_det_elev_r5": 219412,
+        "cont_det_elev_r15": 219412,
+        "cont_det_elev_r30": 219412,
+        "cont_det_elev_r60": 219412,
+        "cont_ncc_r15": 219412,
+        "cont_ncc_r30": 219412
+      },
+      "n_features": {
+        "baseline107": 107,
+        "H25": 166,
+        "H29": 182
+      },
+      "prediction_files": {
+        "baseline107": {
+          "file": "scratch/h29/baseline107_fold1.npy",
+          "sha256": "1c0e097e7b9241042afd3208eb4c3f6e285b5048c765be3ac54529b5a10e2c74"
+        },
+        "baseline107_discovery": {
+          "file": "scratch/h29/baseline107_discovery_fold1.npy",
+          "sha256": "1c0e097e7b9241042afd3208eb4c3f6e285b5048c765be3ac54529b5a10e2c74"
+        },
+        "H25": {
+          "file": "scratch/h29/H25_fold1.npy",
+          "sha256": "7bcc45ae23ce8eaa67b181ad5343a13cbb7a8470d6cafdfda14572be9cac5445"
+        },
+        "H29": {
+          "file": "scratch/h29/H29_fold1.npy",
+          "sha256": "01da3e89e59d8cdc159d03c521d6a2cebf9b867448e9a91df69f30f1ed855355"
+        }
+      },
+      "extra_fold_sha256": "b0de1af8435bf49895df0a69eb084bc143cf219ed5dca3e4824b37d0f6cd260b",
+      "seconds": 255.81
+    },
+    {
+      "fold": 2,
+      "role": "development",
+      "train_mask_sha256": "67308d9b13aaf03c251ad9a227b5da82122dd2e40718a5cfa87564235d34ee5a",
+      "score_mask_sha256": "4af7d961a371440ba92f52391feea67f4d7fc8b46bd7a4de629ae3be9e7d4c01",
+      "train_pixels": 3489930,
+      "score_pixels": 1519181,
+      "training_positives": 41511,
+      "training_negatives": 200000,
+      "gt_pixels": 16847,
+      "scores": {
+        "baseline107": {
+          "ridge15_binary": {
+            "tp_w": 6494.085824141568,
+            "fp_w": 49386.566497030886,
+            "fn_w": 10352.914175858432,
+            "dti": 0.263411893529161,
+            "n_pos_pred": 55562,
+            "n_gt": 16847
+          }
+        },
+        "baseline107_discovery": {
+          "ridge15_binary": {
+            "tp_w": 6494.085824141568,
+            "fp_w": 49386.566497030886,
+            "fn_w": 10352.914175858432,
+            "dti": 0.263411893529161,
+            "n_pos_pred": 55562,
+            "n_gt": 16847
+          }
+        },
+        "H25": {
+          "ridge15_binary": {
+            "tp_w": 6689.7456837317295,
+            "fp_w": 43636.71086113742,
+            "fn_w": 10157.25431626827,
+            "dti": 0.2841514067213063,
+            "n_pos_pred": 50152,
+            "n_gt": 16847
+          }
+        },
+        "H29": {
+          "ridge15_binary": {
+            "tp_w": 6733.610441587177,
+            "fp_w": 44509.26740371139,
+            "fn_w": 10113.389558412822,
+            "dti": 0.283805134206635,
+            "n_pos_pred": 51087,
+            "n_gt": 16847
+          }
+        },
+        "random_budget_control": {
+          "topk02_binary": {
+            "tp_w": 2768.1904009050654,
+            "fp_w": 29194.473486177587,
+            "fn_w": 14078.809599094935,
+            "dti": 0.13931413704750184,
+            "n_pos_pred": 30384,
+            "n_gt": 16847
+          }
+        }
+      },
+      "h16_train_systems": 2257,
+      "h16_coverage_train_px": {
+        "cont_tmi_r5": 318548,
+        "cont_tmi_r15": 318548,
+        "cont_tmi_r30": 318548,
+        "cont_tmi_r60": 318548,
+        "cont_det_elev_r5": 318548,
+        "cont_det_elev_r15": 318548,
+        "cont_det_elev_r30": 318548,
+        "cont_det_elev_r60": 318548,
+        "cont_ncc_r15": 318548,
+        "cont_ncc_r30": 318548
+      },
+      "n_features": {
+        "baseline107": 107,
+        "H25": 166,
+        "H29": 182
+      },
+      "prediction_files": {
+        "baseline107": {
+          "file": "scratch/h29/baseline107_fold2.npy",
+          "sha256": "0c01c1aabd2a1f0b457bc489f7bf7e56fedf18b6be13946729672d078884b736"
+        },
+        "baseline107_discovery": {
+          "file": "scratch/h29/baseline107_discovery_fold2.npy",
+          "sha256": "0c01c1aabd2a1f0b457bc489f7bf7e56fedf18b6be13946729672d078884b736"
+        },
+        "H25": {
+          "file": "scratch/h29/H25_fold2.npy",
+          "sha256": "782f0f3b8bff143f32218cbf0973875bc82572d85f711df429fefb7f311f2800"
+        },
+        "H29": {
+          "file": "scratch/h29/H29_fold2.npy",
+          "sha256": "9ea1ee9322e6b161a0bf3f0a7802887703df40a3fd5d93e5a2b32d6f9c723308"
+        }
+      },
+      "extra_fold_sha256": "540e48d4b9738836e41d9e752aa706a21cd7af89a69b332c2972b8824c615f3a",
+      "seconds": 239.05
+    },
+    {
+      "fold": 3,
+      "role": "confirmation",
+      "train_mask_sha256": "600d0a3e86c6742a62f2dd3979b12cd41af59147cbbd0420e1913f8e7f400422",
+      "score_mask_sha256": "fbf9b8961fe96f444efe6dcb0b838e70a0f4c1d81c7193e3e85c0670aa1fb70d",
+      "train_pixels": 4501386,
+      "score_pixels": 635027,
+      "training_positives": 55474,
+      "training_negatives": 200000,
+      "gt_pixels": 5349,
+      "scores": {
+        "baseline107": {
+          "ridge15_binary": {
+            "tp_w": 1847.4963485361,
+            "fp_w": 20649.088461902174,
+            "fn_w": 3501.5036514639,
+            "dti": 0.2104565448258517,
+            "n_pos_pred": 22554,
+            "n_gt": 5349
+          }
+        },
+        "baseline107_discovery": {
+          "ridge15_binary": {
+            "tp_w": 1847.4963485361,
+            "fp_w": 20649.088461902174,
+            "fn_w": 3501.5036514639,
+            "dti": 0.2104565448258517,
+            "n_pos_pred": 22554,
+            "n_gt": 5349
+          }
+        },
+        "H25": {
+          "ridge15_binary": {
+            "tp_w": 2115.0900499689014,
+            "fp_w": 18490.255335600876,
+            "fn_w": 3233.9099500310986,
+            "dti": 0.2517883689858627,
+            "n_pos_pred": 20763,
+            "n_gt": 5349
+          }
+        },
+        "H29": {
+          "ridge15_binary": {
+            "tp_w": 2130.6954612408763,
+            "fp_w": 18903.295730767848,
+            "fn_w": 3218.3045387591233,
+            "dti": 0.2510836558507431,
+            "n_pos_pred": 21185,
+            "n_gt": 5349
+          }
+        },
+        "random_budget_control": {
+          "topk02_binary": {
+            "tp_w": 833.6380804800183,
+            "fp_w": 12332.366693948752,
+            "fn_w": 4515.361919519982,
+            "dti": 0.12060036533193211,
+            "n_pos_pred": 12701,
+            "n_gt": 5349
+          }
+        }
+      },
+      "h16_train_systems": 2826,
+      "h16_coverage_train_px": {
+        "cont_tmi_r5": 401789,
+        "cont_tmi_r15": 401789,
+        "cont_tmi_r30": 401789,
+        "cont_tmi_r60": 401789,
+        "cont_det_elev_r5": 401789,
+        "cont_det_elev_r15": 401789,
+        "cont_det_elev_r30": 401789,
+        "cont_det_elev_r60": 401789,
+        "cont_ncc_r15": 401789,
+        "cont_ncc_r30": 401789
+      },
+      "n_features": {
+        "baseline107": 107,
+        "H25": 166,
+        "H29": 182
+      },
+      "prediction_files": {
+        "baseline107": {
+          "file": "scratch/h29/baseline107_fold3.npy",
+          "sha256": "5602eb3c7a68296911686bcd4536feb090f5d4c466eed0c204680ad4a5c2d989"
+        },
+        "baseline107_discovery": {
+          "file": "scratch/h29/baseline107_discovery_fold3.npy",
+          "sha256": "5602eb3c7a68296911686bcd4536feb090f5d4c466eed0c204680ad4a5c2d989"
+        },
+        "H25": {
+          "file": "scratch/h29/H25_fold3.npy",
+          "sha256": "5a27855de488a7d6deb124ae01745baf0a2964c94724ac8ecc5b5cecb39e43e4"
+        },
+        "H29": {
+          "file": "scratch/h29/H29_fold3.npy",
+          "sha256": "61bf8c422c81360ae6fb4efaf479b43110982462b6aa20bd6a2263e5b0656202"
+        }
+      },
+      "extra_fold_sha256": "9b2ccc6588036af5cdb70150ac88f68982a9f2e12773e47373343ea57eed5b56",
+      "seconds": 206.58
+    }
+  ],
+  "incumbent_report": "reports/h25_blocked.json",
+  "limitations": [
+    "Not private new-fault truth; does not forecast leaderboard DTI",
+    "Four geographic stripe folds, not independent statistical replicates",
+    "Confirmation geography re-used from H12 (inspected; not pristine)",
+    "Baseline107 Frangi normalization inherits tile-local scale",
+    "H16 features rebuild from train systems per fold; H13/H20 extras are label-free"
+  ],
+  "new_channels": [
+    "dem10_slope_max",
+    "dem10_slope_mean",
+    "dem10_slope_std",
+    "dem10_hgm20_max",
+    "dem10_hgm50_max",
+    "dem10_hgm200_mean",
+    "dem10_steep_ratio_max",
+    "dem10_resid_std",
+    "dem10_resid_range",
+    "dem10_curv_absmax",
+    "dem10_onesided",
+    "dem10_onesided3",
+    "dem10_valid_frac",
+    "ctx_dem10_slope_max_mean7",
+    "ctx_dem10_slope_max_max7",
+    "ctx_dem10_slope_max_std7",
+    "ctx_dem10_slope_max_mean15",
+    "ctx_dem10_slope_max_max15",
+    "ctx_dem10_slope_max_std15",
+    "ctx_dem10_steep_ratio_max_mean7",
+    "ctx_dem10_steep_ratio_max_max7",
+    "ctx_dem10_steep_ratio_max_std7",
+    "ctx_dem10_steep_ratio_max_mean15",
+    "ctx_dem10_steep_ratio_max_max15",
+    "ctx_dem10_steep_ratio_max_std15",
+    "ctx_dem10_onesided_mean7",
+    "ctx_dem10_onesided_max7",
+    "ctx_dem10_onesided_std7",
+    "ctx_dem10_onesided_mean15",
+    "ctx_dem10_onesided_max15",
+    "ctx_dem10_onesided_std15",
+    "ctx_dem10_onesided3_mean7",
+    "ctx_dem10_onesided3_max7",
+    "ctx_dem10_onesided3_std7",
+    "ctx_dem10_onesided3_mean15",
+    "ctx_dem10_onesided3_max15",
+    "ctx_dem10_onesided3_std15",
+    "ctx_dem10_hgm200_mean_mean7",
+    "ctx_dem10_hgm200_mean_max7",
+    "ctx_dem10_hgm200_mean_std7",
+    "ctx_dem10_hgm200_mean_mean15",
+    "ctx_dem10_hgm200_mean_max15",
+    "ctx_dem10_hgm200_mean_std15",
+    "ctx_dem10_resid_range_mean7",
+    "ctx_dem10_resid_range_max7",
+    "ctx_dem10_resid_range_std7",
+    "ctx_dem10_resid_range_mean15",
+    "ctx_dem10_resid_range_max15",
+    "ctx_dem10_resid_range_std15",
+    "ls_dem10_onesided_L21_max",
+    "ls_dem10_onesided_L21_aniso",
+    "ls_dem10_onesided_L51_max",
+    "ls_dem10_onesided_L51_aniso",
+    "ls_dem10_slope_max_L21_max",
+    "ls_dem10_slope_max_L21_aniso",
+    "ls_dem10_slope_max_L51_max",
+    "ls_dem10_slope_max_L51_aniso",
+    "ls_hgm_tmi_s1.5_L21_max",
+    "ls_hgm_tmi_s1.5_L21_aniso",
+    "ls_hgm_tmi_s1.5_L51_max",
+    "ls_hgm_tmi_s1.5_L51_aniso",
+    "ls_hgm_iso_grav_anom_s1.5_L21_max",
+    "ls_hgm_iso_grav_anom_s1.5_L21_aniso",
+    "ls_hgm_iso_grav_anom_s1.5_L51_max",
+    "ls_hgm_iso_grav_anom_s1.5_L51_aniso"
+  ],
+  "external_data": [
+    {
+      "product": "USGS 3DEP 1/3 arc-second seamless DEM (current), public domain",
+      "product_catalog": "https://www.sciencebase.gov/catalog/item/4f70aa9fe4b058caae3f8de5",
+      "tag": "ext/dem10-36326816737",
+      "commit": "9f05855388a6316b0e444f8b338e6d515c1c7a25",
+      "github_run_id": "36326816737",
+      "builder_code_sha256": "6a4040042acf614ef39abe3ba4061a9b98760f957900f02eead7f24efd2443bb",
+      "tiles": {
+        "n38w118": {
+          "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n38w118/USGS_13_n38w118.tif",
+          "available": true,
+          "http": "HTTP/1.1 200 OK",
+          "bytes": 409708514,
+          "etag": "\"14662fdfaf7eef0bef210a9f30dc7c9c-79\"",
+          "last_modified": "Thu, 11 Jun 2026 17:55:45 GMT",
+          "sha256": "21e4616b410d787b6faee8f60fefbc7969fdb2d26a300ae0cce9703e40077192",
+          "src_crs": "EPSG:4269",
+          "src_nodata": -999999.0,
+          "src_shape": [
+            10812,
+            10812
+          ],
+          "bounds_template_crs": [
+            410972.594504035,
+            4094810.7409351715,
+            500049.431573739,
+            4206348.924769476
+          ]
+        },
+        "n38w119": {
+          "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n38w119/USGS_13_n38w119.tif",
+          "available": true,
+          "http": "HTTP/1.1 200 OK",
+          "bytes": 416350584,
+          "etag": "\"741072dc04b6f1cfa61ac1f8dcb0761d-80\"",
+          "last_modified": "Thu, 11 Jun 2026 17:53:36 GMT",
+          "sha256": "d1a22cfe538179c65fa221f70c0cd7ba4403d087450dd3bb463ee50fb69fa97c",
+          "src_crs": "EPSG:4269",
+          "src_nodata": -999999.0,
+          "src_shape": [
+            10812,
+            10812
+          ],
+          "bounds_template_crs": [
+            321987.0748278659,
+            4095277.5397645887,
+            412251.0224268916,
+            4207765.065702287
+          ]
+        },
+        "n39w118": {
+          "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n39w118/USGS_13_n39w118.tif",
+          "available": true,
+          "http": "HTTP/1.1 200 OK",
+          "bytes": 391985657,
+          "etag": "\"548de8b9b07e686f9debe7dd77f5c0f2-75\"",
+          "last_modified": "Wed, 14 Jan 2026 17:30:09 GMT",
+          "sha256": "01a5b4bdc759d2fdb610cba1f4cd3db2482af13b29eaca186f7bb37862081b0f",
+          "src_crs": "EPSG:4269",
+          "src_nodata": -999999.0,
+          "src_shape": [
+            10812,
+            10812
+          ],
+          "bounds_template_crs": [
+            412152.14122540376,
+            4205753.379947905,
+            500048.7767262,
+            4317314.345928493
+          ]
+        },
+        "n39w119": {
+          "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n39w119/USGS_13_n39w119.tif",
+          "available": true,
+          "http": "HTTP/1.1 200 OK",
+          "bytes": 401998969,
+          "etag": "\"6657f23841bd258575b53be9cac3e03b-77\"",
+          "last_modified": "Thu, 15 May 2025 18:38:40 GMT",
+          "sha256": "b7fe301c8cdc70babbe84339afe09fef6247c6ac21b3315387d58955dba116bc",
+          "src_crs": "EPSG:4269",
+          "src_nodata": -999999.0,
+          "src_shape": [
+            10812,
+            10812
+          ],
+          "bounds_template_crs": [
+            324346.5197762354,
+            4206224.591569602,
+            413456.1069961245,
+            4318742.008344221
+          ]
+        },
+        "n40w118": {
+          "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n40w118/USGS_13_n40w118.tif",
+          "available": true,
+          "http": "HTTP/1.1 200 OK",
+          "bytes": 397926937,
+          "etag": "\"8eee63102aa8fbbd902872952be69504-76\"",
+          "last_modified": "Wed, 14 Jan 2026 17:24:03 GMT",
+          "sha256": "f2d1d2419b5a8ef7c43fcab6af5c67f1c2ae84259d0c7cf184f9f42f80d16d46",
+          "src_crs": "EPSG:4269",
+          "src_nodata": -999999.0,
+          "src_shape": [
+            10812,
+            10812
+          ],
+          "bounds_template_crs": [
+            413358.5362559816,
+            4316714.932736246,
+            500048.1069698152,
+            4428298.259849076
+          ]
+        },
+        "n40w119": {
+          "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n40w119/USGS_13_n40w119.tif",
+          "available": true,
+          "http": "HTTP/1.1 200 OK",
+          "bytes": 378567782,
+          "etag": "\"95b6a4fb1924990e8e6c5cf776b13160-73\"",
+          "last_modified": "Thu, 09 Mar 2023 20:29:29 GMT",
+          "sha256": "e3b69524af737688d74ca01f06fd3de994bf6d8d5b11fe599e211d5dfe4f91c1",
+          "src_crs": "EPSG:4269",
+          "src_nodata": -999999.0,
+          "src_shape": [
+            10812,
+            10812
+          ],
+          "bounds_template_crs": [
+            326759.63150339364,
+            4317189.983723075,
+            414687.653034881,
+            4429735.705781152
+          ]
+        },
+        "n40w120": {
+          "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n40w120/USGS_13_n40w120.tif",
+          "available": true,
+          "http": "HTTP/1.1 200 OK",
+          "bytes": 402039220,
+          "etag": "\"44fd1cd0f38242b5744f2b7c081dc4b6-77\"",
+          "last_modified": "Wed, 20 May 2026 18:43:33 GMT",
+          "sha256": "59a6df67e342b5b0c7166ab5a07b8bed6f9774a868a14badacd2c3d7dc185b3a",
+          "src_crs": "EPSG:4269",
+          "src_nodata": -999999.0,
+          "src_shape": [
+            10812,
+            10812
+          ],
+          "bounds_template_crs": [
+            240149.653155264,
+            4318616.576531773,
+            329323.3167444169,
+            4432132.331112149
+          ]
+        },
+        "n40w121": {
+          "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n40w121/USGS_13_n40w121.tif",
+          "available": true,
+          "http": "HTTP/1.1 200 OK",
+          "bytes": 426141596,
+          "etag": "\"c4be10bf609b08bc568121636f74982f-82\"",
+          "last_modified": "Wed, 20 May 2026 18:43:07 GMT",
+          "sha256": "1ef8c81e8528aacbbb7a3eb5733d225dad81422af04d1f330576e6d6ac9af957",
+          "src_crs": "EPSG:4269",
+          "src_nodata": -999999.0,
+          "src_shape": [
+            10812,
+            10812
+          ],
+          "bounds_template_crs": [
+            153523.1134516286,
+            4320995.861183844,
+            243949.862850494,
+            4435489.991799617
+          ]
+        },
+        "n41w117": {
+          "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n41w117/USGS_13_n41w117.tif",
+          "available": true,
+          "http": "HTTP/1.1 200 OK",
+          "bytes": 400243874,
+          "etag": "\"668e9653e71de8ee607c74c816612a85-77\"",
+          "last_modified": "Wed, 20 May 2026 18:33:22 GMT",
+          "sha256": "7e2dcd6fb40f66bc166fea34724f5a7eb6071ea371b303448cdf5afc8fa2c067",
+          "src_crs": "EPSG:4269",
+          "src_nodata": -999999.0,
+          "src_shape": [
+            10812,
+            10812
+          ],
+          "bounds_template_crs": [
+            499952.577514543,
+            4427695.55760792,
+            585408.5774480845,
+            4539300.797926722
+          ]
+        },
+        "n41w118": {
+          "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n41w118/USGS_13_n41w118.tif",
+          "available": true,
+          "http": "HTTP/1.1 200 OK",
+          "bytes": 393630308,
+          "etag": "\"15d82c304d78ff6666491c6b3c2e3565-76\"",
+          "last_modified": "Thu, 16 Jan 2025 19:07:25 GMT",
+          "sha256": "2b503a935cf4016cb4b675b3e739bf9bd0df8d4fc5c49b6cf8d4381740523048",
+          "src_crs": "EPSG:4269",
+          "src_nodata": -999999.0,
+          "src_shape": [
+            10812,
+            10812
+          ],
+          "bounds_template_crs": [
+            414591.4225690786,
+            4427695.55760792,
+            500047.42250261316,
+            4539300.797926529
+          ]
+        },
+        "n41w119": {
+          "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n41w119/USGS_13_n41w119.tif",
+          "available": true,
+          "http": "HTTP/1.1 200 OK",
+          "bytes": 386798261,
+          "etag": "\"da64c60b5f98e11f1d3bdfb40fe698a7-74\"",
+          "last_modified": "Thu, 27 Jun 2024 19:10:48 GMT",
+          "sha256": "5029c65f574c5c5241f1862336e8911d39c8faab1e037b9ba0b4d2fafe0fce0c",
+          "src_crs": "EPSG:4269",
+          "src_nodata": -999999.0,
+          "src_shape": [
+            10812,
+            10812
+          ],
+          "bounds_template_crs": [
+            329225.6938896852,
+            4428173.869766191,
+            415945.29557900835,
+            4540746.2772664465
+          ]
+        },
+        "n41w120": {
+          "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n41w120/USGS_13_n41w120.tif",
+          "available": true,
+          "http": "HTTP/1.1 200 OK",
+          "bytes": 375913234,
+          "etag": "\"cceaf08bb00f424940ee6f9d9b75e61e-72\"",
+          "last_modified": "Tue, 02 Jun 2026 16:09:51 GMT",
+          "sha256": "f5bee4fbfe291b0eaf181d4b36aa32766b6ab62b9a0cb83420f22fea73580c41",
+          "src_crs": "EPSG:4269",
+          "src_nodata": -999999.0,
+          "src_shape": [
+            10812,
+            10812
+          ],
+          "bounds_template_crs": [
+            243850.84042506458,
+            4429610.240804556,
+            331840.2545654847,
+            4543156.245276554
+          ]
+        }
+      },
+      "blocks_processed": 49,
+      "grid": {
+        "rows": 3730,
+        "cols": 3292,
+        "block_cells": 400,
+        "halo_cells": 12,
+        "dst_pixel_m": 10.0,
+        "resampling": "bilinear"
+      }
+    },
+    {
+      "kind": "derived",
+      "derived_from": "dem10_channels.f32.npy",
+      "parent_tag": "ext/dem10-36326816737",
+      "bases": [
+        "dem10_slope_max",
+        "dem10_steep_ratio_max",
+        "dem10_onesided",
+        "dem10_onesided3",
+        "dem10_hgm200_mean",
+        "dem10_resid_range"
+      ],
+      "windows_px": [
+        7,
+        15
+      ],
+      "stats": [
+        "mean",
+        "max",
+        "std"
+      ],
+      "builder": "scripts/build_dem10_context.py",
+      "builder_sha256": "162654d22470116cc1671ae38d4979f16a9cd2b8fc71477e73320a1a27e5291e",
+      "preregistration": "HYPOTHESES.md session-4 register (frozen before any session-4 holdout contact)"
+    },
+    "derived: provided 107-channel stack + 3DEP 10 m DEM aggregates (tag ext/dem10-36326816737)"
+  ],
+  "elapsed_seconds": 956.08,
+  "policy_selection": {
+    "baseline107": "ridge15_binary",
+    "H25": "ridge15_binary",
+    "H29": "ridge15_binary",
+    "baseline107_discovery": "ridge15_binary"
+  },
+  "reproduction": {
+    "shared_policies": [
+      "ridge15_binary"
+    ],
+    "arms": [
+      "baseline107",
+      "H25",
+      "baseline107_discovery"
+    ],
+    "max_abs_dti_diff": 0.0,
+    "exact": true
+  },
+  "decision": {
+    "eligible": false,
+    "candidate_arm": "H29",
+    "candidate_policy": "ridge15_binary",
+    "comparisons": {
+      "baseline107": {
+        "baseline_policy": "ridge15_binary",
+        "delta_by_fold": [
+          0.004988797504951903,
+          0.009778742631035814,
+          0.020393240677474,
+          0.040627111024891416
+        ],
+        "development_mean_delta": 0.011720260271153906,
+        "confirmation_delta": 0.040627111024891416,
+        "passes": true
+      },
+      "H25": {
+        "baseline_policy": "ridge15_binary",
+        "delta_by_fold": [
+          -0.0015558366485058928,
+          0.0024618199595975165,
+          -0.0003462725146712864,
+          -0.0007047131351196056
+        ],
+        "development_mean_delta": 0.0001865702654734458,
+        "confirmation_delta": -0.0007047131351196056,
+        "passes": false
+      },
+      "baseline107_discovery": {
+        "baseline_policy": "ridge15_binary",
+        "delta_by_fold": [
+          0.004988797504951903,
+          0.009778742631035814,
+          0.020393240677474,
+          0.040627111024891416
+        ],
+        "development_mean_delta": 0.011720260271153906,
+        "confirmation_delta": 0.040627111024891416,
+        "passes": true
+      },
+      "incumbent_report:H25": {
+        "report": "reports/h25_blocked.json",
+        "arm": "H25",
+        "baseline_policy": "ridge15_binary",
+        "delta_by_fold": [
+          -0.0015558366485058928,
+          0.0024618199595975165,
+          -0.0003462725146712864,
+          -0.0007047131351196056
+        ],
+        "development_mean_delta": 0.0001865702654734458,
+        "confirmation_delta": -0.0007047131351196056,
+        "passes": false
+      }
+    },
+    "reason": "no slot: development AND confirmation must both improve over every incumbent"
+  }
+}

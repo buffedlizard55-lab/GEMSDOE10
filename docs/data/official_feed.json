@@ -1,116 +1,185 @@
 {
-  "schema": 1,
-  "last_attempt_utc": "2026-09-27T21:54:42.550482+00:00",
-  "retrieval_method": "in-sandbox urllib refresh fails TLS; leaderboard and forum entries are verified via the research fetch tool and recorded manually with dates",
-  "sources": [
-    {
-      "id": "problem",
-      "url": "https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/",
-      "required_excerpt": "structures that are indicative of geothermal resources",
-      "status": "stale_check_failed",
-      "last_success_date": "2026-09-27",
-      "claim": "Hidden test faults were manually identified by fault experts and are NOT in the current public USGS database; the competition distributes 1 m DEM download links (1m_DEM_links.csv); external data allowed when its licence permits use and sharing with the sponsor.",
-      "scope": "Problem-description page, re-read first-hand this session. It does not disclose fault types, coverage or the mapping method beyond 'expert-labelled'.",
-      "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>",
-      "reverified_utc": "2026-09-27T06:01:04.688187+00:00",
-      "reverified_by": "fetch_page tool, session 2026-09-27",
-      "note": "Re-verified 2026-09-27 via fetch_page: task, DTI alpha=0.2/beta=0.8/R=300m (3 px), linear p(x), one final submission chosen blind to private score, two-round prizes."
-    },
-    {
-      "id": "masking",
-      "url": "https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2",
-      "required_excerpt": "Pixels corresponding to known USGS/INGENIOUS faults",
-      "status": "stale_check_failed",
-      "last_success_date": "2026-09-27",
-      "claim": "Staff confirms known catalogue pixels excluded in both rounds.",
-      "scope": "Does not disclose the order of masking relative to kernel dilation.",
-      "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>",
-      "reverified_utc": "2026-09-27T06:01:04.688217+00:00",
-      "reverified_by": "fetch_page tool, session 2026-09-27",
-      "note": "Re-verified 2026-09-27 via fetch_page (posts /2 staff and /4 staff): mask is PIXEL-EXACT provided labels, no buffer, applied in both rounds; a predicted pixel near a known trace but far from new ground truth is FULLY penalized; new ground truth may lie within 300 m of known traces ('corrections or modifications to existing fault traces') in both the new-fault and final-round sets."
-    },
-    {
-      "id": "new_geometry",
-      "url": "https://community.drivendata.org/t/where-do-you-draw-the-line/11536/2",
-      "required_excerpt": "any fault pixel not already captured by USGS/INGENIOUS",
-      "status": "stale_check_failed",
-      "last_success_date": "2026-09-27",
-      "claim": "New geometry of existing fault systems can qualify.",
-      "scope": "No justification for excluding every pixel within 1 km of a known trace.",
-      "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>",
-      "reverified_utc": "2026-09-27T06:01:04.688220+00:00",
-      "reverified_by": "fetch_page tool, session 2026-09-27",
-      "note": "Re-verified 2026-09-27 via fetch_page: 'new fault' = any fault pixel not already captured by USGS/INGENIOUS, INCLUDING newly mapped geometry of an existing fault system (splays, continuations eligible)."
-    },
-    {
-      "id": "hidden_sources",
-      "url": "https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527/7",
-      "required_excerpt": "not sharing details about the data sources, fault types, or coverage",
-      "status": "stale_check_failed",
-      "last_success_date": "2026-09-27",
-      "claim": "Staff declines to disclose hidden test data sources, fault types or coverage.",
-      "scope": "No claim about hidden faults' median catalogue distance is verified.",
-      "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>",
-      "reverified_utc": "2026-09-27T06:01:04.688223+00:00",
-      "reverified_by": "fetch_page tool, session 2026-09-27",
-      "note": "Re-verified 2026-09-27 via fetch_page: staff will not disclose test-fault sources/types; Phase 2 test set updated by expert review of ALL Phase 1 submissions, so novel verified predictions matter for final evaluation."
-    },
-    {
-      "id": "cadence",
-      "url": "https://community.drivendata.org/t/weekly-submissions/11524/2",
-      "required_excerpt": "submission allowance resets based on a rolling window",
-      "status": "stale_check_failed",
-      "last_success_date": "2026-09-27",
-      "claim": "The submission allowance uses a rolling window.",
-      "scope": "Current account slot usage cannot be read without that account's authenticated history.",
-      "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>",
-      "reverified_utc": "2026-09-27T06:01:04.688225+00:00",
-      "reverified_by": "fetch_page tool, session 2026-09-27",
-      "note": "Re-verified 2026-09-27 via fetch_page: 3 submissions per week, rolling 7-day window reset."
-    },
-    {
-      "id": "ingenious",
-      "url": "https://gdr.openei.org/submissions/1391",
-      "required_excerpt": "2-meter temperature probe surveys",
-      "status": "stale_check_failed",
-      "last_success_date": "2026-09-27",
-      "claim": "Official regional dataset provides temperature probes, paleo features and well/spring resources under CC BY 4.0.",
-      "scope": "Landing page verified; binary archives not obtained here (TLS failures).",
-      "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>",
-      "reverified_utc": "2026-09-27T06:01:04.688227+00:00",
-      "reverified_by": "fetch_page tool, session 2026-09-27",
-      "note": "Re-verified 2026-09-27 via fetch_page: INGENIOUS Great Basin Regional Dataset Compilation (Ayling et al. 2022, DOI 10.15121/1881483, CC BY 4.0); Quaternary Faults v2 (2023-06-27) supersedes v1; binaries not fetchable from this sandbox (TLS) — obtainable by user/CI."
-    },
-    {
-      "claim": "USGS 3DEP 1/3 arc-second (~10 m) seamless DEM is public domain and staged as GeoTIFF tiles at prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/<tile>/USGS_13_<tile>.tif (H20 source; 12 tiles cover the footprint).",
-      "url": "https://www.sciencebase.gov/catalog/item/4f70aa9fe4b058caae3f8de5",
-      "status": "stale_check_failed",
-      "last_success_date": "2026-09-27",
-      "scope": "Catalogue item + S3 listing read first-hand; per-tile size/ETag/sha256 recorded in the ext/dem10-36326816737 manifest. Not reachable from the sandbox itself (TLS); fetched on the GitHub runner.",
-      "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>"
-    },
-    {
-      "claim": "USGS Quaternary Fault and Fold Database GIS download (Qfaults_GIS.zip) is public domain; cite USGS 2020, doi:10.5066/P9BCVRCK. Interactive database search retired 2026-02-26.",
-      "url": "https://www.usgs.gov/programs/earthquake-hazards/faults",
-      "status": "stale_check_failed",
-      "last_success_date": "2026-09-27",
-      "scope": "Programme page read first-hand; archive sha256 447eadc5… recorded in data/external/catalogue/catalogue_diff.json (H21).",
-      "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>"
-    }
-  ],
-  "leaderboard": {
-    "url": "https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/",
-    "status": "verified",
-    "last_success_date": "2026-09-27",
-    "rank1": "DARD",
-    "score": 0.3168,
-    "note": "Public snapshot, not a forecast or a verified mapping of group uploads. Re-verified first-hand 2026-09-27 (session 4, pages 1-2 read via fetch_page): rank1 DARD 0.3168 (11 submissions; ROSE from 0.3049 earlier the same day), #2 alexoktaba 0.2993, #3 HardcoreTechGod 0.2854, #4 mzoorob 0.2843, #5 joeyfezster 0.2806, #6 GrigorSargsyan 0.2742; doegemsDrivendata 0.1847 (#16, role not stated); 0.1563 appears three times (extradr19 #26, SDCF9 #27, smashi34 #28 — consistent with the byte-identical artifact audit; account mapping not authenticated); top-50 floor 0.0982; metric column 'DW-Tversky'.",
-    "error": null,
-    "reverified_utc": "2026-09-27T15:30:24.043124+00:00",
-    "reverified_by": "fetch_page tool, session 2026-09-27 (session 3)",
-    "irregularities": [
-      "0.1563 listed for three different accounts (ranks 25-27) — the same artifact bytes were uploaded under several accounts (reports/submission_audit.json)",
-      "doegemsDrivendata (0.1847, 5 submissions) is plausibly an organiser account; not confirmed by any official text"
-    ]
+ "schema": 1,
+ "last_attempt_utc": "2026-09-28T01:18:51.630020+00:00",
+ "retrieval_method": "in-sandbox urllib refresh fails TLS; leaderboard and forum entries are verified via the research fetch tool and recorded manually with dates",
+ "sources": [
+  {
+   "id": "problem",
+   "url": "https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/",
+   "required_excerpt": "structures that are indicative of geothermal resources",
+   "status": "stale_check_failed",
+   "last_success_date": "2026-09-27",
+   "claim": "Hidden test faults were manually identified by fault experts and are NOT in the current public USGS database; the competition distributes 1 m DEM download links (1m_DEM_links.csv); external data allowed when its licence permits use and sharing with the sponsor.",
+   "scope": "Problem-description page, re-read first-hand this session. It does not disclose fault types, coverage or the mapping method beyond 'expert-labelled'.",
+   "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>",
+   "reverified_utc": "2026-09-27T06:01:04.688187+00:00",
+   "reverified_by": "fetch_page tool, session 2026-09-27",
+   "note": "Re-verified 2026-09-27 via fetch_page: task, DTI alpha=0.2/beta=0.8/R=300m (3 px), linear p(x), one final submission chosen blind to private score, two-round prizes."
+  },
+  {
+   "id": "masking",
+   "url": "https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2",
+   "required_excerpt": "Pixels corresponding to known USGS/INGENIOUS faults",
+   "status": "stale_check_failed",
+   "last_success_date": "2026-09-27",
+   "claim": "Staff confirms known catalogue pixels excluded in both rounds.",
+   "scope": "Does not disclose the order of masking relative to kernel dilation.",
+   "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>",
+   "reverified_utc": "2026-09-27T06:01:04.688217+00:00",
+   "reverified_by": "fetch_page tool, session 2026-09-27",
+   "note": "Re-verified 2026-09-27 via fetch_page (posts /2 staff and /4 staff): mask is PIXEL-EXACT provided labels, no buffer, applied in both rounds; a predicted pixel near a known trace but far from new ground truth is FULLY penalized; new ground truth may lie within 300 m of known traces ('corrections or modifications to existing fault traces') in both the new-fault and final-round sets."
+  },
+  {
+   "id": "new_geometry",
+   "url": "https://community.drivendata.org/t/where-do-you-draw-the-line/11536/2",
+   "required_excerpt": "any fault pixel not already captured by USGS/INGENIOUS",
+   "status": "stale_check_failed",
+   "last_success_date": "2026-09-27",
+   "claim": "New geometry of existing fault systems can qualify.",
+   "scope": "No justification for excluding every pixel within 1 km of a known trace.",
+   "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>",
+   "reverified_utc": "2026-09-27T06:01:04.688220+00:00",
+   "reverified_by": "fetch_page tool, session 2026-09-27",
+   "note": "Re-verified 2026-09-27 via fetch_page: 'new fault' = any fault pixel not already captured by USGS/INGENIOUS, INCLUDING newly mapped geometry of an existing fault system (splays, continuations eligible)."
+  },
+  {
+   "id": "hidden_sources",
+   "url": "https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527/7",
+   "required_excerpt": "not sharing details about the data sources, fault types, or coverage",
+   "status": "stale_check_failed",
+   "last_success_date": "2026-09-27",
+   "claim": "Staff declines to disclose hidden test data sources, fault types or coverage.",
+   "scope": "No claim about hidden faults' median catalogue distance is verified.",
+   "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>",
+   "reverified_utc": "2026-09-27T06:01:04.688223+00:00",
+   "reverified_by": "fetch_page tool, session 2026-09-27",
+   "note": "Re-verified 2026-09-27 via fetch_page: staff will not disclose test-fault sources/types; Phase 2 test set updated by expert review of ALL Phase 1 submissions, so novel verified predictions matter for final evaluation."
+  },
+  {
+   "id": "cadence",
+   "url": "https://community.drivendata.org/t/weekly-submissions/11524/2",
+   "required_excerpt": "submission allowance resets based on a rolling window",
+   "status": "stale_check_failed",
+   "last_success_date": "2026-09-27",
+   "claim": "The submission allowance uses a rolling window.",
+   "scope": "Current account slot usage cannot be read without that account's authenticated history.",
+   "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>",
+   "reverified_utc": "2026-09-27T06:01:04.688225+00:00",
+   "reverified_by": "fetch_page tool, session 2026-09-27",
+   "note": "Re-verified 2026-09-27 via fetch_page: 3 submissions per week, rolling 7-day window reset."
+  },
+  {
+   "id": "ingenious",
+   "url": "https://gdr.openei.org/submissions/1391",
+   "required_excerpt": "2-meter temperature probe surveys",
+   "status": "stale_check_failed",
+   "last_success_date": "2026-09-27",
+   "claim": "Official regional dataset provides temperature probes, paleo features and well/spring resources under CC BY 4.0.",
+   "scope": "Landing page verified; binary archives not obtained here (TLS failures).",
+   "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>",
+   "reverified_utc": "2026-09-27T06:01:04.688227+00:00",
+   "reverified_by": "fetch_page tool, session 2026-09-27",
+   "note": "Re-verified 2026-09-27 via fetch_page: INGENIOUS Great Basin Regional Dataset Compilation (Ayling et al. 2022, DOI 10.15121/1881483, CC BY 4.0); Quaternary Faults v2 (2023-06-27) supersedes v1; binaries not fetchable from this sandbox (TLS) \u2014 obtainable by user/CI."
+  },
+  {
+   "claim": "USGS 3DEP 1/3 arc-second (~10 m) seamless DEM is public domain and staged as GeoTIFF tiles at prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/<tile>/USGS_13_<tile>.tif (H20 source; 12 tiles cover the footprint).",
+   "url": "https://www.sciencebase.gov/catalog/item/4f70aa9fe4b058caae3f8de5",
+   "status": "stale_check_failed",
+   "last_success_date": "2026-09-27",
+   "scope": "Catalogue item + S3 listing read first-hand; per-tile size/ETag/sha256 recorded in the ext/dem10-36326816737 manifest. Not reachable from the sandbox itself (TLS); fetched on the GitHub runner.",
+   "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>"
+  },
+  {
+   "claim": "USGS Quaternary Fault and Fold Database GIS download (Qfaults_GIS.zip) is public domain; cite USGS 2020, doi:10.5066/P9BCVRCK. Interactive database search retired 2026-02-26.",
+   "url": "https://www.usgs.gov/programs/earthquake-hazards/faults",
+   "status": "stale_check_failed",
+   "last_success_date": "2026-09-27",
+   "scope": "Programme page read first-hand; archive sha256 447eadc5\u2026 recorded in data/external/catalogue/catalogue_diff.json (H21).",
+   "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:992)>"
+  },
+  {
+   "id": "test_fault_sources_thread",
+   "url": "https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527/7",
+   "required_excerpt": "not sharing details about the data sources, fault types, or coverage",
+   "status": "verified",
+   "last_success_date": "2026-09-28",
+   "claim": "Staff (chrisk-dd, post 7) decline to disclose the data sources, fault types or coverage behind the test faults; the Phase 2 test set is updated by expert review of all Phase 1 submissions, so predictions matter for final evaluation even if not the most performant in Phase 1.",
+   "scope": "Posts 8-10 are participants only (no further staff information as of 2026-09-28).",
+   "reverified_utc": "2026-09-28T01:18:51.630020+00:00",
+   "reverified_by": "fetch_page tool, session 2026-09-28 (session 5)"
+  },
+  {
+   "id": "geodawn_3dep_1m",
+   "url": "https://prd-tnm.s3.amazonaws.com/?list-type=2&prefix=StagedProducts/Elevation/1m/Projects/NV_&delimiter=/",
+   "required_excerpt": "NV_WestCentral_EarthMRI_2020_D20",
+   "status": "verified",
+   "last_success_date": "2026-09-28",
+   "claim": "USGS 3DEP 1 m DEM tiles cover 98.3% of the competition footprint (686 tiles, 157.4 GB): NV_WestCentral_EarthMRI_2020_D20 (GeoDAWN lidar) 86.8% / 512 tiles / 130.3 GB; NV_NorthWestElko_2020_D20 12.3% / 72 tiles / 15.9 GB; six smaller NV/CA projects the rest. Tile naming verified on COG headers (EPSG:26910/26911).",
+   "scope": "Measured by the external-data runner job lidar1m (tag ext/lidar1m-inventory-36365777149: inventory.json + build.log; S3 listing sizes, no pixels downloaded). Sandbox bash cannot reach AWS.",
+   "reverified_utc": "2026-09-28T01:18:51.630020+00:00",
+   "reverified_by": "fetch_page tool, session 2026-09-28 (session 5)"
   }
+ ],
+ "leaderboard": {
+  "url": "https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/",
+  "status": "verified",
+  "last_success_date": "2026-09-28",
+  "rank1": "DARD",
+  "score": 0.3168,
+  "note": "Public snapshot, not a forecast or a verified mapping of group uploads. Re-verified first-hand 2026-09-28 ~01:00 UTC (session 5, pages 1-2 via fetch_page): #1 DARD 0.3168 (11 submissions, last 8h before the read), #2 alexoktaba 0.2993, #3 HardcoreTechGod 0.2854, #4 mzoorob 0.2843, #5 joeyfezster 0.2806, #6 GrigorSargsyan 0.2742, #7 exposed 0.2439, #8 xiaofanhu 0.2367, #9 hiii12345 0.2262, #10 ad3002 0.2235; doegemsDrivendata 0.1847 (#17, role not stated); 0.1563 three times (extradr19 #26, SDCF9 #27, smashi34 #28); top-50 floor 0.1119 (was 0.0982 on 2026-09-27); metric column 'DW-Tversky'.",
+  "error": null,
+  "reverified_utc": "2026-09-28T01:18:51.630020+00:00",
+  "reverified_by": "fetch_page tool, session 2026-09-28 (session 5)",
+  "irregularities": [
+   "0.1563 listed for three different accounts (ranks 26-28) \u2014 the same artifact bytes were uploaded under several accounts (reports/submission_audit.json, re-verified 2026-09-28)",
+   "doegemsDrivendata (0.1847) is plausibly an organiser/benchmark account; not confirmed by any official text"
+  ],
+  "top10_snapshot": {
+   "date_utc": "2026-09-28T01:00Z",
+   "source": "fetch_page (session 5)",
+   "rows": [
+    [
+     "DARD",
+     0.3168
+    ],
+    [
+     "alexoktaba",
+     0.2993
+    ],
+    [
+     "HardcoreTechGod",
+     0.2854
+    ],
+    [
+     "mzoorob",
+     0.2843
+    ],
+    [
+     "joeyfezster",
+     0.2806
+    ],
+    [
+     "GrigorSargsyan",
+     0.2742
+    ],
+    [
+     "exposed",
+     0.2439
+    ],
+    [
+     "xiaofanhu",
+     0.2367
+    ],
+    [
+     "hiii12345",
+     0.2262
+    ],
+    [
+     "ad3002",
+     0.2235
+    ]
+   ],
+   "top50_floor": 0.1119
+  }
+ }
 }

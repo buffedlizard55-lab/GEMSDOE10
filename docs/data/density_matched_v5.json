@@ -1,0 +1,737 @@
+{
+  "protocol": "spatial-4x4-strided-v1-buffer40-policy-sweep-v5-density-matched",
+  "generated_utc": "2026-09-28T01:56:41Z",
+  "selection": {
+    "baseline107": "ridge30_d3",
+    "baseline107_discovery": "ridge30_d3",
+    "H25": "ridge20_d3",
+    "H29": "ridge30_d3"
+  },
+  "reproduction": {
+    "grids_byte_identical_to_incumbent_report": {
+      "baseline107_fold0": true,
+      "H25_fold0": true,
+      "baseline107_fold1": true,
+      "H25_fold1": true,
+      "baseline107_fold2": true,
+      "H25_fold2": true,
+      "baseline107_fold3": true,
+      "H25_fold3": true
+    },
+    "exact": true
+  },
+  "table": {
+    "baseline107": {
+      "topk02_binary": {
+        "density_matched": {
+          "development_mean": 0.0975270917947197,
+          "confirmation": 0.14239462137466474
+        },
+        "full_density": {
+          "development_mean": 0.14367850358976642,
+          "confirmation": 0.18736822613509482
+        }
+      },
+      "thin12_binary": {
+        "density_matched": {
+          "development_mean": 0.09948087985007219,
+          "confirmation": 0.08849052377374152
+        },
+        "full_density": {
+          "development_mean": 0.1789124555839369,
+          "confirmation": 0.16087655484051927
+        }
+      },
+      "ridge04_binary": {
+        "density_matched": {
+          "development_mean": 0.1286159338990561,
+          "confirmation": 0.14900737093258906
+        },
+        "full_density": {
+          "development_mean": 0.17595810318138042,
+          "confirmation": 0.19323683664112476
+        }
+      },
+      "ridge06_binary": {
+        "density_matched": {
+          "development_mean": 0.1321246057446063,
+          "confirmation": 0.14494560928422576
+        },
+        "full_density": {
+          "development_mean": 0.19555603570023686,
+          "confirmation": 0.2080496342186256
+        }
+      },
+      "ridge10_binary": {
+        "density_matched": {
+          "development_mean": 0.13155111982049136,
+          "confirmation": 0.13553462372821143
+        },
+        "full_density": {
+          "development_mean": 0.21564938572574244,
+          "confirmation": 0.2174228695214971
+        }
+      },
+      "ridge15_binary": {
+        "density_matched": {
+          "development_mean": 0.12717342363144615,
+          "confirmation": 0.12172212603759879
+        },
+        "full_density": {
+          "development_mean": 0.22509417387465938,
+          "confirmation": 0.2104565448258517
+        }
+      },
+      "ridge20_binary": {
+        "density_matched": {
+          "development_mean": 0.1237301477929937,
+          "confirmation": 0.11290522765103361
+        },
+        "full_density": {
+          "development_mean": 0.23012790093596255,
+          "confirmation": 0.20430876540744117
+        }
+      },
+      "ridge30_binary": {
+        "density_matched": {
+          "development_mean": 0.11523553185106979,
+          "confirmation": 0.10030864140714496
+        },
+        "full_density": {
+          "development_mean": 0.22870955653101932,
+          "confirmation": 0.19279498214142016
+        }
+      },
+      "ridge10_d2": {
+        "density_matched": {
+          "development_mean": 0.15326449529945663,
+          "confirmation": 0.16348257291245724
+        },
+        "full_density": {
+          "development_mean": 0.2170438672235592,
+          "confirmation": 0.2278770690448591
+        }
+      },
+      "ridge15_d2": {
+        "density_matched": {
+          "development_mean": 0.15522114404527312,
+          "confirmation": 0.15340300885449146
+        },
+        "full_density": {
+          "development_mean": 0.23676081973116736,
+          "confirmation": 0.23070710225011287
+        }
+      },
+      "ridge20_d2": {
+        "density_matched": {
+          "development_mean": 0.15578826360785894,
+          "confirmation": 0.1459115035805306
+        },
+        "full_density": {
+          "development_mean": 0.2500302734212218,
+          "confirmation": 0.23171885986287408
+        }
+      },
+      "ridge30_d2": {
+        "density_matched": {
+          "development_mean": 0.15136934332457164,
+          "confirmation": 0.1346529407987915
+        },
+        "full_density": {
+          "development_mean": 0.26064607555780533,
+          "confirmation": 0.22947767265675822
+        }
+      },
+      "ridge15_d3": {
+        "density_matched": {
+          "development_mean": 0.15610533362853674,
+          "confirmation": 0.1551423558335095
+        },
+        "full_density": {
+          "development_mean": 0.21469057264546146,
+          "confirmation": 0.21152086473983864
+        }
+      },
+      "ridge20_d3": {
+        "density_matched": {
+          "development_mean": 0.16081932728978923,
+          "confirmation": 0.15252275119053196
+        },
+        "full_density": {
+          "development_mean": 0.23129655455329204,
+          "confirmation": 0.21852538180705933
+        }
+      },
+      "ridge30_d3": {
+        "density_matched": {
+          "development_mean": 0.16210228473845098,
+          "confirmation": 0.1459376106048964
+        },
+        "full_density": {
+          "development_mean": 0.2490416758277297,
+          "confirmation": 0.22290061558693852
+        }
+      },
+      "ridge40_d3": {
+        "density_matched": {
+          "development_mean": 0.15973510016617154,
+          "confirmation": 0.1392314395428475
+        },
+        "full_density": {
+          "development_mean": 0.2559873554121536,
+          "confirmation": 0.22331233854015106
+        }
+      }
+    },
+    "baseline107_discovery": {
+      "topk02_binary": {
+        "density_matched": {
+          "development_mean": 0.0975270917947197,
+          "confirmation": 0.14239462137466474
+        },
+        "full_density": {
+          "development_mean": 0.14367850358976642,
+          "confirmation": 0.18736822613509482
+        }
+      },
+      "thin12_binary": {
+        "density_matched": {
+          "development_mean": 0.09948087985007219,
+          "confirmation": 0.08849052377374152
+        },
+        "full_density": {
+          "development_mean": 0.1789124555839369,
+          "confirmation": 0.16087655484051927
+        }
+      },
+      "ridge04_binary": {
+        "density_matched": {
+          "development_mean": 0.1286159338990561,
+          "confirmation": 0.14900737093258906
+        },
+        "full_density": {
+          "development_mean": 0.17595810318138042,
+          "confirmation": 0.19323683664112476
+        }
+      },
+      "ridge06_binary": {
+        "density_matched": {
+          "development_mean": 0.1321246057446063,
+          "confirmation": 0.14494560928422576
+        },
+        "full_density": {
+          "development_mean": 0.19555603570023686,
+          "confirmation": 0.2080496342186256
+        }
+      },
+      "ridge10_binary": {
+        "density_matched": {
+          "development_mean": 0.13155111982049136,
+          "confirmation": 0.13553462372821143
+        },
+        "full_density": {
+          "development_mean": 0.21564938572574244,
+          "confirmation": 0.2174228695214971
+        }
+      },
+      "ridge15_binary": {
+        "density_matched": {
+          "development_mean": 0.12717342363144615,
+          "confirmation": 0.12172212603759879
+        },
+        "full_density": {
+          "development_mean": 0.22509417387465938,
+          "confirmation": 0.2104565448258517
+        }
+      },
+      "ridge20_binary": {
+        "density_matched": {
+          "development_mean": 0.1237301477929937,
+          "confirmation": 0.11290522765103361
+        },
+        "full_density": {
+          "development_mean": 0.23012790093596255,
+          "confirmation": 0.20430876540744117
+        }
+      },
+      "ridge30_binary": {
+        "density_matched": {
+          "development_mean": 0.11523553185106979,
+          "confirmation": 0.10030864140714496
+        },
+        "full_density": {
+          "development_mean": 0.22870955653101932,
+          "confirmation": 0.19279498214142016
+        }
+      },
+      "ridge10_d2": {
+        "density_matched": {
+          "development_mean": 0.15326449529945663,
+          "confirmation": 0.16348257291245724
+        },
+        "full_density": {
+          "development_mean": 0.2170438672235592,
+          "confirmation": 0.2278770690448591
+        }
+      },
+      "ridge15_d2": {
+        "density_matched": {
+          "development_mean": 0.15522114404527312,
+          "confirmation": 0.15340300885449146
+        },
+        "full_density": {
+          "development_mean": 0.23676081973116736,
+          "confirmation": 0.23070710225011287
+        }
+      },
+      "ridge20_d2": {
+        "density_matched": {
+          "development_mean": 0.15578826360785894,
+          "confirmation": 0.1459115035805306
+        },
+        "full_density": {
+          "development_mean": 0.2500302734212218,
+          "confirmation": 0.23171885986287408
+        }
+      },
+      "ridge30_d2": {
+        "density_matched": {
+          "development_mean": 0.15136934332457164,
+          "confirmation": 0.1346529407987915
+        },
+        "full_density": {
+          "development_mean": 0.26064607555780533,
+          "confirmation": 0.22947767265675822
+        }
+      },
+      "ridge15_d3": {
+        "density_matched": {
+          "development_mean": 0.15610533362853674,
+          "confirmation": 0.1551423558335095
+        },
+        "full_density": {
+          "development_mean": 0.21469057264546146,
+          "confirmation": 0.21152086473983864
+        }
+      },
+      "ridge20_d3": {
+        "density_matched": {
+          "development_mean": 0.16081932728978923,
+          "confirmation": 0.15252275119053196
+        },
+        "full_density": {
+          "development_mean": 0.23129655455329204,
+          "confirmation": 0.21852538180705933
+        }
+      },
+      "ridge30_d3": {
+        "density_matched": {
+          "development_mean": 0.16210228473845098,
+          "confirmation": 0.1459376106048964
+        },
+        "full_density": {
+          "development_mean": 0.2490416758277297,
+          "confirmation": 0.22290061558693852
+        }
+      },
+      "ridge40_d3": {
+        "density_matched": {
+          "development_mean": 0.15973510016617154,
+          "confirmation": 0.1392314395428475
+        },
+        "full_density": {
+          "development_mean": 0.2559873554121536,
+          "confirmation": 0.22331233854015106
+        }
+      }
+    },
+    "H25": {
+      "topk02_binary": {
+        "density_matched": {
+          "development_mean": 0.1098347581085673,
+          "confirmation": 0.1670553462259099
+        },
+        "full_density": {
+          "development_mean": 0.16385473400364967,
+          "confirmation": 0.2275305757370488
+        }
+      },
+      "thin12_binary": {
+        "density_matched": {
+          "development_mean": 0.11283370458777993,
+          "confirmation": 0.12369288697458658
+        },
+        "full_density": {
+          "development_mean": 0.19230719428630658,
+          "confirmation": 0.20994406995288903
+        }
+      },
+      "ridge04_binary": {
+        "density_matched": {
+          "development_mean": 0.13721375982843012,
+          "confirmation": 0.19761718364519773
+        },
+        "full_density": {
+          "development_mean": 0.1833548307630765,
+          "confirmation": 0.2523124628477373
+        }
+      },
+      "ridge06_binary": {
+        "density_matched": {
+          "development_mean": 0.14066401361698896,
+          "confirmation": 0.188293727866516
+        },
+        "full_density": {
+          "development_mean": 0.2031731801764145,
+          "confirmation": 0.2608830482985433
+        }
+      },
+      "ridge10_binary": {
+        "density_matched": {
+          "development_mean": 0.1405662977724754,
+          "confirmation": 0.16876413369802623
+        },
+        "full_density": {
+          "development_mean": 0.22506221516742383,
+          "confirmation": 0.2627659375786072
+        }
+      },
+      "ridge15_binary": {
+        "density_matched": {
+          "development_mean": 0.13717541648153853,
+          "confirmation": 0.14985544739505743
+        },
+        "full_density": {
+          "development_mean": 0.23662786388033985,
+          "confirmation": 0.2517883689858627
+        }
+      },
+      "ridge20_binary": {
+        "density_matched": {
+          "development_mean": 0.13231029284077636,
+          "confirmation": 0.13756122765859033
+        },
+        "full_density": {
+          "development_mean": 0.2393154201327089,
+          "confirmation": 0.2426414244971945
+        }
+      },
+      "ridge30_binary": {
+        "density_matched": {
+          "development_mean": 0.12265531753135639,
+          "confirmation": 0.12116413454053794
+        },
+        "full_density": {
+          "development_mean": 0.23806292304098467,
+          "confirmation": 0.22604349137964116
+        }
+      },
+      "ridge10_d2": {
+        "density_matched": {
+          "development_mean": 0.16146040784484764,
+          "confirmation": 0.19932514035434798
+        },
+        "full_density": {
+          "development_mean": 0.22300478504290658,
+          "confirmation": 0.2697909802578057
+        }
+      },
+      "ridge15_d2": {
+        "density_matched": {
+          "development_mean": 0.16590139450761904,
+          "confirmation": 0.18640071749215745
+        },
+        "full_density": {
+          "development_mean": 0.24523897881531495,
+          "confirmation": 0.2715316812212458
+        }
+      },
+      "ridge20_d2": {
+        "density_matched": {
+          "development_mean": 0.16531193974884184,
+          "confirmation": 0.17699720480390127
+        },
+        "full_density": {
+          "development_mean": 0.25644017812977804,
+          "confirmation": 0.2715658405603619
+        }
+      },
+      "ridge30_d2": {
+        "density_matched": {
+          "development_mean": 0.15995796007799992,
+          "confirmation": 0.1627656690753324
+        },
+        "full_density": {
+          "development_mean": 0.26760733679129395,
+          "confirmation": 0.26673469382243264
+        }
+      },
+      "ridge15_d3": {
+        "density_matched": {
+          "development_mean": 0.16417231728268308,
+          "confirmation": 0.19158153256939525
+        },
+        "full_density": {
+          "development_mean": 0.22116752413828422,
+          "confirmation": 0.25685178864133895
+        }
+      },
+      "ridge20_d3": {
+        "density_matched": {
+          "development_mean": 0.16909419227061348,
+          "confirmation": 0.1869651815505223
+        },
+        "full_density": {
+          "development_mean": 0.23686799526965044,
+          "confirmation": 0.26329514053357045
+        }
+      },
+      "ridge30_d3": {
+        "density_matched": {
+          "development_mean": 0.16898481043469435,
+          "confirmation": 0.17850286430889442
+        },
+        "full_density": {
+          "development_mean": 0.253752438432648,
+          "confirmation": 0.26686533666335055
+        }
+      },
+      "ridge40_d3": {
+        "density_matched": {
+          "development_mean": 0.1673736141602642,
+          "confirmation": 0.16784531356810015
+        },
+        "full_density": {
+          "development_mean": 0.26276306103416314,
+          "confirmation": 0.26152341960367775
+        }
+      }
+    },
+    "H29": {
+      "topk02_binary": {
+        "density_matched": {
+          "development_mean": 0.11097530679970143,
+          "confirmation": 0.1675900165830442
+        },
+        "full_density": {
+          "development_mean": 0.164614658240569,
+          "confirmation": 0.22918763189539534
+        }
+      },
+      "thin12_binary": {
+        "density_matched": {
+          "development_mean": 0.11363397825378015,
+          "confirmation": 0.12301684042464739
+        },
+        "full_density": {
+          "development_mean": 0.1945482761824353,
+          "confirmation": 0.20678768829937583
+        }
+      },
+      "ridge04_binary": {
+        "density_matched": {
+          "development_mean": 0.1387048320100707,
+          "confirmation": 0.2007511849083247
+        },
+        "full_density": {
+          "development_mean": 0.18651156314673412,
+          "confirmation": 0.25339235708927316
+        }
+      },
+      "ridge06_binary": {
+        "density_matched": {
+          "development_mean": 0.1426591961513151,
+          "confirmation": 0.18815609655615761
+        },
+        "full_density": {
+          "development_mean": 0.20732158523160216,
+          "confirmation": 0.26195225378510417
+        }
+      },
+      "ridge10_binary": {
+        "density_matched": {
+          "development_mean": 0.14244891717513328,
+          "confirmation": 0.16777162461712744
+        },
+        "full_density": {
+          "development_mean": 0.22771143621235887,
+          "confirmation": 0.2617186537959587
+        }
+      },
+      "ridge15_binary": {
+        "density_matched": {
+          "development_mean": 0.13668990965304792,
+          "confirmation": 0.14927438341616003
+        },
+        "full_density": {
+          "development_mean": 0.23681443414581327,
+          "confirmation": 0.2510836558507431
+        }
+      },
+      "ridge20_binary": {
+        "density_matched": {
+          "development_mean": 0.1319178057795046,
+          "confirmation": 0.13835080888263887
+        },
+        "full_density": {
+          "development_mean": 0.24037269503587955,
+          "confirmation": 0.2438835430479697
+        }
+      },
+      "ridge30_binary": {
+        "density_matched": {
+          "development_mean": 0.12288040738343875,
+          "confirmation": 0.12292780150100152
+        },
+        "full_density": {
+          "development_mean": 0.23891364878831545,
+          "confirmation": 0.2299730507273278
+        }
+      },
+      "ridge10_d2": {
+        "density_matched": {
+          "development_mean": 0.1641672033752502,
+          "confirmation": 0.19684829840563725
+        },
+        "full_density": {
+          "development_mean": 0.22627305511191106,
+          "confirmation": 0.26656986111572323
+        }
+      },
+      "ridge15_d2": {
+        "density_matched": {
+          "development_mean": 0.16595688659727273,
+          "confirmation": 0.18440836433591087
+        },
+        "full_density": {
+          "development_mean": 0.2461918527633465,
+          "confirmation": 0.26904914540717995
+        }
+      },
+      "ridge20_d2": {
+        "density_matched": {
+          "development_mean": 0.16566061072538174,
+          "confirmation": 0.17774755813619314
+        },
+        "full_density": {
+          "development_mean": 0.258698661881481,
+          "confirmation": 0.2726449959630774
+        }
+      },
+      "ridge30_d2": {
+        "density_matched": {
+          "development_mean": 0.16164648813904992,
+          "confirmation": 0.16405008044900654
+        },
+        "full_density": {
+          "development_mean": 0.27064267918290064,
+          "confirmation": 0.26967156703475276
+        }
+      },
+      "ridge15_d3": {
+        "density_matched": {
+          "development_mean": 0.16520378749826958,
+          "confirmation": 0.1929715593687956
+        },
+        "full_density": {
+          "development_mean": 0.22265215218346032,
+          "confirmation": 0.2577588243986695
+        }
+      },
+      "ridge20_d3": {
+        "density_matched": {
+          "development_mean": 0.16877943272858056,
+          "confirmation": 0.19108553685514576
+        },
+        "full_density": {
+          "development_mean": 0.23811247460963714,
+          "confirmation": 0.265504277209181
+        }
+      },
+      "ridge30_d3": {
+        "density_matched": {
+          "development_mean": 0.17036320091204704,
+          "confirmation": 0.18097728664534787
+        },
+        "full_density": {
+          "development_mean": 0.25679861750238403,
+          "confirmation": 0.26937739997624377
+        }
+      },
+      "ridge40_d3": {
+        "density_matched": {
+          "development_mean": 0.1678746102610833,
+          "confirmation": 0.17078255086192703
+        },
+        "full_density": {
+          "development_mean": 0.2645353944703073,
+          "confirmation": 0.2659605529270672
+        }
+      }
+    }
+  },
+  "H28": {
+    "eligible": true,
+    "policy": "ridge20_d3",
+    "comparisons": {
+      "baseline107": {
+        "development_mean_delta": 0.006991907532162491,
+        "confirmation_delta": 0.041027570945625896,
+        "passes": true
+      },
+      "baseline107_discovery": {
+        "development_mean_delta": 0.006991907532162491,
+        "confirmation_delta": 0.041027570945625896,
+        "passes": true
+      },
+      "incumbent_fixed:H25@ridge15_binary": {
+        "development_mean_delta": 0.03191877578907495,
+        "confirmation_delta": 0.03710973415546487,
+        "passes": true
+      },
+      "full_density_noninferiority": {
+        "development_mean_delta": 0.00024013138931060682,
+        "confirmation_delta": 0.01150677154770774,
+        "passes": true
+      },
+      "reproduction_of_incumbent_grids": {
+        "development_mean_delta": null,
+        "confirmation_delta": null,
+        "passes": true
+      }
+    }
+  },
+  "H29": {
+    "eligible": false,
+    "policy": "ridge30_d3",
+    "comparisons": {
+      "baseline107": {
+        "development_mean_delta": 0.008260916173596061,
+        "confirmation_delta": 0.03503967604045147,
+        "passes": true
+      },
+      "baseline107_discovery": {
+        "development_mean_delta": 0.008260916173596061,
+        "confirmation_delta": 0.03503967604045147,
+        "passes": true
+      },
+      "H25": {
+        "development_mean_delta": 0.0012690086414335704,
+        "confirmation_delta": -0.005987894905174429,
+        "passes": false
+      },
+      "incumbent_fixed:H25@ridge15_binary": {
+        "development_mean_delta": 0.033187784430508516,
+        "confirmation_delta": 0.03112183925029044,
+        "passes": true
+      },
+      "full_density_noninferiority": {
+        "development_mean_delta": 0.020170753622044207,
+        "confirmation_delta": 0.01758903099038106,
+        "passes": true
+      }
+    }
+  },
+  "release_rule": "H29 if eligible, else H28 if eligible, else none",
+  "elapsed_seconds": 1346.4
+}

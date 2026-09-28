@@ -1,0 +1,492 @@
+{
+  "scored_area_px": 5106385,
+  "artifacts": {
+    "GEMSDOE1": {
+      "user_reported_score": 0.1563,
+      "sha256": "7f00890a62878d612fb5eef67a9a364a2df819433dde74b6762ce4fc0fc4fe15",
+      "source_url": "https://github.com/buffedlizard55-lab/GEMSDOE/blob/cceebbdcf9a7d2890bb0665defcb54dfc66ae452/data/evidence/runs/ens12-adopted-floor0.1-w0/submission.tif",
+      "mass": 166519.0,
+      "n_pos": 166519,
+      "binary": true,
+      "mass_share_by_distance_to_catalogue": {
+        "d=1px": 0.0726,
+        "d=sqrt2": 0.0269,
+        "d=2px": 0.0313,
+        "2-3px": 0.0545,
+        "3-10px": 0.2233,
+        "10-30px": 0.3375,
+        ">30px": 0.2539
+      },
+      "share_within_300m": 0.1853,
+      "share_beyond_1km": 0.5914,
+      "frac_pos_with_ge5_neighbours": 0.0146,
+      "components_8conn": 14892,
+      "reach_uniform_truth_recall": 0.1117
+    },
+    "GEMSDOE2-union": {
+      "user_reported_score": 0.156,
+      "sha256": "f68e590f8534d036872f18170819b52366c728e68619f17c648dce9629b0aaf2",
+      "source_url": "https://github.com/buffedlizard55-lab/GEMSDOE2/blob/099b2d2e404dc12abac1be3cb4ba289b62898a5d/docs/gemsdoe2-dual-family-union-f68e590f.tif",
+      "mass": 175949.0,
+      "n_pos": 175949,
+      "binary": true,
+      "mass_share_by_distance_to_catalogue": {
+        "d=1px": 0.0798,
+        "d=sqrt2": 0.0289,
+        "d=2px": 0.033,
+        "2-3px": 0.0564,
+        "3-10px": 0.2229,
+        "10-30px": 0.3305,
+        ">30px": 0.2486
+      },
+      "share_within_300m": 0.1981,
+      "share_beyond_1km": 0.579,
+      "frac_pos_with_ge5_neighbours": 0.0334,
+      "components_8conn": 14907,
+      "reach_uniform_truth_recall": 0.1141
+    },
+    "GEMSDOE3-nodes": {
+      "user_reported_score": 0.1193,
+      "sha256": "f347b70daa95170bfc967b1c0b6bbf951496c2b74764a7102848ad6178829aca",
+      "source_url": "https://github.com/buffedlizard55-lab/GEMSDOE3/blob/512371de5d30162813803cdccbd4931ceeb065c7/docs/downloads/pindrop-v4-nodes-20260925T152420Z-f347b70daa.tif",
+      "mass": 155021.0,
+      "n_pos": 155021,
+      "binary": true,
+      "mass_share_by_distance_to_catalogue": {
+        "d=1px": 0.04,
+        "d=sqrt2": 0.011,
+        "d=2px": 0.0125,
+        "2-3px": 0.0248,
+        "3-10px": 0.1594,
+        "10-30px": 0.3448,
+        ">30px": 0.4075
+      },
+      "share_within_300m": 0.0883,
+      "share_beyond_1km": 0.7523,
+      "frac_pos_with_ge5_neighbours": 0.0,
+      "components_8conn": 155021,
+      "reach_uniform_truth_recall": 0.2697
+    },
+    "GEMSDOE3-ridge": {
+      "user_reported_score": 0.1152,
+      "sha256": "4e03fc97052e9bd673e48f1923ad17f15926f8db26d2befc033e1722381dc9b7",
+      "source_url": "https://github.com/buffedlizard55-lab/GEMSDOE3/blob/512371de5d30162813803cdccbd4931ceeb065c7/docs/downloads/pindrop-v4-ridge-20260925T152422Z-4e03fc9705.tif",
+      "mass": 155021.0,
+      "n_pos": 155021,
+      "binary": true,
+      "mass_share_by_distance_to_catalogue": {
+        "d=1px": 0.0861,
+        "d=sqrt2": 0.0281,
+        "d=2px": 0.0305,
+        "2-3px": 0.0505,
+        "3-10px": 0.2203,
+        "10-30px": 0.3156,
+        ">30px": 0.2689
+      },
+      "share_within_300m": 0.1952,
+      "share_beyond_1km": 0.5845,
+      "frac_pos_with_ge5_neighbours": 0.0274,
+      "components_8conn": 21469,
+      "reach_uniform_truth_recall": 0.0993
+    },
+    "GEMSDOE3-gap": {
+      "user_reported_score": 0.083,
+      "sha256": "37f9d5b855ee1b6c302cb81cdae1414db94db427f5dc9da3538474df37cf1cad",
+      "source_url": "https://github.com/buffedlizard55-lab/GEMSDOE3/blob/512371de5d30162813803cdccbd4931ceeb065c7/docs/downloads/pindrop-v4-discovery-20260925T152423Z-37f9d5b855.tif",
+      "mass": 155021.0,
+      "n_pos": 155021,
+      "binary": true,
+      "mass_share_by_distance_to_catalogue": {
+        "d=1px": 0.0319,
+        "d=sqrt2": 0.0114,
+        "d=2px": 0.0141,
+        "2-3px": 0.0273,
+        "3-10px": 0.1663,
+        "10-30px": 0.3468,
+        ">30px": 0.4023
+      },
+      "share_within_300m": 0.0846,
+      "share_beyond_1km": 0.7491,
+      "frac_pos_with_ge5_neighbours": 0.0,
+      "components_8conn": 155021,
+      "reach_uniform_truth_recall": 0.2702
+    },
+    "GEMSDOE4": {
+      "user_reported_score": 0.0343,
+      "sha256": "237f0063a440b2c6c4b822bcb0f74e5203586313b3b5ed6c5cabe70fa046f63f",
+      "source_url": "https://github.com/buffedlizard55-lab/GEMSDOE4/blob/1726ecadf1ce3c5462af9de19a8c66937a1ea33c/data/evidence/combined/submission.tif",
+      "mass": 258323.0,
+      "n_pos": 258323,
+      "binary": true,
+      "mass_share_by_distance_to_catalogue": {
+        "d=1px": 0.0449,
+        "d=sqrt2": 0.0162,
+        "d=2px": 0.0251,
+        "2-3px": 0.0416,
+        "3-10px": 0.2166,
+        "10-30px": 0.3465,
+        ">30px": 0.3091
+      },
+      "share_within_300m": 0.1278,
+      "share_beyond_1km": 0.6556,
+      "frac_pos_with_ge5_neighbours": 0.7193,
+      "components_8conn": 10329,
+      "reach_uniform_truth_recall": 0.0901
+    },
+    "6GEMSDOE": {
+      "user_reported_score": 0.0286,
+      "sha256": "33cec71ff00b3f32d0d59c81c156f3f1488ffef46baa4b6499094e24ea1875ab",
+      "source_url": "https://github.com/buffedlizard55-lab/6GEMSDOE/blob/e2fe3f41c6f5dd2dcb2fc91958ee67698f114ada/downloads/gems6_hgb88-topk03_33cec71ff0.tif",
+      "mass": 131416.0,
+      "n_pos": 131416,
+      "binary": true,
+      "mass_share_by_distance_to_catalogue": {
+        "d=1px": 0.3007,
+        "d=sqrt2": 0.1005,
+        "d=2px": 0.114,
+        "2-3px": 0.1671,
+        "3-10px": 0.2748,
+        "10-30px": 0.0357,
+        ">30px": 0.0071
+      },
+      "share_within_300m": 0.6824,
+      "share_beyond_1km": 0.0428,
+      "frac_pos_with_ge5_neighbours": 0.6213,
+      "components_8conn": 6645,
+      "reach_uniform_truth_recall": 0.0468
+    }
+  },
+  "ours_unscored": {
+    "gems10-h16-continuation-20260927T065521077735Z-3431b83c7c.tif": {
+      "sha256": "b33684ae033512a1a1c7d2cfccd128955fedfdff2a8fed6c7585a755b1b58b3c",
+      "mass": 283532.0,
+      "n_pos": 283532,
+      "binary": true,
+      "mass_share_by_distance_to_catalogue": {
+        "d=1px": 0.1714,
+        "d=sqrt2": 0.066,
+        "d=2px": 0.0793,
+        "2-3px": 0.1416,
+        "3-10px": 0.3957,
+        "10-30px": 0.1214,
+        ">30px": 0.0246
+      },
+      "share_within_300m": 0.4583,
+      "share_beyond_1km": 0.146,
+      "frac_pos_with_ge5_neighbours": 0.6786,
+      "components_8conn": 11406,
+      "reach_uniform_truth_recall": 0.0998
+    },
+    "gems10-h20-dem10-scarp-thin-20260927T155223039488Z-ffc91a1686.tif": {
+      "sha256": "a26e5e46acc00ddd867f0b2910e638b25e4e81108ebe05c0abcc7c9b04372247",
+      "mass": 143657.0,
+      "n_pos": 143657,
+      "binary": true,
+      "mass_share_by_distance_to_catalogue": {
+        "d=1px": 0.128,
+        "d=sqrt2": 0.0487,
+        "d=2px": 0.0566,
+        "2-3px": 0.1065,
+        "3-10px": 0.3835,
+        "10-30px": 0.2122,
+        ">30px": 0.0644
+      },
+      "share_within_300m": 0.3399,
+      "share_beyond_1km": 0.2766,
+      "frac_pos_with_ge5_neighbours": 0.063,
+      "components_8conn": 15915,
+      "reach_uniform_truth_recall": 0.088
+    },
+    "gems10-h25-ctx-ridge-20260927T232947704150Z-6452ae1d00.tif": {
+      "sha256": "1381e784fb8b8340beffd0e735ac9eea89ad35d1a807f8a9bab5506e3fc8275e",
+      "mass": 161366.0,
+      "n_pos": 161366,
+      "binary": true,
+      "mass_share_by_distance_to_catalogue": {
+        "d=1px": 0.1153,
+        "d=sqrt2": 0.039,
+        "d=2px": 0.0417,
+        "2-3px": 0.0817,
+        "3-10px": 0.3352,
+        "10-30px": 0.2793,
+        ">30px": 0.1078
+      },
+      "share_within_300m": 0.2777,
+      "share_beyond_1km": 0.3871,
+      "frac_pos_with_ge5_neighbours": 0.0003,
+      "components_8conn": 52929,
+      "reach_uniform_truth_recall": 0.1235
+    }
+  },
+  "density_inversion": {
+    "0.0012": {
+      "GEMSDOE1": {
+        "implied_recall": 1.006,
+        "implied_skill_vs_random": 9.006
+      },
+      "GEMSDOE2-union": {
+        "implied_recall": 1.0535,
+        "implied_skill_vs_random": 9.234
+      },
+      "GEMSDOE3-nodes": {
+        "implied_recall": 0.7162,
+        "implied_skill_vs_random": 2.655
+      },
+      "GEMSDOE3-ridge": {
+        "implied_recall": 0.691,
+        "implied_skill_vs_random": 6.958
+      },
+      "GEMSDOE3-gap": {
+        "implied_recall": 0.4946,
+        "implied_skill_vs_random": 1.83
+      },
+      "GEMSDOE4": {
+        "implied_recall": 0.3188,
+        "implied_skill_vs_random": 3.539
+      },
+      "6GEMSDOE": {
+        "implied_recall": 0.1464,
+        "implied_skill_vs_random": 3.128
+      },
+      "feasible_all_recall_le_1": false,
+      "min_skill": 1.83
+    },
+    "0.0015": {
+      "GEMSDOE1": {
+        "implied_recall": 0.8306,
+        "implied_skill_vs_random": 7.436
+      },
+      "GEMSDOE2-union": {
+        "implied_recall": 0.8686,
+        "implied_skill_vs_random": 7.613
+      },
+      "GEMSDOE3-nodes": {
+        "implied_recall": 0.5925,
+        "implied_skill_vs_random": 2.197
+      },
+      "GEMSDOE3-ridge": {
+        "implied_recall": 0.5716,
+        "implied_skill_vs_random": 5.757
+      },
+      "GEMSDOE3-gap": {
+        "implied_recall": 0.4092,
+        "implied_skill_vs_random": 1.514
+      },
+      "GEMSDOE4": {
+        "implied_recall": 0.2606,
+        "implied_skill_vs_random": 2.892
+      },
+      "6GEMSDOE": {
+        "implied_recall": 0.1217,
+        "implied_skill_vs_random": 2.601
+      },
+      "feasible_all_recall_le_1": true,
+      "min_skill": 1.514
+    },
+    "0.0020": {
+      "GEMSDOE1": {
+        "implied_recall": 0.6552,
+        "implied_skill_vs_random": 5.866
+      },
+      "GEMSDOE2-union": {
+        "implied_recall": 0.6837,
+        "implied_skill_vs_random": 5.992
+      },
+      "GEMSDOE3-nodes": {
+        "implied_recall": 0.4688,
+        "implied_skill_vs_random": 1.738
+      },
+      "GEMSDOE3-ridge": {
+        "implied_recall": 0.4523,
+        "implied_skill_vs_random": 4.555
+      },
+      "GEMSDOE3-gap": {
+        "implied_recall": 0.3237,
+        "implied_skill_vs_random": 1.198
+      },
+      "GEMSDOE4": {
+        "implied_recall": 0.2023,
+        "implied_skill_vs_random": 2.246
+      },
+      "6GEMSDOE": {
+        "implied_recall": 0.097,
+        "implied_skill_vs_random": 2.073
+      },
+      "feasible_all_recall_le_1": true,
+      "min_skill": 1.198
+    },
+    "0.0030": {
+      "GEMSDOE1": {
+        "implied_recall": 0.4798,
+        "implied_skill_vs_random": 4.296
+      },
+      "GEMSDOE2-union": {
+        "implied_recall": 0.4987,
+        "implied_skill_vs_random": 4.371
+      },
+      "GEMSDOE3-nodes": {
+        "implied_recall": 0.3451,
+        "implied_skill_vs_random": 1.28
+      },
+      "GEMSDOE3-ridge": {
+        "implied_recall": 0.333,
+        "implied_skill_vs_random": 3.353
+      },
+      "GEMSDOE3-gap": {
+        "implied_recall": 0.2383,
+        "implied_skill_vs_random": 0.882
+      },
+      "GEMSDOE4": {
+        "implied_recall": 0.1441,
+        "implied_skill_vs_random": 1.599
+      },
+      "6GEMSDOE": {
+        "implied_recall": 0.0724,
+        "implied_skill_vs_random": 1.546
+      },
+      "feasible_all_recall_le_1": true,
+      "min_skill": 0.882
+    },
+    "0.0040": {
+      "GEMSDOE1": {
+        "implied_recall": 0.3921,
+        "implied_skill_vs_random": 3.511
+      },
+      "GEMSDOE2-union": {
+        "implied_recall": 0.4062,
+        "implied_skill_vs_random": 3.56
+      },
+      "GEMSDOE3-nodes": {
+        "implied_recall": 0.2833,
+        "implied_skill_vs_random": 1.05
+      },
+      "GEMSDOE3-ridge": {
+        "implied_recall": 0.2733,
+        "implied_skill_vs_random": 2.752
+      },
+      "GEMSDOE3-gap": {
+        "implied_recall": 0.1956,
+        "implied_skill_vs_random": 0.724
+      },
+      "GEMSDOE4": {
+        "implied_recall": 0.115,
+        "implied_skill_vs_random": 1.276
+      },
+      "6GEMSDOE": {
+        "implied_recall": 0.06,
+        "implied_skill_vs_random": 1.283
+      },
+      "feasible_all_recall_le_1": true,
+      "min_skill": 0.724
+    },
+    "0.0060": {
+      "GEMSDOE1": {
+        "implied_recall": 0.3045,
+        "implied_skill_vs_random": 2.726
+      },
+      "GEMSDOE2-union": {
+        "implied_recall": 0.3138,
+        "implied_skill_vs_random": 2.75
+      },
+      "GEMSDOE3-nodes": {
+        "implied_recall": 0.2214,
+        "implied_skill_vs_random": 0.821
+      },
+      "GEMSDOE3-ridge": {
+        "implied_recall": 0.2137,
+        "implied_skill_vs_random": 2.152
+      },
+      "GEMSDOE3-gap": {
+        "implied_recall": 0.1529,
+        "implied_skill_vs_random": 0.566
+      },
+      "GEMSDOE4": {
+        "implied_recall": 0.0859,
+        "implied_skill_vs_random": 0.953
+      },
+      "6GEMSDOE": {
+        "implied_recall": 0.0477,
+        "implied_skill_vs_random": 1.019
+      },
+      "feasible_all_recall_le_1": true,
+      "min_skill": 0.566
+    },
+    "0.0080": {
+      "GEMSDOE1": {
+        "implied_recall": 0.2606,
+        "implied_skill_vs_random": 2.333
+      },
+      "GEMSDOE2-union": {
+        "implied_recall": 0.2675,
+        "implied_skill_vs_random": 2.345
+      },
+      "GEMSDOE3-nodes": {
+        "implied_recall": 0.1905,
+        "implied_skill_vs_random": 0.706
+      },
+      "GEMSDOE3-ridge": {
+        "implied_recall": 0.1838,
+        "implied_skill_vs_random": 1.851
+      },
+      "GEMSDOE3-gap": {
+        "implied_recall": 0.1316,
+        "implied_skill_vs_random": 0.487
+      },
+      "GEMSDOE4": {
+        "implied_recall": 0.0713,
+        "implied_skill_vs_random": 0.791
+      },
+      "6GEMSDOE": {
+        "implied_recall": 0.0415,
+        "implied_skill_vs_random": 0.887
+      },
+      "feasible_all_recall_le_1": true,
+      "min_skill": 0.487
+    },
+    "0.0118": {
+      "GEMSDOE1": {
+        "implied_recall": 0.2183,
+        "implied_skill_vs_random": 1.954
+      },
+      "GEMSDOE2-union": {
+        "implied_recall": 0.2229,
+        "implied_skill_vs_random": 1.953
+      },
+      "GEMSDOE3-nodes": {
+        "implied_recall": 0.1607,
+        "implied_skill_vs_random": 0.596
+      },
+      "GEMSDOE3-ridge": {
+        "implied_recall": 0.155,
+        "implied_skill_vs_random": 1.561
+      },
+      "GEMSDOE3-gap": {
+        "implied_recall": 0.1109,
+        "implied_skill_vs_random": 0.411
+      },
+      "GEMSDOE4": {
+        "implied_recall": 0.0572,
+        "implied_skill_vs_random": 0.635
+      },
+      "6GEMSDOE": {
+        "implied_recall": 0.0356,
+        "implied_skill_vs_random": 0.76
+      },
+      "feasible_all_recall_le_1": true,
+      "min_skill": 0.411
+    }
+  },
+  "catalogue_density_of_footprint": 0.0118,
+  "reading": [
+    "All seven scored fields are binary.",
+    "rho below ~0.12% is infeasible (the best artifact would need recall > 1).",
+    "At catalogue density (~1.2%) both isolated-pixel artifacts would have to be placed WORSE than random (skill ~0.4-0.6); skills of all artifacts are >= ~0.9 only for rho <~0.4%. Plausible hidden density: ~0.13-0.6% (2-8x sparser than the catalogue proxy).",
+    "6GEMSDOE (worst, 0.0286) put 68% of its mass within 300 m of catalogue faults; the best (0.1563) put 18.5% there and 59% beyond 1 km. Blobby emission (GEMSDOE4, 6GEMSDOE) scored ~0.03 regardless.",
+    "The local catalogue proxy never scores emission next to KNOWN faults (score blocks contain no training faults) \u2014 a blind spot this probe exposes."
+  ],
+  "caveats": [
+    "Scores are user-reported, not authenticated submission history",
+    "FP ~= phi * mass ignores near-truth credit (a few % at most)",
+    "Seven heterogeneous models; bounds, not estimates"
+  ]
+}

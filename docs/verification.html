@@ -322,6 +322,67 @@ not a deliverable to upload.</p>
 </tr>
 </tbody>
 </table>
+<h2>Session-5 review additions (2026-09-28, session 5)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Finding (first-hand)</th>
+<th>Evidence</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S5-1</td>
+<td><strong>The local proxy is blind to two leaderboard effects</strong>: (a) its truth is 2–8× denser than the hidden new-fault truth; (b) its score blocks contain no known faults, so emission hugging known faults is never penalised locally.</td>
+<td><code>reports/lb_probe.json</code> (density inversion over the seven scored artifacts; mass-by-distance profiles); our H16/H20/H25 artifacts put 45.8/34.0/27.8 % of mass within 300 m of catalogue faults vs 18.5 % for the best scored artifact.</td>
+<td>Protocol v5 decides on density-matched scores (masked-known simulation at f = ½, ¼) with full-density non-inferiority; (b) remains open (H30, needs an in-sample protocol).</td>
+</tr>
+<tr>
+<td>S5-2</td>
+<td>Inherited header in <code>placement.py</code> ("densifying a TRUE line is never harmful") is correct only for lines known to be true; it was used to dismiss along-strike spacing without measurement. With candidate-trace precision ~10–15 %, FP control dominates.</td>
+<td>Kernel arithmetic (KNOWLEDGE §5d); fold-0 density-matched baseline107: ridge15 0.1089 → ridge15_d2 0.1337.</td>
+<td>H28 measured under v5; header left intact (historical), superseded by <code>dot_nms</code> docstring.</td>
+</tr>
+<tr>
+<td>S5-3</td>
+<td><code>placement.thin_keep</code> keeps every n-th skeleton pixel in RASTER order, not arc length; never used by any validated path.</td>
+<td>Code read (<code>np.lexsort((xs, ys))</code>).</td>
+<td>Not used; <code>dot_nms</code> (probability-ordered, radius-based) replaces the idea.</td>
+</tr>
+<tr>
+<td>S5-4</td>
+<td>8GEMSDOE's all-catalogue hedge scored identically to the unhedged field → masked predictions earn no TP credit (or no hidden truth lies within 300 m of any catalogue pixel — implausible given staff's "corrections within 300 m").</td>
+<td><code>reports/submission_audit.json</code> (the hedge adds exactly the 60,988 catalogue pixels).</td>
+<td>v5 scores with <code>zero_ignored=True</code>; <code>dti_credit</code> recorded for the alternative.</td>
+</tr>
+<tr>
+<td>S5-5</td>
+<td>NEXT_STEPS "token expired, commits local only" blocker was stale — session-4 commits were pushed and merged (PR #8).</td>
+<td><code>git log origin/main</code>.</td>
+<td>Corrected in NEXT_STEPS.</td>
+</tr>
+<tr>
+<td>S5-6</td>
+<td>H27 as coded (<code>[feat | h16_aligned]</code>, no statics) cannot plausibly beat H25.</td>
+<td><code>validate_candidate.py</code> column layouts.</td>
+<td>Deprioritized; "H25 layout + aligned gate" variant carried forward.</td>
+</tr>
+<tr>
+<td>S5-7</td>
+<td>Exact reproduction extended to the grid level: this session's baseline107 and H25 OOF grids are <strong>byte-identical</strong> (sha256) to the session-4 report's, and the ridge15 DTIs match to 0.</td>
+<td><code>reports/h29_oof.json</code> vs <code>reports/h25_blocked.json</code> prediction_files.</td>
+<td>Required by the H28 decision rule (passes).</td>
+</tr>
+<tr>
+<td>S5-8</td>
+<td>1 m lidar is not a "maybe": 3DEP 1 m tiles cover <strong>98.3 %</strong> of the footprint (GeoDAWN West Central 86.8 %).</td>
+<td><code>reports/lidar1m_inventory.json</code> (runner tag <code>ext/lidar1m-inventory-36365777149</code>).</td>
+<td>H31 = P0 next session.</td>
+</tr>
+</tbody>
+</table>
 <h2>Scope boundary</h2>
 <p>A verified source supports the statement beside it, not every inference made from that statement. These are candidate <em>fault</em> detectors, not confirmed geothermal vents. The hidden truth, account eligibility and private upload history are unavailable. No claim is made that this work beats the leaderboard, verifies every external dataset line, or removes the need for the account holder's legal attestation.</p>
 <h2>Completed H12 result and second-pass integrity finding</h2>
@@ -370,9 +431,10 @@ not a deliverable to upload.</p>
 <li><strong>No private new-fault labels or guaranteed leaderboard uplift.</strong> Spatial CV still scores held-out catalogue faults. Component holdouts and FAR10 subsets are different proxies. Hidden source/type/coverage is explicitly undisclosed by staff. Neither can certify geothermal resources.</li>
 <li><strong>No DrivenData account session.</strong> We can read public leaderboard/forum through the research fetch tool, but cannot verify authenticated upload hashes, remaining slots or eligibility. Never request credentials in chat; use the authorized account holder's normal platform workflow.</li>
 <li><strong>Binary network access is uneven.</strong> Dropbox, GDR, USGS and DrivenData binary requests fail TLS from this runtime; Actions logs/artifacts are unreadable here. Public GitHub API/git transport works, so external products are built on a GitHub-hosted runner and moved through immutable <code>ext/*</code> tags (session 3). Feature data were restored from an immutable team mirror and matched inherited hashes, not independently authenticated official bytes. H15 archives are now in hand (hashed) but unmodelled.</li>
-<li><strong>CPU only, ~4 GB RAM.</strong> Bounded HGB training works here. A GPU is not required for the implemented experiment. Raw 1 m DEM processing and U-Net comparisons need additional storage/compute and their own frozen protocols; no assertion that GPU training is already complete.</li>
+<li><strong>CPU only, ~4 GB RAM.</strong> Bounded HGB training works here. A GPU is not required for the implemented experiment. Raw 1 m DEM processing (measured session 5: 686 tiles / 157 GB cover 98.3 % of the footprint) must run as a sharded GitHub-runner job; U-Net comparisons need additional compute and their own frozen protocols; no assertion that GPU training is already complete.</li>
 <li><strong>No artifact without a positive experiment AND a bound final fit.</strong> H12 was measured and rejected; H13 and H19 failed the preregistered rule (development improved, confirmation regressed); H16 (session 2), H20 (session 3) and H25 (session 4) are the released, hash-bound candidates — H25 (166 features, <code>ridge15_binary</code>) beat the same-run H20 arm and the H20/thin10 incumbent on the development mean and the confirmation fold and is now the hub's recommended download (<code>reports/h25_blocked.json</code>, <code>reports/final_manifest_h25.json</code>); H24's H20+ridge15 (dev 0.23553 / conf 0.22525) was eligible but not released. No submission slot was spent by any session; no artifact has a leaderboard measurement.
-5b. <strong>The emission budget is not calibrated to the hidden truth density.</strong> The released budget (H25/ridge15, 3.37% of the footprint after strike-normal NMS) was selected on development folds whose truth density (1.1–1.3%) is the catalogue's; the hidden truth (new faults only) is sparser, and locally the sparser fold prefers smaller budgets. The hidden density is unknown; <code>reports/budget_density_sweep.json</code> maps the sensitivity for the <em>thin</em> family (thinner is better as truth gets sparser), it does not resolve it, and no equivalent density sweep has been run over the ridge family. The thin budgets (H16 6%, H20 ~3%) remain historical provenance only.
+5b. <strong>Hidden truth density is bounded, not measured.</strong> Session 5 inverted the seven user-reported group scores (<code>reports/lb_probe.json</code>): the new-fault truth is ~0.13–0.6 % of the scored area, 2–8× sparser than the catalogue proxy. Protocol v5 therefore decides on a density-matched simulation (held-out catalogue thinned to 1/2 and 1/4 of its systems, the rest masked as known). The bound relies on user-reported scores (account/file association unauthenticated) and on FP ≈ public share × emitted pixels; the simulation keeps the catalogue's own spatial clustering, which the new faults may not share.
+5b-2. <strong>Known-fault shadow emission is still unmeasured.</strong> Local score blocks contain no training faults, so emission hugging KNOWN faults is never penalised locally, while the final in-sample fit makes such shadow ridges likely (our released fields put 28–46 % of their mass within 300 m of catalogue faults vs 18.5 % for the best scored group artifact). Needs an in-sample masked-known protocol (NEXT_STEPS P1).
 5c. <strong>The provided labels are the current public catalogue</strong> (session-3 measurement): no public catalogue offers held-out "new" traces, so every local proxy scores catalogue generalisation only.</li>
 <li><strong>Feature semantics/normalization issues.</strong> <code>tc</code> and depth-to-base metadata need official release comparison. Existing Frangi normalization depends on tile-local maxima; new paired experiments fix the tile height and hash the resulting stack. Fixing this changes the baseline and needs a new recorded run.</li>
 <li><strong>Masking surrogate is not backend source code.</strong> Known pixels are excluded officially, but order relative to the metric dilation is not disclosed. The optional FP-ignore metric is an explicit surrogate, not a byte-for-byte official scorer claim.</li>
@@ -380,4 +442,4 @@ not a deliverable to upload.</p>
 <li><strong>Live checks are not continuous science.</strong> Daily scheduled workflow checks availability, quotations and the leaderboard. Changed text or failures require review; it does not autonomously certify newly downloaded data, account compliance or geologic interpretations. GitHub schedules may be delayed/disabled by platform policy.</li>
 <li><strong>Legal/user obligations remain.</strong> Rules eligibility, AI-disclosure accuracy and account/entity submission allowance require participant attestation. A repo count is not proof of a rules violation. Final upload/sign-off cannot honestly be declared fully autonomous here.</li>
 </ol>
-<p>Do not claim all original goals are finished: no demonstrated &gt;.3049 model, no new geothermal-vent catalogue, no private-score verification; the 10 m DEM pilot (H20) is a first external-resolution test, not a 1 m lidar study. H16's +0.0037 dev / +0.0007 confirmation margin, H20's +0.0147 dev / +0.0141 confirmation margin and H25's +0.0011 dev / +0.0265 confirmation margin over the same-run H20 arm are catalogue-generalization proxies on four correlated stripe folds, not leaderboard forecasts; the confirmation fold is re-used geography (now for a fourth decision), the selected policies were chosen on the development folds from a 22-policy set, H25 loses fold 0 to same-run H20 and its development margin is within fold noise, and the emission budget was tuned to the catalogue's density rather than the unknown hidden density (<code>reports/budget_density_sweep.json</code>, thin family only). See HYPOTHESES.md (session-2 results) for the next measurable work.</p></article></main><footer class="wrap"><b>Maximize P(Win). Own the Outcome.</b><p>Local evidence is not a private competition score. AI-assisted research; official links and limitations are explicit.</p><p>Site built 2026-09-28T00:40:52+00:00 · <a href="https://github.com/buffedlizard55-lab/GEMSDOE10">Repository</a> · <a href="data/site.json">Machine-readable manifest</a></p></footer></body></html>
+<p>Do not claim all original goals are finished: no demonstrated &gt;.3049 model, no new geothermal-vent catalogue, no private-score verification; the 10 m DEM pilot (H20) is a first external-resolution test, not a 1 m lidar study. H16's +0.0037 dev / +0.0007 confirmation margin, H20's +0.0147 dev / +0.0141 confirmation margin and H25's +0.0011 dev / +0.0265 confirmation margin over the same-run H20 arm are catalogue-generalization proxies on four correlated stripe folds, not leaderboard forecasts; the confirmation fold is re-used geography (now for a fourth decision), the selected policies were chosen on the development folds from a 22-policy set, H25 loses fold 0 to same-run H20 and its development margin is within fold noise, and the emission budget was tuned to the catalogue's density rather than the unknown hidden density (<code>reports/budget_density_sweep.json</code>, thin family only). See HYPOTHESES.md (session-2 results) for the next measurable work.</p></article></main><footer class="wrap"><b>Maximize P(Win). Own the Outcome.</b><p>Local evidence is not a private competition score. AI-assisted research; official links and limitations are explicit.</p><p>Site built 2026-09-28T02:09:45+00:00 · <a href="https://github.com/buffedlizard55-lab/GEMSDOE10">Repository</a> · <a href="data/site.json">Machine-readable manifest</a></p></footer></body></html>

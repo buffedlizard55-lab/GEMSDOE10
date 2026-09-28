@@ -1,5 +1,5 @@
 {
-  "started_utc": "2026-09-28T00:40:40.910935+00:00",
+  "started_utc": "2026-09-28T02:09:33.129941+00:00",
   "status": "passed",
   "checks": [
     {
@@ -11,29 +11,29 @@
     {
       "command": "/home/user/GEMSDOE10/.venv/bin/python -m pytest -q --junitxml=scratch/test-results.xml",
       "exit_code": 0,
-      "stdout": "........................................................................ [ 56%]\n........................................................                 [100%]\n=============================== warnings summary ===============================\ntests/test_alignment.py::test_displaced_lineation_detected_with_correct_lag\ntests/test_alignment.py::test_no_displacement_control\ntests/test_alignment.py::test_null_field_no_advantage\ntests/test_alignment.py::test_nan_halo_invalidated\ntests/test_alignment.py::test_tiled_matches_full_grid\ntests/test_alignment.py::test_ninety_degree_offset_detected\ntests/test_alignment.py::test_all_angles_and_shape\n  /home/user/GEMSDOE10/src/gems10/alignment.py:155: RuntimeWarning: Mean of empty slice\n    adv_pool = np.nanmean(np.stack(adv_d, axis=-1), axis=-1)\n\ntests/test_alignment.py::test_displaced_lineation_detected_with_correct_lag\ntests/test_alignment.py::test_no_displacement_control\ntests/test_alignment.py::test_null_field_no_advantage\ntests/test_alignment.py::test_nan_halo_invalidated\ntests/test_alignment.py::test_tiled_matches_full_grid\ntests/test_alignment.py::test_ninety_degree_offset_detected\ntests/test_alignment.py::test_all_angles_and_shape\n  /home/user/GEMSDOE10/src/gems10/alignment.py:221: RuntimeWarning: All-NaN slice encountered\n    out[..., n_ang * 3] = np.nanmax(np.stack(advs, axis=-1), axis=-1)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n",
+      "stdout": "........................................................................ [ 50%]\n......................................................................   [100%]\n=============================== warnings summary ===============================\ntests/test_alignment.py::test_displaced_lineation_detected_with_correct_lag\ntests/test_alignment.py::test_no_displacement_control\ntests/test_alignment.py::test_null_field_no_advantage\ntests/test_alignment.py::test_nan_halo_invalidated\ntests/test_alignment.py::test_tiled_matches_full_grid\ntests/test_alignment.py::test_ninety_degree_offset_detected\ntests/test_alignment.py::test_all_angles_and_shape\n  /home/user/GEMSDOE10/src/gems10/alignment.py:155: RuntimeWarning: Mean of empty slice\n    adv_pool = np.nanmean(np.stack(adv_d, axis=-1), axis=-1)\n\ntests/test_alignment.py::test_displaced_lineation_detected_with_correct_lag\ntests/test_alignment.py::test_no_displacement_control\ntests/test_alignment.py::test_null_field_no_advantage\ntests/test_alignment.py::test_nan_halo_invalidated\ntests/test_alignment.py::test_tiled_matches_full_grid\ntests/test_alignment.py::test_ninety_degree_offset_detected\ntests/test_alignment.py::test_all_angles_and_shape\n  /home/user/GEMSDOE10/src/gems10/alignment.py:221: RuntimeWarning: All-NaN slice encountered\n    out[..., n_ang * 3] = np.nanmax(np.stack(advs, axis=-1), axis=-1)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n",
       "stderr": ""
     },
     {
       "command": "/home/user/GEMSDOE10/.venv/bin/python scripts/build_site.py",
       "exit_code": 0,
-      "stdout": "6 pages; 3 approved downloads; 0 refused\n",
+      "stdout": "6 pages; 4 approved downloads; 0 refused\n",
       "stderr": ""
     }
   ],
   "scope": "local tests, data integrity and static site links; not all scientific claims or private backend behavior",
   "tests": {
-    "tests": 128,
+    "tests": 142,
     "failures": 0,
     "errors": 0,
     "skipped": 0
   },
   "site_links": {
-    "checked_internal_links": 103,
+    "checked_internal_links": 113,
     "missing": [],
     "ok": true
   },
-  "approved_downloads": 3,
+  "approved_downloads": 4,
   "refused_publications": [],
-  "finished_utc": "2026-09-28T00:40:51.991736+00:00"
+  "finished_utc": "2026-09-28T02:09:45.567295+00:00"
 }

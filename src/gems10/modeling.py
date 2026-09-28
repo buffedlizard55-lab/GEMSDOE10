@@ -104,15 +104,21 @@ def parse_policy(policy: str) -> tuple[float, str]:
     1.0. `ridgeNN_binary` (session 4, H24) is the top-NN% mask reduced to its
     across-strike probability-ridge NMS (`placement.ridge_nms`) and emitted at
     1.0 — NN is the PRE-NMS budget; in both families the emitted pixel count is
-    smaller and is reported by the scorer (`n_pos_pred`).
+    smaller and is reported by the scorer (`n_pos_pred`). `ridgeNN_d2` /
+    `ridgeNN_d3` (session 5, H28) further keep every 2nd/3rd ridge pixel along
+    strike (`placement.dot_nms`, probability-ordered): 'ridge15_d3' ->
+    (0.15, 'ridgedot3').
     """
     budget_s, mode = policy.split("_", 1)
     if budget_s.startswith("thin"):
         assert mode == "binary", policy
         return int(budget_s[4:]) / 100.0, "thin"
     if budget_s.startswith("ridge"):
-        assert mode == "binary", policy
-        return int(budget_s[5:]) / 100.0, "ridge"
+        # `ridgeNN_d2` / `ridgeNN_d3` (session 5, H28): the ridgeNN line
+        # thinned ALONG strike by probability-ordered radius-2/3 suppression.
+        assert mode in ("binary", "d2", "d3"), policy
+        return int(budget_s[5:]) / 100.0, ("ridge" if mode == "binary"
+                                           else "ridgedot" + mode[1:])
     assert budget_s.startswith("topk"), policy
     frac = int(budget_s[4:]) / 100.0
     assert mode in ("binary", "soft", "envelope", "halo2"), policy
@@ -132,6 +138,8 @@ def apply_policy(prob: np.ndarray, footprint: np.ndarray, policy: str) -> np.nda
       ridge    — across-strike NMS of p inside the top-k mask at 1.0 (H24:
                  follows the probability ridge instead of the mask geometry,
                  so it cannot leave the top-k support)
+      ridgedotR — the ridge line dotted ALONG strike: probability-ordered
+                 suppression of kept pixels closer than R px (H28, R = 2|3)
     """
     frac, mode = parse_policy(policy)
     fp = np.asarray(footprint, dtype=bool)
@@ -144,6 +152,10 @@ def apply_policy(prob: np.ndarray, footprint: np.ndarray, policy: str) -> np.nda
         offsets = _ridge_offsets_cached(prob, fp, p)
         out = np.where(placement.ridge_nms(core, p, offsets=offsets) & fp,
                        1.0, 0.0)
+    elif mode.startswith("ridgedot"):
+        offsets = _ridge_offsets_cached(prob, fp, p)
+        ridge = placement.ridge_nms(core, p, offsets=offsets) & fp
+        out = np.where(placement.dot_nms(ridge, p, int(mode[8:])), 1.0, 0.0)
     elif mode == "binary":
         out = np.where(core, 1.0, 0.0)
     elif mode == "soft":
